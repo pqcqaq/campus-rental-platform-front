@@ -4,11 +4,13 @@
   <div class="main">
     <div class="userInfo">
       <div class="avatar" @click="handleChangeAvatar">
-        <hd-image lazy-load width="100" height="100" mode="scaleToFill" :round="true" :src="userInfo?.avatar" />
+        <hd-image lazy-load width="160" height="160" mode="scaleToFill" :round="true" :src="userInfo?.avatar" />
       </div>
-      <div class="nickName">
-        <text>{{ userInfo?.nickName }}</text>
-        <hd-icon class="ic_edit" name="ic_edit_line" style="color: rgb(62, 195, 14)" @click="handleEditNickName"></hd-icon>
+      <div class="info">
+        <hd-icon class="ic_edit" name="ic_edit_line" size="50rpx" style="color: rgb(62, 195, 14)" @click="handleEdit"></hd-icon>
+        <div class="nickName">{{ userInfo?.nickName }}</div>
+        <div class="school">就读院校：{{ userInfo?.school }}</div>
+        <div class="mobile">联系电话：{{ userInfo?.mobile }}</div>
       </div>
     </div>
   </div>
@@ -16,13 +18,23 @@
     <view>
       <div class="editor">
         <header class="title">
-          <text>{{ title }}</text>
+          <text>编辑个人信息</text>
           <hd-icon class="close" name="ic_close_line" @click="handleClose"></hd-icon>
         </header>
         <main class="input">
-          <Inputfield class="field" clearable :placeholder="msg" type="text" v-model="inputValue" :maxlength="30">
+          <Inputfield class="field" clearable placeholder="请输入用户名" type="text" v-model="inputNickname" :maxlength="30">
+            <template #title>
+              <div><hd-icon name="ic_me_line1"></hd-icon></div>
+            </template>
+          </Inputfield>
+          <Inputfield class="field" clearable placeholder="请输入就读院校" type="text" v-model="inputSchool" :maxlength="30">
             <template #title>
               <div><hd-icon name="ic_edit_line"></hd-icon></div>
+            </template>
+          </Inputfield>
+          <Inputfield class="field" clearable placeholder="请输入手机号" type="text" v-model="inputMobile" :maxlength="11">
+            <template #title>
+              <div><hd-icon name="ic_phone_line"></hd-icon></div>
             </template>
           </Inputfield>
         </main>
@@ -45,31 +57,29 @@ const modal = useModal()
 const toast = useToast()
 // 解构pinia的store
 const { userInfo } = storeToRefs(useAuthStore())
-const handleEditNickName = () => {
+const handleEdit = () => {
   // 将文本切换为输入框，失去焦点时保存
-  inputValue.value = userInfo.value?.nickName || ''
+  inputNickname.value = userInfo.value?.nickName || ''
+  inputSchool.value = userInfo.value?.school || ''
+  inputMobile.value = userInfo.value?.mobile || ''
   popup.showPopup()
 }
-const title = ref('编辑昵称')
-const msg = ref('请输入昵称')
-const inputValue = ref('')
+const inputNickname = ref('')
+const inputSchool = ref('')
+const inputMobile = ref('')
 const handleClose = () => {
   popup.closePopup()
 }
 const handleSubmit = () => {
-  if (inputValue.value == '') {
+  if (inputNickname.value == '') {
     toast.showToast('请输入昵称')
     return
   }
   // 保存昵称
   UserAPI.alter({
-    nickName: inputValue.value,
-    linkMan: userInfo.value?.linkMan || null,
-    username: userInfo.value?.username || null,
-    mobile: userInfo.value?.mobile || null,
-    avatar: userInfo.value?.avatar || null,
-    school: userInfo.value?.school || null,
-    token: userInfo.value?.token || null
+    nickName: inputNickname.value,
+    school: inputSchool.value,
+    mobile: inputMobile.value
   })
     .then((resp: any) => {
       toast.showToast({
@@ -144,20 +154,67 @@ const handleChangeAvatar = () => {
   width: 100vw;
   box-sizing: border-box;
   background: #e7f0ff;
+  // 头像居中
+  .userInfo {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 60px;
+    .info {
+      //淡蓝色圆角背景，带阴影
+      position: relative;
+      width: 620rpx;
+      height: 300rpx;
+      background: #f8fcff;
+      border-radius: 50rpx 50rpx 50rpx 50rpx;
+      padding: 20rpx 20rpx 20rpx 20rpx;
+      // 背景阴影
+      box-shadow: 0rpx 0rpx 5rpx 0rpx rgba(0, 0, 0, 0.3);
+      margin-top: 20rpx;
+
+      // 编辑按钮
+      .ic_edit {
+        margin-left: 5rpx;
+        color: rgb(62, 195, 14);
+        // 靠右上角
+        position: absolute;
+        top: 20rpx;
+        right: 20rpx;
+      }
+      // 昵称
+      .nickName {
+        font-size: 50rpx;
+        color: #828282;
+        margin-top: 25rpx;
+        margin-bottom: 20rpx;
+        text-align: center;
+      }
+      // 学校
+      .school {
+        font-size: 30rpx;
+        color: #6f6f6f;
+        margin-top: 10rpx;
+        text-align: center;
+      }
+      // 手机号
+      .mobile {
+        font-size: 28rpx;
+        color: #818181;
+        margin-top: 10rpx;
+        text-align: center;
+      }
+    }
+  }
 }
-// 头像居中
-.userInfo {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding-top: 60px;
+
+.avatar_edit {
+  position: relative;
+  top: 0;
+  right: 0;
+  color: rgb(62, 195, 14);
+  font-size: 50rpx;
 }
-// 昵称
-.nickName {
-  font-size: 32rpx;
-  color: #333;
-  margin-top: 25rpx;
-}
+
 // 编辑图标
 .ic_edit {
   margin-left: 5rpx;
@@ -167,7 +224,7 @@ const handleChangeAvatar = () => {
 .editor {
   position: relative;
   width: 620rpx;
-  height: 300rpx;
+  height: 600rpx;
   background: #ecf7ff;
   border-radius: 50rpx 50rpx 50rpx 50rpx;
   padding: 20rpx 20rpx 20rpx 20rpx;
@@ -188,6 +245,7 @@ const handleChangeAvatar = () => {
     height: 40rpx;
   }
   .title {
+    margin-top: 10rpx;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -209,9 +267,11 @@ const handleChangeAvatar = () => {
       border-radius: 50rpx 50rpx 50rpx 50rpx;
       // 背景阴影
       box-shadow: 2rpx 2rpx 5rpx 0rpx rgba(0, 0, 0, 0.3);
+      margin-top: 20rpx;
     }
   }
   .footer {
+    margin-top: 280rpx;
     display: flex;
     flex-direction: column;
     align-items: center;

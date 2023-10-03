@@ -16,10 +16,13 @@ export default class UserAPI {
   }
 
   // 修改
-  static alter(user: UserInfo): Promise<BaseResponse<UserInfo>> {
+  static alter(user: any): Promise<BaseResponse<UserInfo>> {
     return http
       .server()
-      .post('user/alter', user)
+      .post('user/alter', {
+        ...useAuthStore().userInfo,
+        ...user
+      })
       .then((res) => res.data)
   }
 

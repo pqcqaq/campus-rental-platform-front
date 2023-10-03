@@ -20,41 +20,61 @@
       <view class="header-user">
         <image :src="userInfo?.avatar" class="header-user-avatar"></image>
         <view class="header-user-nickname">
-          <view class="nickname">{{ userInfo?.nickName }}🧑‍💻</view>
-          <view class="info">{{ userInfo?.mobile }}</view>
+          <view class="nickname">{{ userInfo?.nickName }}</view>
+          <view class="info">{{ userInfo?.school }}</view>
+          <view class="phone">{{ userInfo?.mobile }}</view>
         </view>
         <view class="header-user-more">
           <hd-icon name="ic_sort_fill" size="48rpx" color="#BEC0C7"></hd-icon>
         </view>
       </view>
       <view class="header-target">
-        <view class="header-target-item" v-for="(item, key) of target" :key="key">
-          <text class="label">{{ item }}</text>
+        <view class="header-target-item" v-for="(item, key) of target" :key="key" @click="handlePageShow(item)">
+          <text class="label">{{ item.value }}</text>
           <text class="value">{{ key }}</text>
         </view>
       </view>
     </view>
     <view class="main">
-      <!-- <hd-cell title="余额" value="9999999999+" align="right" is-link hasLine /> -->
-      <!-- <hd-cell title="定位" align="right" value="天涯海角" is-link hasLine icon="ic_address_fill" /> -->
-      <hd-cell title="退出当前账号" @click="doLogout" icon="ic_shutdown_line" is-link hasLine />
+      <hd-cell title="关于我们" value="" align="right" is-link hasLine icon="ic_toastwarn_fill" />
+      <hd-cell title="了解更多" align="right" value="" is-link hasLine icon="ic_address_fill" />
     </view>
+    <div class="exit">
+      <hd-cell title="退出当前账号" @click="doLogout" icon="ic_shutdown_line" is-link hasLine />
+    </div>
   </view>
 </template>
 
 <script lang="ts" setup>
+import myRecord from '@/model/myRecord'
 import { useModal, useToast } from '@/uni_modules/fant-mini-plus'
 const modal = useModal()
 const toast = useToast()
 
 const { userInfo } = storeToRefs(useAuthStore()) // 解构pinia的store
 const router = useRouter()
-const target = ref<Record<string, number>>({
-  我的租赁: 0,
-  我的出租: 0,
-  我的收藏: 0,
-  我的发布: 0
+const target = ref<Record<string, myRecord>>({
+  我的租赁: {
+    value: 0,
+    routerName: 'lease'
+  },
+  我的出租: {
+    value: 0,
+    routerName: 'hire'
+  },
+  我的收藏: {
+    value: 0,
+    routerName: 'collect'
+  },
+  我的发布: {
+    value: 0,
+    routerName: 'publish'
+  }
 })
+
+const handlePageShow = (item) => {
+  router.push({ name: item.routerName })
+}
 
 /**
  * 扫码
@@ -132,12 +152,16 @@ const setup = () => {
         .nickname {
           color: #292c39;
           font-weight: 550;
-          font-size: 32rpx;
-          margin-bottom: 12rpx;
+          font-size: 40rpx;
+          margin-bottom: 2rpx;
         }
         .info {
           color: #c6c9cf;
-          font-size: 26rpx;
+          font-size: 28rpx;
+        }
+        .phone {
+          color: #c6c9cf;
+          font-size: 20rpx;
         }
       }
       &-more {
@@ -172,6 +196,23 @@ const setup = () => {
     border-radius: 16rpx;
     padding: 12rpx 12rpx;
     box-sizing: border-box;
+  }
+  .exit {
+    // 显示在界面的最下面
+    position: absolute;
+    box-sizing: border-box;
+    border-radius: 16rpx;
+    padding: 12rpx 12rpx;
+    height: 100rpx;
+    bottom: 10rpx;
+    // 白底
+    background: #ffffff;
+    // 阴影
+    box-shadow: 0rpx 5rpx 5rpx 0rpx rgba(0, 0, 0, 0.3);
+    // 上下居中
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
 }
 </style>

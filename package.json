@@ -61,6 +61,7 @@
         "@dcloudio/uni-mp-toutiao": "3.0.0-alpha-3080320230523001",
         "@dcloudio/uni-mp-weixin": "3.0.0-alpha-3080320230523001",
         "@dcloudio/uni-quickapp-webview": "3.0.0-alpha-3080320230523001",
+        "update-browserslist-db": "^1.0.13",
         "vue": "^3.2.45",
         "vue-i18n": "^9.1.9"
     },

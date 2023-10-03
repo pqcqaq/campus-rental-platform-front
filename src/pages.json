@@ -1,5 +1,6 @@
 {
-  "pages": [{
+  "pages": [
+    {
       "path": "pages/home/Home",
       "name": "home",
       "style": {
@@ -36,6 +37,38 @@
       }
     },
     {
+      "path": "pages/mine/lease/Lease",
+      "name": "lease",
+      "style": {
+        "navigationBarTitleText": "我的租赁",
+        "navigationBarBackgroundColor": "#E7F0FF"
+      }
+    },
+    {
+      "path": "pages/mine/hire/Hire",
+      "name": "hire",
+      "style": {
+        "navigationBarTitleText": "我的出租",
+        "navigationBarBackgroundColor": "#E7F0FF"
+      }
+    },
+    {
+      "path": "pages/mine/collect/Collect",
+      "name": "collect",
+      "style": {
+        "navigationBarTitleText": "我的收藏",
+        "navigationBarBackgroundColor": "#E7F0FF"
+      }
+    },
+    {
+      "path": "pages/mine/publish/Publish",
+      "name": "publish",
+      "style": {
+        "navigationBarTitleText": "我的发布",
+        "navigationBarBackgroundColor": "#E7F0FF"
+      }
+    },
+    {
       "path": "pages/cart/Cart",
       "name": "cart",
       "style": {
@@ -44,30 +77,35 @@
       }
     }
   ],
-  "subPackages": [{
-    "root": "pagesA",
-    "pages": [    {
-      "path": "routerDemo/RouterDemo",
-      "name": "routerDemo",
-      "style": {
-        "navigationBarTitleText": "",
-        "navigationBarBackgroundColor": "#E7F0FF"
-      }
-    },
+  "subPackages": [
     {
-      "path": "routerDemo/RouterDemo1",
-      "name": "routerDemo1",
-      "style": {
-        "navigationBarTitleText": "",
-        "navigationBarBackgroundColor": "#E7F0FF"
-      }
-    }]
-  }],
+      "root": "pagesA",
+      "pages": [
+        {
+          "path": "routerDemo/RouterDemo",
+          "name": "routerDemo",
+          "style": {
+            "navigationBarTitleText": "",
+            "navigationBarBackgroundColor": "#E7F0FF"
+          }
+        },
+        {
+          "path": "routerDemo/RouterDemo1",
+          "name": "routerDemo1",
+          "style": {
+            "navigationBarTitleText": "",
+            "navigationBarBackgroundColor": "#E7F0FF"
+          }
+        }
+      ]
+    }
+  ],
   "tabBar": {
     "color": "#b8b8b8",
     "selectedColor": "#8c93ff",
     "backgroundColor": "#f7faff",
-    "list": [{
+    "list": [
+      {
         "pagePath": "pages/home/Home",
         "iconPath": "static/icon_home.png",
         "selectedIconPath": "static/icon_home_selected.png",
