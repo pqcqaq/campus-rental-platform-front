@@ -91,6 +91,13 @@ function doScan() {
 const setup = () => {
   router.push({ name: 'settings' })
 }
+
+onMounted(() => {
+  if (useAuthStore().isVisitor) {
+    userInfo.value = null
+    router.replaceAll({ name: 'login' })
+  }
+})
 </script>
 
 <style lang="scss" scoped>

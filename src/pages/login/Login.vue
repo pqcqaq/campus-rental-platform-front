@@ -20,6 +20,7 @@
           <login-input key="password" v-model="password" password clearable placeholder="密码" :maxlength="20"></login-input>
         </view>
         <hd-button size="large" type="primary" :disabled="disabled" @click="doLogin">登录</hd-button>
+        <hd-button class="jump" plain type="primary" size="small" @click="jump">跳过登录</hd-button>
       </view>
     </view>
     <view class="login-footer">
@@ -37,7 +38,7 @@ const username = ref<string>('') // 用户名
 const password = ref<string>('') // 密码
 const loading = useLoading()
 const toast = useToast()
-const { userInfo } = storeToRefs(useAuthStore()) // 解构pinia的store
+const { userInfo, isVisitor } = storeToRefs(useAuthStore()) // 解构pinia的store
 const router = useRouter() // 路由
 
 // 登录按钮是否禁用
@@ -56,6 +57,7 @@ function doLogin() {
         icon: 'success'
       })
       userInfo.value = resp.data
+      isVisitor.value = false
       router.replaceAll({ name: 'home' })
     })
     .catch((error) => {
@@ -65,6 +67,20 @@ function doLogin() {
         icon: 'error'
       })
     })
+}
+
+const jump = () => {
+  userInfo.value = {
+    linkMan: '游客',
+    username: '游客',
+    mobile: '12345678910',
+    nickName: '游客',
+    avatar: '',
+    school: '某知名大学',
+    token: 'null'
+  }
+  isVisitor.value = true
+  router.replaceAll({ name: 'home' })
 }
 </script>
 
@@ -118,5 +134,9 @@ function doLogin() {
     font-size: 20rpx;
     font-weight: 500;
   }
+}
+.jump {
+  margin-top: 50rpx;
+  height: 40rpx;
 }
 </style>

@@ -58,20 +58,23 @@ export default class ApiClient {
         if (response.data.code === 200) {
           return response
         } else {
-          switch (response.data.code) {
-            case 302:
-              // 跳转到登录
-              console.log('跳转到登录')
-              useAuthStore().logout()
-              router.replaceAll({ name: 'login' })
-              break
-            case 401:
-              // 跳转到登录
-              console.log('跳转到登录')
-              useAuthStore().logout()
-              router.replaceAll({ name: 'login' })
-              break
+          if (!useAuthStore().isVisitor) {
+            switch (response.data.code) {
+              case 302:
+                // 跳转到登录
+                console.log('跳转到登录')
+                useAuthStore().logout()
+                router.replaceAll({ name: 'login' })
+                break
+              case 401:
+                // 跳转到登录
+                console.log('跳转到登录')
+                useAuthStore().logout()
+                router.replaceAll({ name: 'login' })
+                break
+            }
           }
+
           const error: Record<string, any> = {}
           if (response.data.code) {
             error.code = response.data.code

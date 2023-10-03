@@ -1,12 +1,3 @@
-<!--
- * @Author: weisheng
- * @Date: 2021-12-22 15:19:08
- * @LastEditTime: 2023-05-31 14:38:57
- * @LastEditors: weisheng
- * @Description: 
- * @FilePath: \uniapp-vue3-fant-ts\src\pages\home\Home.vue
- * 记得注释
--->
 <template>
   <hd-loading></hd-loading>
   <hd-toast></hd-toast>
@@ -41,7 +32,7 @@ import Chanel from '@/model/Chanel'
 import { SwiperItem } from '@/model/Swiper'
 import { useLoading, useToast } from '@/uni_modules/fant-mini-plus'
 import axios from 'axios'
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 const loading = useLoading()
 const toast = useToast()
 const router = useRouter()
@@ -49,7 +40,7 @@ const swiperList = ref<SwiperItem[]>([])
 
 const chanel = ref<Chanel[]>([])
 
-onShow(() => {
+onMounted(() => {
   doInit()
 })
 
@@ -66,9 +57,9 @@ function doAdd() {
 /**
  * 初始化
  */
-function doInit(abortRequest: 'same' | 'all' | 'none' = 'none') {
+function doInit() {
   loading.showLoading({})
-  DemoApi.init(abortRequest)
+  DemoApi.init()
     .then((resp) => {
       loading.hideLoading()
       chanel.value = resp.data || []
@@ -80,13 +71,14 @@ function doInit(abortRequest: 'same' | 'all' | 'none' = 'none') {
         return
       }
       toast.showToast({
-        title: error.msg,
-        icon: 'error'
+        title: error.message,
+        icon: 'none'
       })
     })
   // 获取轮播图
   CommonApi.getSwiper().then((resp) => {
     swiperList.value = resp.data || []
+    console.log(resp.data)
   })
 }
 </script>
