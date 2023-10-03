@@ -13,6 +13,9 @@
         <div class="mobile">联系电话：{{ userInfo?.mobile }}</div>
       </div>
     </div>
+    <div class="exit">
+      <hd-cell title="退出当前账号" @click="doLogout" icon="ic_shutdown_line" is-link hasLine background="#C1C2F5" />
+    </div>
   </div>
   <hd-popup :maskClick="false">
     <view>
@@ -51,6 +54,7 @@ import { useModal, usePopup, useToast } from '@/uni_modules/fant-mini-plus'
 import { ref } from 'vue'
 import Inputfield from '@/components/Inputfield.vue'
 import UserAPI from '@/api/UserAPI'
+import router from '@/router'
 const baseURL = import.meta.env.VITE_BASEURL
 const popup = usePopup()
 const modal = useModal()
@@ -142,6 +146,23 @@ const handleChangeAvatar = () => {
         })
       } else if (res.cancel) {
         // 取消
+      }
+    }
+  })
+}
+
+/**
+ * 登出
+ */
+function doLogout() {
+  modal.showModal({
+    title: '提示',
+    content: '确认退出当前登录账号吗？',
+    success: (action) => {
+      if (action.confirm) {
+        // 点击的确认按钮
+        useAuthStore().logout()
+        router.replaceAll({ name: 'login' })
       }
     }
   })
@@ -283,5 +304,24 @@ const handleChangeAvatar = () => {
       box-shadow: 2rpx 2rpx 15rpx 0rpx rgba(0, 0, 0, 0.3);
     }
   }
+}
+
+.exit {
+  // 显示在界面的最下面
+  position: absolute;
+  box-sizing: border-box;
+  border-radius: 16rpx;
+  padding: 12rpx 12rpx;
+  height: 100rpx;
+  bottom: 200rpx;
+  // 白底
+  background: #ffffff;
+  // 阴影
+  box-shadow: 0rpx 5rpx 5rpx 0rpx rgba(0, 0, 0, 0.3);
+  // 上下居中
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  left: 25rpx;
 }
 </style>

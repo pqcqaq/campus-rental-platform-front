@@ -7,7 +7,16 @@
         "mp-alipay": {
           "allowsBounceVertical": "NO"
         },
-        "navigationBarTitleText": "首页"
+        "navigationBarTitleText": "首页",
+        "navigationBarBackgroundColor": "#E7F0FF"
+      }
+    },
+    {
+      "path": "pages/home/add/Add",
+      "name": "add",
+      "style": {
+        "navigationBarTitleText": "发布",
+        "navigationBarBackgroundColor": "#E7F0FF"
       }
     },
     {

@@ -12,16 +12,25 @@
   <hd-toast></hd-toast>
   <view class="home">
     <view class="header">
-      <hd-swiper :swiperList="swiperList" card :vertical="false" previousMargin="50rpx" nextMargin="50rpx"></hd-swiper>
+      <hd-swiper
+        :swiperList="swiperList"
+        card
+        :vertical="false"
+        previousMargin="50rpx"
+        nextMargin="50rpx"
+        :showTextTip="true"
+        :indicatorDots="false"
+      ></hd-swiper>
     </view>
     <view class="main">
-      <hd-grid :column-num="4">
-        <hd-grid-item use-slot v-for="(value, index) in chanel" :key="index" @click="doNavi">
-          <image class="main-img" :src="value.image" />
-          <text class="main-txt">{{ value.txt }}</text>
-        </hd-grid-item>
-      </hd-grid>
+      <hd-button @click="doNav">
+        <hd-icon name="ic_scan_line" size="48rpx" color="#292C39"></hd-icon>
+      </hd-button>
     </view>
+    <!-- 悬浮在左下角的发布按钮（圆形加号） -->
+    <button class="addBtn" color="#E1EDF9" @click="doAdd">
+      <hd-icon class="icon" name="ic_add_line" size="110rpx" color="#71ADE9"></hd-icon>
+    </button>
   </view>
 </template>
 
@@ -36,13 +45,16 @@ const toast = useToast()
 const router = useRouter()
 const swiperList = ref([
   {
-    img: 'https://fastly.jsdelivr.net/npm/@vant/assets/cat.jpeg'
+    img: 'https://fastly.jsdelivr.net/npm/@vant/assets/cat.jpeg',
+    text: '1'
   },
   {
-    img: 'https://fastly.jsdelivr.net/npm/@vant/assets/cat.jpeg'
+    img: 'https://fastly.jsdelivr.net/npm/@vant/assets/cat.jpeg',
+    text: '2'
   },
   {
-    img: 'https://fastly.jsdelivr.net/npm/@vant/assets/cat.jpeg'
+    img: 'https://fastly.jsdelivr.net/npm/@vant/assets/cat.jpeg',
+    text: '3'
   }
 ])
 
@@ -55,10 +67,13 @@ onShow(() => {
 /**
  * 跳转至路由演示页面
  */
-function doNavi() {
+function doNav() {
   router.push({ name: 'routerDemo' })
 }
 
+function doAdd() {
+  router.push({ name: 'add' })
+}
 /**
  * 初始化
  */
@@ -88,7 +103,7 @@ function doInit(abortRequest: 'same' | 'all' | 'none' = 'none') {
   min-height: calc(100vh - var(--window-top) - var(--window-bottom));
   width: 100vw;
   box-sizing: border-box;
-  background: #fff;
+  background: #f4f9ff;
   padding: 0 24rpx 24rpx;
   .header {
     margin-bottom: 24rpx;
@@ -103,6 +118,24 @@ function doInit(abortRequest: 'same' | 'all' | 'none' = 'none') {
       font-size: 20rpx;
       color: #646566;
     }
+  }
+}
+.addBtn {
+  width: 100rpx;
+  height: 100rpx;
+  position: fixed;
+  bottom: 120rpx;
+  left: 24rpx;
+  border-radius: 50%;
+  // 阴影
+  box-shadow: 3rpx 3rpx 20rpx 0rpx rgba(64, 109, 255, 0.665);
+
+  .icon {
+    // 居中
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
   }
 }
 </style>

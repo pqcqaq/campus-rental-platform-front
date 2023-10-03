@@ -39,9 +39,6 @@
       <hd-cell title="关于我们" value="" align="right" is-link hasLine icon="ic_toastwarn_fill" />
       <hd-cell title="了解更多" align="right" value="" is-link hasLine icon="ic_address_fill" />
     </view>
-    <div class="exit">
-      <hd-cell title="退出当前账号" @click="doLogout" icon="ic_shutdown_line" is-link hasLine />
-    </div>
   </view>
 </template>
 
@@ -86,23 +83,6 @@ function doScan() {
       const code: string = res.result || ''
 
       toast.showToast(`扫码内容：${code}`)
-    }
-  })
-}
-
-/**
- * 登出
- */
-function doLogout() {
-  modal.showModal({
-    title: '提示',
-    content: '确认退出当前登录账号吗？',
-    success: (action) => {
-      if (action.confirm) {
-        // 点击的确认按钮
-        useAuthStore().logout()
-        router.replaceAll({ name: 'login' })
-      }
     }
   })
 }
@@ -196,23 +176,6 @@ const setup = () => {
     border-radius: 16rpx;
     padding: 12rpx 12rpx;
     box-sizing: border-box;
-  }
-  .exit {
-    // 显示在界面的最下面
-    position: absolute;
-    box-sizing: border-box;
-    border-radius: 16rpx;
-    padding: 12rpx 12rpx;
-    height: 100rpx;
-    bottom: 10rpx;
-    // 白底
-    background: #ffffff;
-    // 阴影
-    box-shadow: 0rpx 5rpx 5rpx 0rpx rgba(0, 0, 0, 0.3);
-    // 上下居中
-    display: flex;
-    justify-content: center;
-    align-items: center;
   }
 }
 </style>
