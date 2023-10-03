@@ -20,6 +20,14 @@
       }
     },
     {
+      "path": "pages/posts/detail/Detail",
+      "name": "detail",
+      "style": {
+        "navigationBarTitleText": "详情",
+        "navigationBarBackgroundColor": "#E7F0FF"
+      }
+    },
+    {
       "path": "pages/login/Login",
       "name": "login",
       "style": {

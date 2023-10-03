@@ -15,7 +15,7 @@
       >
         <!-- v-for循环遍历数组 -->
         <swiper-item class="swiper-box" :autoplay="true" :interval="1000" v-for="item in swiperList" :key="item">
-          <view class="swiper-item">
+          <view class="swiper-item" @click="openDetial(item)">
             <image class="image" mode="aspectFill" :src="item.img"></image>
           </view>
         </swiper-item>
@@ -48,8 +48,8 @@ const router = useRouter()
 const swiperList = ref<SwiperItem[]>([])
 const indicatorDots = ref<boolean>(true)
 const autoplay = ref<boolean>(true)
-const interval = ref<number>(2000)
-const duration = ref<number>(500)
+const interval = ref<number>(5000)
+const duration = ref<number>(1000)
 
 const chanel = ref<Chanel[]>([])
 
@@ -94,6 +94,11 @@ function doInit() {
     console.log(resp.data)
   })
 }
+
+const openDetial = (item) => {
+  console.log(item.postId)
+  router.push({ name: 'detail', params: { id: item.postId } })
+}
 </script>
 
 <style lang="scss" scoped>
@@ -137,7 +142,6 @@ function doInit() {
   }
 }
 .swiper-box {
-  width: 90%;
   height: 380upx;
 }
 
@@ -148,15 +152,16 @@ function doInit() {
   align-items: center;
   background-color: #999;
   color: #fff;
-  margin: 10px;
-  border-radius: 30upx;
+  margin: 10rpx 10rpx 10rpx 10px;
+  border-radius: 50upx;
   /* app上运行不显示图片，就需要加下面这行，设置高度 */
   height: 320upx;
 }
 .image {
+  width: 100%;
   height: 320upx;
   // 图片的圆角
-  border-radius: 30upx;
+  border-radius: 50upx;
   // 阴影
   box-shadow: 3rpx 3rpx 20rpx 0rpx rgba(0, 0, 0, 0.186);
 }
