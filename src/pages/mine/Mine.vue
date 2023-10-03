@@ -18,7 +18,8 @@
     </view>
     <view class="header">
       <view class="header-user">
-        <image :src="userInfo?.avatar" class="header-user-avatar"></image>
+        <image v-if="userInfo?.avatar != ''" :src="userInfo?.avatar" class="header-user-avatar"></image>
+        <image v-else src="@/static/guest.png" class="header-user-avatar" />
         <view class="header-user-nickname">
           <view class="nickname">{{ userInfo?.nickName }}</view>
           <view class="info">{{ userInfo?.school }}</view>
@@ -113,6 +114,8 @@ const setup = () => {
     padding: 32rpx;
     box-sizing: border-box;
     margin-bottom: 24rpx;
+    // 阴影效果
+    box-shadow: 0 2rpx 10rpx 0 rgba(0, 0, 0, 0.3);
     &-user {
       display: flex;
       margin-bottom: 56rpx;
@@ -176,6 +179,52 @@ const setup = () => {
     border-radius: 16rpx;
     padding: 12rpx 12rpx;
     box-sizing: border-box;
+    // 阴影效果
+    box-shadow: 0 2rpx 10rpx 0 rgba(0, 0, 0, 0.3);
   }
+}
+
+.header-target-item {
+  /* 其他样式 */
+  position: relative;
+  overflow: hidden;
+}
+
+.header-target-item::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(171, 198, 255, 0.426);
+  opacity: 0;
+  transition: opacity 0.1s ease-in-out;
+}
+
+.header-target-item:hover::before {
+  opacity: 1;
+}
+.tools-setting {
+  /* 其他样式 */
+  position: relative;
+}
+
+.tools-setting::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 8rpx;
+  height: 8rpx;
+  border-radius: 50%;
+  background-color: #333;
+  opacity: 0;
+  transition: opacity 0.3s ease-in-out;
+}
+
+.tools-setting:hover::before {
+  opacity: 1;
 }
 </style>

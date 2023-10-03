@@ -35,28 +35,17 @@
 </template>
 
 <script lang="ts" setup>
+import CommonApi from '@/api/CommonApi'
 import DemoApi from '@/api/DemoApi'
 import Chanel from '@/model/Chanel'
+import { SwiperItem } from '@/model/Swiper'
 import { useLoading, useToast } from '@/uni_modules/fant-mini-plus'
 import axios from 'axios'
 import { ref } from 'vue'
 const loading = useLoading()
 const toast = useToast()
 const router = useRouter()
-const swiperList = ref([
-  {
-    img: 'https://fastly.jsdelivr.net/npm/@vant/assets/cat.jpeg',
-    text: '1'
-  },
-  {
-    img: 'https://fastly.jsdelivr.net/npm/@vant/assets/cat.jpeg',
-    text: '2'
-  },
-  {
-    img: 'https://fastly.jsdelivr.net/npm/@vant/assets/cat.jpeg',
-    text: '3'
-  }
-])
+const swiperList = ref<SwiperItem[]>([])
 
 const chanel = ref<Chanel[]>([])
 
@@ -95,6 +84,10 @@ function doInit(abortRequest: 'same' | 'all' | 'none' = 'none') {
         icon: 'error'
       })
     })
+  // 获取轮播图
+  CommonApi.getSwiper().then((resp) => {
+    swiperList.value = resp.data || []
+  })
 }
 </script>
 

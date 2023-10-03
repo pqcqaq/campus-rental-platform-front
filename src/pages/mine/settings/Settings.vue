@@ -4,7 +4,8 @@
   <div class="main">
     <div class="userInfo">
       <div class="avatar" @click="handleChangeAvatar">
-        <hd-image lazy-load width="160" height="160" mode="scaleToFill" :round="true" :src="userInfo?.avatar" />
+        <hd-image v-if="userInfo?.avatar != ''" lazy-load width="160" height="160" mode="scaleToFill" :round="true" :src="userInfo?.avatar" />
+        <image v-else src="../static/guest.png" class="defaultAvatar" />
       </div>
       <div class="info">
         <hd-icon class="ic_edit" name="ic_edit_line" size="50rpx" style="color: rgb(62, 195, 14)" @click="handleEdit"></hd-icon>
@@ -22,7 +23,7 @@
       <div class="editor">
         <header class="title">
           <text>编辑个人信息</text>
-          <hd-icon class="close" name="ic_close_line" @click="handleClose"></hd-icon>
+          <hd-icon class="close" color="#111" size="55rpx" name="ic_close_line" @click="handleClose"></hd-icon>
         </header>
         <main class="input">
           <Inputfield class="field" clearable placeholder="请输入用户名" type="text" v-model="inputNickname" :maxlength="30">
@@ -181,6 +182,14 @@ function doLogout() {
     flex-direction: column;
     align-items: center;
     padding-top: 60px;
+    .defaultAvatar {
+      width: 160rpx;
+      height: 160rpx;
+      border-radius: 50%;
+      transition: transform 0.3s ease-in-out;
+      // 阴影
+      box-shadow: 0rpx 0rpx 100rpx 10rpx rgba(0, 0, 0, 0.3);
+    }
     .info {
       //淡蓝色圆角背景，带阴影
       position: relative;
@@ -190,7 +199,7 @@ function doLogout() {
       border-radius: 50rpx 50rpx 50rpx 50rpx;
       padding: 20rpx 20rpx 20rpx 20rpx;
       // 背景阴影
-      box-shadow: 0rpx 0rpx 5rpx 0rpx rgba(0, 0, 0, 0.3);
+      box-shadow: 0rpx 50rpx 100rpx 1rpx rgba(0, 0, 0, 0.3);
       margin-top: 20rpx;
 
       // 编辑按钮
@@ -287,7 +296,7 @@ function doLogout() {
       //圆角
       border-radius: 50rpx 50rpx 50rpx 50rpx;
       // 背景阴影
-      box-shadow: 2rpx 2rpx 5rpx 0rpx rgba(0, 0, 0, 0.3);
+      box-shadow: 0rpx 3rpx 0rpx 0rpx rgba(0, 0, 0, 0.3);
       margin-top: 20rpx;
     }
   }
@@ -323,5 +332,18 @@ function doLogout() {
   justify-content: center;
   align-items: center;
   left: 25rpx;
+}
+
+.avatar {
+  /* 其他样式 */
+  border-radius: 50%;
+  border: 5px solid #759eff;
+  transition: transform 0.3s ease-in-out;
+  // 阴影
+  box-shadow: 0rpx 0rpx 100rpx 10rpx rgba(0, 0, 0, 0.3);
+}
+
+.avatar:hover {
+  transform: scale(1.1);
 }
 </style>
