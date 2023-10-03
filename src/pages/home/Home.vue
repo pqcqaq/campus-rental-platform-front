@@ -3,16 +3,25 @@
   <hd-toast></hd-toast>
   <view class="home">
     <view class="header">
-      <hd-swiper
-        :swiperList="swiperList"
-        card
-        :vertical="false"
-        previousMargin="50rpx"
-        nextMargin="50rpx"
-        :showTextTip="true"
-        :indicatorDots="false"
-      ></hd-swiper>
+      <swiper
+        class="swiper-box"
+        :indicator-dots="indicatorDots"
+        :autoplay="autoplay"
+        :interval="interval"
+        :duration="duration"
+        circular="true"
+        previous-margin="20px"
+        next-margin="20px"
+      >
+        <!-- v-for循环遍历数组 -->
+        <swiper-item class="swiper-box" :autoplay="true" :interval="1000" v-for="item in swiperList" :key="item">
+          <view class="swiper-item">
+            <image class="image" mode="aspectFill" :src="item.img"></image>
+          </view>
+        </swiper-item>
+      </swiper>
     </view>
+
     <view class="main">
       <hd-button @click="doNav">
         <hd-icon name="ic_scan_line" size="48rpx" color="#292C39"></hd-icon>
@@ -37,6 +46,10 @@ const loading = useLoading()
 const toast = useToast()
 const router = useRouter()
 const swiperList = ref<SwiperItem[]>([])
+const indicatorDots = ref<boolean>(true)
+const autoplay = ref<boolean>(true)
+const interval = ref<number>(2000)
+const duration = ref<number>(500)
 
 const chanel = ref<Chanel[]>([])
 
@@ -122,5 +135,29 @@ function doInit() {
     left: 50%;
     transform: translate(-50%, -50%);
   }
+}
+.swiper-box {
+  width: 90%;
+  height: 380upx;
+}
+
+.swiper-item {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: #999;
+  color: #fff;
+  margin: 10px;
+  border-radius: 30upx;
+  /* app上运行不显示图片，就需要加下面这行，设置高度 */
+  height: 320upx;
+}
+.image {
+  height: 320upx;
+  // 图片的圆角
+  border-radius: 30upx;
+  // 阴影
+  box-shadow: 3rpx 3rpx 20rpx 0rpx rgba(0, 0, 0, 0.186);
 }
 </style>
