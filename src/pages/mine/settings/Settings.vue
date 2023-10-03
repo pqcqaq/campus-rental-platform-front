@@ -3,10 +3,10 @@
   <hd-toast></hd-toast>
   <div class="main">
     <div class="userInfo">
-      <div class="avatar" @click="handleChangeAvatar">
-        <hd-image v-if="userInfo?.avatar != ''" lazy-load width="160" height="160" mode="scaleToFill" :round="true" :src="userInfo?.avatar" />
-        <image v-else src="../static/guest.png" class="defaultAvatar" />
+      <div class="avatar" v-if="userInfo?.avatar != ''" @click="handleChangeAvatar">
+        <hd-image lazy-load width="230rpx" height="230rpx" mode="scaleToFill" :round="true" :src="userInfo?.avatar" />
       </div>
+      <image v-else @click="handleChangeAvatar" src="@/static/guest.png" class="defaultAvatar" />
       <div class="info">
         <hd-icon class="ic_edit" name="ic_edit_line" size="50rpx" style="color: rgb(62, 195, 14)" @click="handleEdit"></hd-icon>
         <div class="nickName">{{ userInfo?.nickName }}</div>
@@ -182,14 +182,6 @@ function doLogout() {
     flex-direction: column;
     align-items: center;
     padding-top: 60px;
-    .defaultAvatar {
-      width: 160rpx;
-      height: 160rpx;
-      border-radius: 50%;
-      transition: transform 0.3s ease-in-out;
-      // 阴影
-      box-shadow: 0rpx 0rpx 100rpx 10rpx rgba(0, 0, 0, 0.3);
-    }
     .info {
       //淡蓝色圆角背景，带阴影
       position: relative;
@@ -200,7 +192,7 @@ function doLogout() {
       padding: 20rpx 20rpx 20rpx 20rpx;
       // 背景阴影
       box-shadow: 0rpx 50rpx 100rpx 1rpx rgba(0, 0, 0, 0.3);
-      margin-top: 20rpx;
+      margin-top: 50rpx;
 
       // 编辑按钮
       .ic_edit {
@@ -344,6 +336,22 @@ function doLogout() {
 }
 
 .avatar:hover {
+  transform: scale(1.1);
+}
+
+.defaultAvatar {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 230rpx;
+  height: 230rpx;
+  border-radius: 50%;
+  transition: transform 0.3s ease-in-out;
+  // 阴影
+  box-shadow: 0rpx 0rpx 100rpx 10rpx rgba(0, 0, 0, 0.3);
+}
+
+.defaultAvatar:hover {
   transform: scale(1.1);
 }
 </style>
