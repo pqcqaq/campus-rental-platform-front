@@ -28,6 +28,9 @@ export const useAuthStore = defineStore('authState', {
       this.userInfo!.avatar = avatarUrl
       // 保存头像
       UserAPI.saveAlterAvatar(avatarUrl)
+    },
+    isAdmin(): boolean {
+      return this.userInfo?.role === 'admin'
     }
   }
 })

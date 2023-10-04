@@ -12,12 +12,12 @@
         <!-- 收藏数目 -->
         <div class="collect">
           <image src="@/static/star-fill.png"></image>
-          <text class="numText">{{ props.post.collectNum }}</text>
+          <text class="numText">{{ collectNum }}</text>
         </div>
         <!-- 点赞数目 -->
         <div class="like">
           <image src="@/static/like.png"></image>
-          <text class="numText">{{ props.post.likeNum }}</text>
+          <text class="numText">{{ likeNum }}</text>
         </div>
       </div>
     </div>
@@ -30,6 +30,7 @@
 </template>
 
 <script lang="ts" setup>
+import PostApi from '@/api/PostApi'
 import ImgSelect from '@/model/ImgSelect'
 import Post from '@/model/Post'
 import router from '@/router'
@@ -37,22 +38,22 @@ import { transIdToUrl } from '@/utils/ImageUtils'
 import { ref } from 'vue'
 
 onMounted(async () => {
-  if (props.post.imgs.length > 0) {
-    console.log('props.imgs', props.post.imgs)
-
-    const url = await transIdToUrl(props.post.imgs[0].id)
+  const imgList = props.post.imgs || []
+  if (imgList.length > 0) {
+    const url = await transIdToUrl(imgList[0].id)
+    firstImageUrl.value = url
+  } else {
+    const url = await transIdToUrl('1709549532318216194')
     firstImageUrl.value = url
   }
+  // 设置按钮颜色
+  btnIconColor.value = props.post.isLike ? '#F97F7F' : '#fff'
 })
 
 const props = defineProps({
-  postId: {
-    type: String,
-    required: true
-  },
   height: {
     type: String,
-    default: '200rpx'
+    default: '400rpx'
   },
   width: {
     type: String,
@@ -62,7 +63,7 @@ const props = defineProps({
     type: Post,
     required: true
   }
-}) as any
+})
 
 const postStyle = ref({
   transform: 'scale(1)',
@@ -99,12 +100,33 @@ const touchE = (e: TouchEvent) => {
 
 const handleClickPost = (e: MouseEvent) => {
   // 处理点击事件
-  router.push({ name: 'detail', params: { id: props.postId } })
+  router.push({ name: 'detail', params: { id: props.post.id || '' } })
 }
+
+// 收藏数量
+const collectNum = ref<number>(props.post.collectNum || 0)
+// 点赞数量
+const likeNum = ref<number>(props.post.likeNum || 0)
 
 const handleLike = (e: MouseEvent) => {
   // 处理点赞事件
-  btnIconColor.value = '#F97F7F'
+  PostApi.likePost(props.post.id || '')
+    .then((resp) => {
+      if (resp.data) {
+        // 点赞成功
+        btnIconColor.value = '#F97F7F'
+        // 更新点赞数目
+        likeNum.value++
+      } else {
+        // 取消点赞
+        btnIconColor.value = '#fff'
+        // 更新点赞数目
+        likeNum.value--
+      }
+    })
+    .catch((error) => {
+      console.log(error)
+    })
 }
 </script>
 

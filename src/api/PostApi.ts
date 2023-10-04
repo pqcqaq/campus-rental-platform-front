@@ -18,4 +18,18 @@ export default class PostApi {
       .post('posts/publish', post)
       .then((res) => res.data)
   }
+
+  static likePost(postId: string): Promise<BaseResponse<boolean>> {
+    return http
+      .server()
+      .get(`posts/like/${postId}`)
+      .then((res) => res.data)
+  }
+
+  static collectPost(postId: string): Promise<BaseResponse<boolean>> {
+    return http
+      .server()
+      .get(`posts/collect/${postId}`)
+      .then((res) => res.data)
+  }
 }

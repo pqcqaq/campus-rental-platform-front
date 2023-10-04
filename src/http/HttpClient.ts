@@ -52,8 +52,6 @@ export default class ApiClient {
 
     instance.interceptors.response.use(
       (response) => {
-        console.log('response', response)
-
         // 此处为前后端约定的接口成功的字段，旨在处理状态码为200的错误响应，开发者可自行调整
         if (response.data.code === 200) {
           return response
@@ -90,11 +88,6 @@ export default class ApiClient {
         }
       },
       (error) => {
-        // 如果请求超时，返回超时信息
-        if (error.code === 'ECONNABORTED' || error.message === 'Network Error' || error.message.includes('timeout')) {
-          error.msg = '请求超时!'
-          return Promise.reject(error)
-        }
         if (error.status !== 0 && !error.status) {
           const newError = error as any
           newError.msg = newError.errMsg || '请检查网络设置'
@@ -111,17 +104,11 @@ export default class ApiClient {
             error.msg = '网络超时!'
             break
           case 401:
-            oauthStore.logout()
             setTimeout(() => {
-              uni.showToast({ title: '登录已过期,请重新登录!', icon: 'none' })
+              uni.showToast({ title: '用户未登录!', icon: 'none' })
             }, 300)
-            // 如果当前页面不是登录页面则跳转至登录页面
-            if (
-              !pages[pages.length - 1].$page ||
-              (pages[pages.length - 1].$page && pages[pages.length - 1].$page.fullPath !== '/pages/login/Login')
-            ) {
-              uni.reLaunch({ url: '/pagesOther/login/Login' })
-            }
+            useAuthStore().logout()
+            router.replaceAll({ name: 'login' })
             break
 
           case 403:

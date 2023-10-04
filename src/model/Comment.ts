@@ -9,7 +9,8 @@ export default class Comment {
     nickName: null,
     avatar: null,
     school: null,
-    token: null
+    token: null,
+    role: null
   }
   detail: string = ''
   createTime: string = ''

@@ -22,4 +22,6 @@ export default class UserInfo {
   school: Nullable<string> = null
   // token
   token: Nullable<string> = null
+  // role
+  role: Nullable<string> = null
 }

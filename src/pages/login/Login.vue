@@ -77,7 +77,8 @@ const jump = () => {
     nickName: '游客',
     avatar: '',
     school: '某知名大学',
-    token: 'null'
+    token: 'null',
+    role: 'visitor'
   }
   isVisitor.value = true
   router.replaceAll({ name: 'home' })

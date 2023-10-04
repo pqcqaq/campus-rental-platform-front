@@ -141,11 +141,11 @@ const handlePublish = () => {
         title: '发布成功',
         icon: 'success'
       })
-      router.push({ name: 'home' })
+      router.replaceAll({ name: 'home' })
     })
     .catch((error) => {
       toast.showToast({
-        title: error.msg,
+        title: error.data.data,
         icon: 'error'
       })
     })

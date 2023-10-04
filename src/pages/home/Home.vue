@@ -54,6 +54,7 @@ import PostCard from './cpns/PostCard.vue'
 import Post from '@/model/Post'
 import { userInfo } from 'os'
 import PostApi from '@/api/PostApi'
+import { transIdToUrl } from '@/utils/ImageUtils'
 const loading = useLoading()
 const toast = useToast()
 const router = useRouter()
@@ -97,8 +98,12 @@ function fetchData() {
       })
     })
   // 获取轮播图
-  CommonApi.getSwiper().then((resp) => {
-    swiperList.value = resp.data || []
+  CommonApi.getSwiper().then(async (resp) => {
+    const imgList: SwiperItem[] = resp.data || []
+    for (const imgItem of imgList) {
+      imgItem.img = await transIdToUrl(imgItem?.img || '')
+    }
+    swiperList.value = imgList
     console.log(resp.data)
   })
   // 获取帖子列表
@@ -109,477 +114,20 @@ const openDetial = (item) => {
   router.push({ name: 'detail', params: { id: item.postId } })
 }
 
-const postList = ref<Post[]>([
-  {
-    id: '123',
-    title: '这是一个标题',
-    intro: '这是一个内容',
-    imgs: [
-      {
-        id: '1709060796295192577',
-        url: 'https://img.yzcdn.cn/vant/cat.jpeg',
-        show: true
-      },
-      {
-        id: '1709060783720669185',
-        url: 'https://img.yzcdn.cn/vant/cat.jpeg',
-        show: true
-      },
-      {
-        id: '3',
-        url: 'https://img.yzcdn.cn/vant/cat.jpeg',
-        show: true
-      }
-    ],
-    createTime: '2021-07-01 12:00:00',
-    updateTime: '2021-07-01 12:00:00',
-    author: {
-      linkMan: null,
-      username: null,
-      mobile: null,
-      nickName: null,
-      avatar: null,
-      school: null,
-      token: null
-    },
-    likeNum: 0,
-    commentNum: 0,
-    comments: [],
-    collectNum: 0,
-    viewNum: 0,
-    shareNum: 0,
-    isLike: false,
-    isCollect: false,
-    status: ''
-  },
-  {
-    id: '123',
-    title: '这是一个标题',
-    intro: '这是一个内容',
-    imgs: [
-      {
-        id: '1709060796295192577',
-        url: 'https://img.yzcdn.cn/vant/cat.jpeg',
-        show: true
-      },
-      {
-        id: '1709060783720669185',
-        url: 'https://img.yzcdn.cn/vant/cat.jpeg',
-        show: true
-      },
-      {
-        id: '3',
-        url: 'https://img.yzcdn.cn/vant/cat.jpeg',
-        show: true
-      }
-    ],
-    createTime: '2021-07-01 12:00:00',
-    updateTime: '2021-07-01 12:00:00',
-    author: {
-      linkMan: null,
-      username: null,
-      mobile: null,
-      nickName: null,
-      avatar: null,
-      school: null,
-      token: null
-    },
-    likeNum: 0,
-    commentNum: 0,
-    comments: [],
-    collectNum: 0,
-    viewNum: 0,
-    shareNum: 0,
-    isLike: false,
-    isCollect: false,
-    status: ''
-  },
-  {
-    id: '123',
-    title: '这是一个标题',
-    intro: '这是一个内容',
-    imgs: [
-      {
-        id: '1709060796295192577',
-        url: 'https://img.yzcdn.cn/vant/cat.jpeg',
-        show: true
-      },
-      {
-        id: '1709060783720669185',
-        url: 'https://img.yzcdn.cn/vant/cat.jpeg',
-        show: true
-      },
-      {
-        id: '3',
-        url: 'https://img.yzcdn.cn/vant/cat.jpeg',
-        show: true
-      }
-    ],
-    createTime: '2021-07-01 12:00:00',
-    updateTime: '2021-07-01 12:00:00',
-    author: {
-      linkMan: null,
-      username: null,
-      mobile: null,
-      nickName: null,
-      avatar: null,
-      school: null,
-      token: null
-    },
-    likeNum: 0,
-    commentNum: 0,
-    comments: [],
-    collectNum: 0,
-    viewNum: 0,
-    shareNum: 0,
-    isLike: false,
-    isCollect: false,
-    status: ''
-  },
-  {
-    id: '123',
-    title: '这是一个标题',
-    intro: '这是一个内容',
-    imgs: [
-      {
-        id: '1709060796295192577',
-        url: 'https://img.yzcdn.cn/vant/cat.jpeg',
-        show: true
-      },
-      {
-        id: '1709060783720669185',
-        url: 'https://img.yzcdn.cn/vant/cat.jpeg',
-        show: true
-      },
-      {
-        id: '3',
-        url: 'https://img.yzcdn.cn/vant/cat.jpeg',
-        show: true
-      }
-    ],
-    createTime: '2021-07-01 12:00:00',
-    updateTime: '2021-07-01 12:00:00',
-    author: {
-      linkMan: null,
-      username: null,
-      mobile: null,
-      nickName: null,
-      avatar: null,
-      school: null,
-      token: null
-    },
-    likeNum: 0,
-    commentNum: 0,
-    comments: [],
-    collectNum: 0,
-    viewNum: 0,
-    shareNum: 0,
-    isLike: false,
-    isCollect: false,
-    status: ''
-  },
-  {
-    id: '123',
-    title: '这是一个标题',
-    intro: '这是一个内容',
-    imgs: [
-      {
-        id: '1709060796295192577',
-        url: 'https://img.yzcdn.cn/vant/cat.jpeg',
-        show: true
-      },
-      {
-        id: '1709060783720669185',
-        url: 'https://img.yzcdn.cn/vant/cat.jpeg',
-        show: true
-      },
-      {
-        id: '3',
-        url: 'https://img.yzcdn.cn/vant/cat.jpeg',
-        show: true
-      }
-    ],
-    createTime: '2021-07-01 12:00:00',
-    updateTime: '2021-07-01 12:00:00',
-    author: {
-      linkMan: null,
-      username: null,
-      mobile: null,
-      nickName: null,
-      avatar: null,
-      school: null,
-      token: null
-    },
-    likeNum: 0,
-    commentNum: 0,
-    comments: [],
-    collectNum: 0,
-    viewNum: 0,
-    shareNum: 0,
-    isLike: false,
-    isCollect: false,
-    status: ''
-  },
-  {
-    id: '123',
-    title: '这是一个标题',
-    intro: '这是一个内容',
-    imgs: [
-      {
-        id: '1709060796295192577',
-        url: 'https://img.yzcdn.cn/vant/cat.jpeg',
-        show: true
-      },
-      {
-        id: '1709060783720669185',
-        url: 'https://img.yzcdn.cn/vant/cat.jpeg',
-        show: true
-      },
-      {
-        id: '3',
-        url: 'https://img.yzcdn.cn/vant/cat.jpeg',
-        show: true
-      }
-    ],
-    createTime: '2021-07-01 12:00:00',
-    updateTime: '2021-07-01 12:00:00',
-    author: {
-      linkMan: null,
-      username: null,
-      mobile: null,
-      nickName: null,
-      avatar: null,
-      school: null,
-      token: null
-    },
-    likeNum: 0,
-    commentNum: 0,
-    comments: [],
-    collectNum: 0,
-    viewNum: 0,
-    shareNum: 0,
-    isLike: false,
-    isCollect: false,
-    status: ''
-  },
-  {
-    id: '123',
-    title: '这是一个标题',
-    intro: '这是一个内容',
-    imgs: [
-      {
-        id: '1709060796295192577',
-        url: 'https://img.yzcdn.cn/vant/cat.jpeg',
-        show: true
-      },
-      {
-        id: '1709060783720669185',
-        url: 'https://img.yzcdn.cn/vant/cat.jpeg',
-        show: true
-      },
-      {
-        id: '3',
-        url: 'https://img.yzcdn.cn/vant/cat.jpeg',
-        show: true
-      }
-    ],
-    createTime: '2021-07-01 12:00:00',
-    updateTime: '2021-07-01 12:00:00',
-    author: {
-      linkMan: null,
-      username: null,
-      mobile: null,
-      nickName: null,
-      avatar: null,
-      school: null,
-      token: null
-    },
-    likeNum: 0,
-    commentNum: 0,
-    comments: [],
-    collectNum: 0,
-    viewNum: 0,
-    shareNum: 0,
-    isLike: false,
-    isCollect: false,
-    status: ''
-  },
-  {
-    id: '123',
-    title: '这是一个标题',
-    intro: '这是一个内容',
-    imgs: [
-      {
-        id: '1709060796295192577',
-        url: 'https://img.yzcdn.cn/vant/cat.jpeg',
-        show: true
-      },
-      {
-        id: '1709060783720669185',
-        url: 'https://img.yzcdn.cn/vant/cat.jpeg',
-        show: true
-      },
-      {
-        id: '3',
-        url: 'https://img.yzcdn.cn/vant/cat.jpeg',
-        show: true
-      }
-    ],
-    createTime: '2021-07-01 12:00:00',
-    updateTime: '2021-07-01 12:00:00',
-    author: {
-      linkMan: null,
-      username: null,
-      mobile: null,
-      nickName: null,
-      avatar: null,
-      school: null,
-      token: null
-    },
-    likeNum: 0,
-    commentNum: 0,
-    comments: [],
-    collectNum: 0,
-    viewNum: 0,
-    shareNum: 0,
-    isLike: false,
-    isCollect: false,
-    status: ''
-  },
-  {
-    id: '123',
-    title: '这是一个标题',
-    intro: '这是一个内容',
-    imgs: [
-      {
-        id: '1709060796295192577',
-        url: 'https://img.yzcdn.cn/vant/cat.jpeg',
-        show: true
-      },
-      {
-        id: '1709060783720669185',
-        url: 'https://img.yzcdn.cn/vant/cat.jpeg',
-        show: true
-      },
-      {
-        id: '3',
-        url: 'https://img.yzcdn.cn/vant/cat.jpeg',
-        show: true
-      }
-    ],
-    createTime: '2021-07-01 12:00:00',
-    updateTime: '2021-07-01 12:00:00',
-    author: {
-      linkMan: null,
-      username: null,
-      mobile: null,
-      nickName: null,
-      avatar: null,
-      school: null,
-      token: null
-    },
-    likeNum: 0,
-    commentNum: 0,
-    comments: [],
-    collectNum: 0,
-    viewNum: 0,
-    shareNum: 0,
-    isLike: false,
-    isCollect: false,
-    status: ''
-  },
-  {
-    id: '123',
-    title: '这是一个标题',
-    intro: '这是一个内容',
-    imgs: [
-      {
-        id: '1709060796295192577',
-        url: 'https://img.yzcdn.cn/vant/cat.jpeg',
-        show: true
-      },
-      {
-        id: '1709060783720669185',
-        url: 'https://img.yzcdn.cn/vant/cat.jpeg',
-        show: true
-      },
-      {
-        id: '3',
-        url: 'https://img.yzcdn.cn/vant/cat.jpeg',
-        show: true
-      }
-    ],
-    createTime: '2021-07-01 12:00:00',
-    updateTime: '2021-07-01 12:00:00',
-    author: {
-      linkMan: null,
-      username: null,
-      mobile: null,
-      nickName: null,
-      avatar: null,
-      school: null,
-      token: null
-    },
-    likeNum: 0,
-    commentNum: 0,
-    comments: [],
-    collectNum: 0,
-    viewNum: 0,
-    shareNum: 0,
-    isLike: false,
-    isCollect: false,
-    status: ''
-  },
-  {
-    id: '123',
-    title: '这是一个标题',
-    intro: '这是一个内容',
-    imgs: [
-      {
-        id: '1709060796295192577',
-        url: 'https://img.yzcdn.cn/vant/cat.jpeg',
-        show: true
-      },
-      {
-        id: '1709060783720669185',
-        url: 'https://img.yzcdn.cn/vant/cat.jpeg',
-        show: true
-      },
-      {
-        id: '3',
-        url: 'https://img.yzcdn.cn/vant/cat.jpeg',
-        show: true
-      }
-    ],
-    createTime: '2021-07-01 12:00:00',
-    updateTime: '2021-07-01 12:00:00',
-    author: {
-      linkMan: null,
-      username: null,
-      mobile: null,
-      nickName: null,
-      avatar: null,
-      school: null,
-      token: null
-    },
-    likeNum: 0,
-    commentNum: 0,
-    comments: [],
-    collectNum: 0,
-    viewNum: 0,
-    shareNum: 0,
-    isLike: false,
-    isCollect: false,
-    status: ''
-  }
-])
+const postList = ref<Post[]>([])
 
 const fetchList = () => {
   loadMsg.value = '加载中...'
+  loading.showLoading({})
   PostApi.getPostsList(pageNum.value, pageSize.value)
     .then((resp) => {
-      postList.value = postList.value.concat(resp.data?.data || [])
-      console.log(resp.data)
+      const list = resp.data?.data || []
+      if (list.length > 0) {
+        postList.value = postList.value.concat(list)
+        pageNum.value++
+      } else {
+        loadMsg.value = '暂无更多数据'
+      }
     })
     .catch((error) => {
       toast.showToast({
@@ -589,12 +137,11 @@ const fetchList = () => {
     })
     .finally(() => {
       loadMsg.value = '暂无更多数据'
+      loading.hideLoading()
     })
 }
 
 onReachBottom(() => {
-  console.log('触底了')
-  pageNum.value++
   fetchList()
 })
 </script>

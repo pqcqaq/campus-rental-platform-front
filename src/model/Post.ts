@@ -16,7 +16,8 @@ export default class Post {
     nickName: null,
     avatar: null,
     school: null,
-    token: null
+    token: null,
+    role: null
   }
   likeNum?: number = 0
   commentNum?: number = 0
