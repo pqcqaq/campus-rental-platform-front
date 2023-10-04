@@ -44,7 +44,6 @@ onMounted(() => {
       icon: 'error'
     })
     useAuthStore().logout()
-    router.push({ name: 'login' })
   }
 })
 

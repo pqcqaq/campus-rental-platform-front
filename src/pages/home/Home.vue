@@ -222,9 +222,15 @@ onReachBottom(() => {
     .text {
       // 没有高度体积，放置在右下角
       position: absolute;
-      bottom: 60rpx;
-      right: 50rpx;
-      padding: 10rpx;
+      bottom: 70rpx;
+      right: 30rpx;
+      padding: 15rpx;
+      // 阴影
+      background-color: #64656666;
+      border-radius: 20rpx;
+      box-shadow: 3rpx 3rpx 20rpx 0rpx rgba(0, 0, 0, 0.186);
+      // 阴影模糊效果
+      backdrop-filter: blur(10rpx);
     }
   }
 }

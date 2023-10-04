@@ -62,13 +62,11 @@ export default class ApiClient {
                 // 跳转到登录
                 console.log('跳转到登录')
                 useAuthStore().logout()
-                router.replaceAll({ name: 'login' })
                 break
               case 401:
                 // 跳转到登录
                 console.log('跳转到登录')
                 useAuthStore().logout()
-                router.replaceAll({ name: 'login' })
                 break
             }
           }
@@ -108,7 +106,6 @@ export default class ApiClient {
               uni.showToast({ title: '用户未登录!', icon: 'none' })
             }, 300)
             useAuthStore().logout()
-            router.replaceAll({ name: 'login' })
             break
 
           case 403:

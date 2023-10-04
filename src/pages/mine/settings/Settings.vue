@@ -163,7 +163,6 @@ function doLogout() {
       if (action.confirm) {
         // 点击的确认按钮
         useAuthStore().logout()
-        router.replaceAll({ name: 'login' })
       }
     }
   })

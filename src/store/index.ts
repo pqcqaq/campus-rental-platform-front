@@ -1,5 +1,6 @@
 import UserAPI from '@/api/UserAPI'
 import UserInfo from '@/model/UserInfo'
+import router from '@/router'
 import { defineStore } from 'pinia'
 const baseURL = import.meta.env.VITE_BASEURL
 
@@ -18,7 +19,14 @@ export const useAuthStore = defineStore('authState', {
   getters: {},
   actions: {
     logout() {
-      this.userInfo = null
+      try {
+        UserAPI.logout().finally(() => {
+          this.userInfo = null
+        })
+      } catch (error) {
+        console.log(error)
+      }
+      router.replaceAll({ name: 'login' })
     },
     getToken(): string {
       return this.userInfo?.token || ''

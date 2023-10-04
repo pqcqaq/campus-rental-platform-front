@@ -46,6 +46,7 @@
 <script lang="ts" setup>
 import myRecord from '@/model/myRecord'
 import { useModal, useToast } from '@/uni_modules/fant-mini-plus'
+import UserApi from '@/api/UserAPI'
 const modal = useModal()
 const toast = useToast()
 
@@ -96,6 +97,19 @@ onMounted(() => {
   if (useAuthStore().isVisitor) {
     userInfo.value = null
     router.replaceAll({ name: 'login' })
+  } else {
+    console.log('刷新用户信息')
+
+    UserApi.refreshToken()
+      .then((resp: any) => {
+        userInfo.value = resp.data
+      })
+      .catch((error) => {
+        toast.showToast({
+          title: error.msg,
+          icon: 'error'
+        })
+      })
   }
 })
 </script>

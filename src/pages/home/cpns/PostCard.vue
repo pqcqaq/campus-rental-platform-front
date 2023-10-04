@@ -26,7 +26,7 @@
         <hd-icon class="likeBtn" name="ic_collection_fill" :color="btnIconColor" size="50rpx"></hd-icon>
       </button>
       <!-- 编辑按钮 -->
-      <button v-if="props.post.editable" class="likeButton" @click="handleEdit">
+      <button v-if="props.post.editable || isAdmin" class="likeButton" @click="handleEdit">
         <hd-icon class="likeBtn" name="ic_edit_line" color="#fff" size="50rpx"></hd-icon>
       </button>
     </div>
@@ -50,7 +50,7 @@ onMounted(async () => {
     firstImageUrl.value = 'https://t.mwm.moe/ai/'
   }
   // 设置按钮颜色
-  btnIconColor.value = props.post.isLike ? '#F97F7F' : '#fff'
+  btnIconColor.value = props.post.isLike ? '#F7CA59' : '#fff'
 })
 
 const props = defineProps({
@@ -113,18 +113,18 @@ const likeNum = ref<number>(props.post.likeNum || 0)
 
 const handleLike = (e: MouseEvent) => {
   // 处理点赞事件
-  PostApi.likePost(props.post.id || '')
+  PostApi.collectPost(props.post.id || '')
     .then((resp) => {
       if (resp.data) {
         // 点赞成功
-        btnIconColor.value = '#F97F7F'
+        btnIconColor.value = '#F7CA59'
         // 更新点赞数目
-        likeNum.value++
+        collectNum.value++
       } else {
         // 取消点赞
         btnIconColor.value = '#fff'
         // 更新点赞数目
-        likeNum.value--
+        collectNum.value--
       }
     })
     .catch((error) => {
@@ -140,6 +140,8 @@ const handleEdit = (e: MouseEvent) => {
   // 恢复原状
   postStyle.value.transform = 'translate(0, 0)'
 }
+
+const isAdmin = useAuthStore().isAdmin()
 </script>
 
 <style lang="scss" scoped>
@@ -155,25 +157,35 @@ const handleEdit = (e: MouseEvent) => {
     .title {
       // 文字显示在图片的右下角
       position: absolute;
-      bottom: 0;
-      right: 0;
+      bottom: 15rpx;
+      right: 15rpx;
       padding: 15rpx;
       // 文字背景
       background: rgba(218, 218, 218, 0.5);
       border-radius: 20rpx 20rpx 20rpx 20rpx;
       // 标题颜色
       color: #000000ae;
+      // 阴影
+      box-shadow: 3rpx 3rpx 20rpx 0rpx rgba(0, 0, 0, 0.186);
+      // 阴影模糊效果
+      backdrop-filter: blur(10rpx);
     }
     .nums {
+      position: absolute;
+      left: 15rpx;
+      bottom: 15rpx;
       display: flex;
+      // 阴影模糊效果
+      backdrop-filter: blur(10rpx);
+      // 阴影
+      box-shadow: 3rpx 3rpx 20rpx 0rpx rgba(0, 0, 0, 0.186);
       image {
         width: 25rpx;
         height: 25rpx;
         margin-right: 10rpx;
       }
-      //元素之间的距离
-      margin-top: 10rpx;
       .collect {
+        margin-left: 10rpx;
         margin-right: 10rpx;
       }
       .like {
@@ -184,16 +196,8 @@ const handleEdit = (e: MouseEvent) => {
         margin-right: 10rpx;
         font-size: 25rpx;
         color: #000000ae;
-        //上下居中
-        line-height: 30rpx;
-        align-items: center;
-        justify-content: center;
       }
-      // 文字显示在图片的左下角
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      padding: 15rpx;
+      padding: 5rpx;
       // 文字背景
       background: rgba(218, 218, 218, 0.5);
       border-radius: 20rpx 20rpx 20rpx 20rpx;
