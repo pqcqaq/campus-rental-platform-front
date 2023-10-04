@@ -24,14 +24,10 @@
     </view>
 
     <view class="main">
-      <!-- <hd-button @click="doNav">
-        <hd-icon name="ic_scan_line" size="48rpx" color="#292C39"></hd-icon>
-      </hd-button> -->
-      <div v-for="(item, index) in postList" :key="index" class="postItem">
-        <PostCard :postId="item.id || ''" :post="item"></PostCard>
-      </div>
-      <div>
-        <!-- 暂无更多的提示  -->
+      <div class="postList">
+        <div v-for="(item, index) in postList" :key="index" class="postItem">
+          <PostCard :postId="item.id || ''" :post="item"></PostCard>
+        </div>
         <text class="info">{{ loadMsg }}</text>
       </div>
     </view>
@@ -168,15 +164,17 @@ onReachBottom(() => {
       font-size: 20rpx;
       color: #646566;
     }
-    .postItem {
-      margin-bottom: 24rpx;
-    }
-    .info {
-      font-size: 35rpx;
-      color: #64656695;
-      // 居中
-      display: flex;
-      justify-content: center;
+    .postList {
+      .postItem {
+        margin-bottom: 24rpx;
+      }
+      .info {
+        font-size: 35rpx;
+        color: #64656695;
+        // 居中
+        display: flex;
+        justify-content: center;
+      }
     }
   }
 }

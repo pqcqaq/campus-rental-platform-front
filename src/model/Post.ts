@@ -28,4 +28,5 @@ export default class Post {
   shareNum?: number = 0
   viewNum?: number = 0
   status?: string = ''
+  editable?: boolean = false
 }

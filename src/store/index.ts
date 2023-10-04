@@ -30,7 +30,7 @@ export const useAuthStore = defineStore('authState', {
       UserAPI.saveAlterAvatar(avatarUrl)
     },
     isAdmin(): boolean {
-      return this.userInfo?.role === 'admin'
+      return this.userInfo?.role === 'ROLE_ADMIN'
     }
   }
 })

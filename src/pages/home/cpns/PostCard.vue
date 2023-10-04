@@ -22,8 +22,12 @@
       </div>
     </div>
     <div class="postActions" ref="postActions">
-      <button class="actionButton" @click="handleLike">
+      <button class="likeButton" @click="handleLike">
         <hd-icon class="likeBtn" name="ic_collection_fill" :color="btnIconColor" size="50rpx"></hd-icon>
+      </button>
+      <!-- 编辑按钮 -->
+      <button v-if="props.post.editable" class="likeButton" @click="handleEdit">
+        <hd-icon class="likeBtn" name="ic_edit_line" color="#fff" size="50rpx"></hd-icon>
       </button>
     </div>
   </div>
@@ -43,8 +47,7 @@ onMounted(async () => {
     const url = await transIdToUrl(imgList[0].id)
     firstImageUrl.value = url
   } else {
-    const url = await transIdToUrl('1709549532318216194')
-    firstImageUrl.value = url
+    firstImageUrl.value = 'https://t.mwm.moe/ai/'
   }
   // 设置按钮颜色
   btnIconColor.value = props.post.isLike ? '#F97F7F' : '#fff'
@@ -127,6 +130,15 @@ const handleLike = (e: MouseEvent) => {
     .catch((error) => {
       console.log(error)
     })
+  // 恢复原状
+  postStyle.value.transform = 'translate(0, 0)'
+}
+
+const handleEdit = (e: MouseEvent) => {
+  // 处理编辑事件
+  router.push({ name: 'edit', params: { id: props.post.id || '' } })
+  // 恢复原状
+  postStyle.value.transform = 'translate(0, 0)'
 }
 </script>
 
@@ -206,7 +218,7 @@ const handleLike = (e: MouseEvent) => {
     justify-content: center;
     transition: right 0.3s ease-in-out;
   }
-  .actionButton {
+  .likeButton {
     width: 120rpx;
     height: 120rpx;
     margin-top: 10rpx;
@@ -223,7 +235,7 @@ const handleLike = (e: MouseEvent) => {
       transition: transform 0.3s ease-in-out;
     }
   }
-  .actionButton:hover {
+  .likeButton:hover {
     background-color: #4c8fcb;
   }
 }
