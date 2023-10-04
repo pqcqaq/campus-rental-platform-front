@@ -1,12 +1,3 @@
-/*
- * @Author: weisheng
- * @Date: 2023-04-14 12:57:12
- * @LastEditTime: 2023-04-19 11:03:00
- * @LastEditors: weisheng
- * @Description: pinia商店
- * @FilePath: \uniapp-vue3-fant-ts\src\store\index.ts
- * 记得注释
- */
 import UserAPI from '@/api/UserAPI'
 import UserInfo from '@/model/UserInfo'
 import { defineStore } from 'pinia'
@@ -33,9 +24,7 @@ export const useAuthStore = defineStore('authState', {
       return this.userInfo?.token || ''
     },
     setAvatar(avatarId: string): void {
-      const avatarUrl = baseURL + '/common/avatar/' + avatarId
-      console.log('avatarUrl', avatarUrl)
-
+      const avatarUrl = baseURL + '/common/img/' + avatarId
       this.userInfo!.avatar = avatarUrl
       // 保存头像
       UserAPI.saveAlterAvatar(avatarUrl)

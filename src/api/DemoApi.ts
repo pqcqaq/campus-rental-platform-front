@@ -1,12 +1,3 @@
-/*
- * @Author: weisheng
- * @Date: 2023-04-17 12:51:22
- * @LastEditTime: 2023-04-20 15:01:53
- * @LastEditors: weisheng
- * @Description:
- * @FilePath: \uniapp-vue3-fant-ts\src\api\DemoApi.ts
- * 记得注释
- */
 import http from '@/http/HttpClient'
 import BaseResponse from '@/model/BaseResponse'
 import Chanel from '@/model/Chanel'

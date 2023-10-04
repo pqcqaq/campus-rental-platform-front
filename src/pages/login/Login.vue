@@ -20,10 +20,10 @@
           <login-input key="password" v-model="password" password clearable placeholder="密码" :maxlength="20"></login-input>
         </view>
         <hd-button size="large" type="primary" :disabled="disabled" @click="doLogin">登录</hd-button>
-        <hd-button class="jump" plain type="primary" size="small" @click="jump">跳过登录</hd-button>
       </view>
     </view>
     <view class="login-footer">
+      <hd-button class="jump" plain type="primary" size="small" @click="jump">我是游客</hd-button>
       <text>developed by qcqcqc</text>
     </view>
   </view>
@@ -137,6 +137,7 @@ const jump = () => {
 }
 .jump {
   margin-top: 50rpx;
+  margin-bottom: 50rpx;
   height: 40rpx;
 }
 </style>

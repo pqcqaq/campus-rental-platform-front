@@ -4,6 +4,7 @@
   <view class="home">
     <view class="header">
       <swiper
+        v-if="swiperList.length > 0"
         class="swiper-box"
         :indicator-dots="indicatorDots"
         :autoplay="autoplay"
@@ -13,19 +14,26 @@
         previous-margin="20px"
         next-margin="20px"
       >
-        <!-- v-for循环遍历数组 -->
         <swiper-item class="swiper-box" :autoplay="true" :interval="1000" v-for="item in swiperList" :key="item">
           <view class="swiper-item" @click="openDetial(item)">
             <image class="image" mode="aspectFill" :src="item.img"></image>
+            <text class="text">{{ item.text }}</text>
           </view>
         </swiper-item>
       </swiper>
     </view>
 
     <view class="main">
-      <hd-button @click="doNav">
+      <!-- <hd-button @click="doNav">
         <hd-icon name="ic_scan_line" size="48rpx" color="#292C39"></hd-icon>
-      </hd-button>
+      </hd-button> -->
+      <div v-for="(item, index) in postList" :key="index" class="postItem">
+        <PostCard :postId="item.id || ''" :post="item"></PostCard>
+      </div>
+      <div>
+        <!-- 暂无更多的提示  -->
+        <text class="info">{{ loadMsg }}</text>
+      </div>
     </view>
     <!-- 悬浮在左下角的发布按钮（圆形加号） -->
     <button class="addBtn" color="#E1EDF9" @click="doAdd">
@@ -42,6 +50,10 @@ import { SwiperItem } from '@/model/Swiper'
 import { useLoading, useToast } from '@/uni_modules/fant-mini-plus'
 import axios from 'axios'
 import { ref, onMounted } from 'vue'
+import PostCard from './cpns/PostCard.vue'
+import Post from '@/model/Post'
+import { userInfo } from 'os'
+import PostApi from '@/api/PostApi'
 const loading = useLoading()
 const toast = useToast()
 const router = useRouter()
@@ -50,11 +62,12 @@ const indicatorDots = ref<boolean>(true)
 const autoplay = ref<boolean>(true)
 const interval = ref<number>(5000)
 const duration = ref<number>(1000)
-
-const chanel = ref<Chanel[]>([])
+const pageNum = ref<number>(1)
+const pageSize = ref<number>(10)
+const loadMsg = ref<string>('暂无更多数据')
 
 onMounted(() => {
-  doInit()
+  fetchData()
 })
 
 /**
@@ -70,19 +83,14 @@ function doAdd() {
 /**
  * 初始化
  */
-function doInit() {
+function fetchData() {
   loading.showLoading({})
   DemoApi.init()
     .then((resp) => {
       loading.hideLoading()
-      chanel.value = resp.data || []
     })
     .catch((error) => {
       loading.hideLoading()
-      // 判断如果是取消的请求则不提示
-      if (axios.isCancel(error)) {
-        return
-      }
       toast.showToast({
         title: error.message,
         icon: 'none'
@@ -93,12 +101,502 @@ function doInit() {
     swiperList.value = resp.data || []
     console.log(resp.data)
   })
+  // 获取帖子列表
+  fetchList()
 }
 
 const openDetial = (item) => {
-  console.log(item.postId)
   router.push({ name: 'detail', params: { id: item.postId } })
 }
+
+const postList = ref<Post[]>([
+  {
+    id: '123',
+    title: '这是一个标题',
+    intro: '这是一个内容',
+    imgs: [
+      {
+        id: '1709060796295192577',
+        url: 'https://img.yzcdn.cn/vant/cat.jpeg',
+        show: true
+      },
+      {
+        id: '1709060783720669185',
+        url: 'https://img.yzcdn.cn/vant/cat.jpeg',
+        show: true
+      },
+      {
+        id: '3',
+        url: 'https://img.yzcdn.cn/vant/cat.jpeg',
+        show: true
+      }
+    ],
+    createTime: '2021-07-01 12:00:00',
+    updateTime: '2021-07-01 12:00:00',
+    author: {
+      linkMan: null,
+      username: null,
+      mobile: null,
+      nickName: null,
+      avatar: null,
+      school: null,
+      token: null
+    },
+    likeNum: 0,
+    commentNum: 0,
+    comments: [],
+    collectNum: 0,
+    viewNum: 0,
+    shareNum: 0,
+    isLike: false,
+    isCollect: false,
+    status: ''
+  },
+  {
+    id: '123',
+    title: '这是一个标题',
+    intro: '这是一个内容',
+    imgs: [
+      {
+        id: '1709060796295192577',
+        url: 'https://img.yzcdn.cn/vant/cat.jpeg',
+        show: true
+      },
+      {
+        id: '1709060783720669185',
+        url: 'https://img.yzcdn.cn/vant/cat.jpeg',
+        show: true
+      },
+      {
+        id: '3',
+        url: 'https://img.yzcdn.cn/vant/cat.jpeg',
+        show: true
+      }
+    ],
+    createTime: '2021-07-01 12:00:00',
+    updateTime: '2021-07-01 12:00:00',
+    author: {
+      linkMan: null,
+      username: null,
+      mobile: null,
+      nickName: null,
+      avatar: null,
+      school: null,
+      token: null
+    },
+    likeNum: 0,
+    commentNum: 0,
+    comments: [],
+    collectNum: 0,
+    viewNum: 0,
+    shareNum: 0,
+    isLike: false,
+    isCollect: false,
+    status: ''
+  },
+  {
+    id: '123',
+    title: '这是一个标题',
+    intro: '这是一个内容',
+    imgs: [
+      {
+        id: '1709060796295192577',
+        url: 'https://img.yzcdn.cn/vant/cat.jpeg',
+        show: true
+      },
+      {
+        id: '1709060783720669185',
+        url: 'https://img.yzcdn.cn/vant/cat.jpeg',
+        show: true
+      },
+      {
+        id: '3',
+        url: 'https://img.yzcdn.cn/vant/cat.jpeg',
+        show: true
+      }
+    ],
+    createTime: '2021-07-01 12:00:00',
+    updateTime: '2021-07-01 12:00:00',
+    author: {
+      linkMan: null,
+      username: null,
+      mobile: null,
+      nickName: null,
+      avatar: null,
+      school: null,
+      token: null
+    },
+    likeNum: 0,
+    commentNum: 0,
+    comments: [],
+    collectNum: 0,
+    viewNum: 0,
+    shareNum: 0,
+    isLike: false,
+    isCollect: false,
+    status: ''
+  },
+  {
+    id: '123',
+    title: '这是一个标题',
+    intro: '这是一个内容',
+    imgs: [
+      {
+        id: '1709060796295192577',
+        url: 'https://img.yzcdn.cn/vant/cat.jpeg',
+        show: true
+      },
+      {
+        id: '1709060783720669185',
+        url: 'https://img.yzcdn.cn/vant/cat.jpeg',
+        show: true
+      },
+      {
+        id: '3',
+        url: 'https://img.yzcdn.cn/vant/cat.jpeg',
+        show: true
+      }
+    ],
+    createTime: '2021-07-01 12:00:00',
+    updateTime: '2021-07-01 12:00:00',
+    author: {
+      linkMan: null,
+      username: null,
+      mobile: null,
+      nickName: null,
+      avatar: null,
+      school: null,
+      token: null
+    },
+    likeNum: 0,
+    commentNum: 0,
+    comments: [],
+    collectNum: 0,
+    viewNum: 0,
+    shareNum: 0,
+    isLike: false,
+    isCollect: false,
+    status: ''
+  },
+  {
+    id: '123',
+    title: '这是一个标题',
+    intro: '这是一个内容',
+    imgs: [
+      {
+        id: '1709060796295192577',
+        url: 'https://img.yzcdn.cn/vant/cat.jpeg',
+        show: true
+      },
+      {
+        id: '1709060783720669185',
+        url: 'https://img.yzcdn.cn/vant/cat.jpeg',
+        show: true
+      },
+      {
+        id: '3',
+        url: 'https://img.yzcdn.cn/vant/cat.jpeg',
+        show: true
+      }
+    ],
+    createTime: '2021-07-01 12:00:00',
+    updateTime: '2021-07-01 12:00:00',
+    author: {
+      linkMan: null,
+      username: null,
+      mobile: null,
+      nickName: null,
+      avatar: null,
+      school: null,
+      token: null
+    },
+    likeNum: 0,
+    commentNum: 0,
+    comments: [],
+    collectNum: 0,
+    viewNum: 0,
+    shareNum: 0,
+    isLike: false,
+    isCollect: false,
+    status: ''
+  },
+  {
+    id: '123',
+    title: '这是一个标题',
+    intro: '这是一个内容',
+    imgs: [
+      {
+        id: '1709060796295192577',
+        url: 'https://img.yzcdn.cn/vant/cat.jpeg',
+        show: true
+      },
+      {
+        id: '1709060783720669185',
+        url: 'https://img.yzcdn.cn/vant/cat.jpeg',
+        show: true
+      },
+      {
+        id: '3',
+        url: 'https://img.yzcdn.cn/vant/cat.jpeg',
+        show: true
+      }
+    ],
+    createTime: '2021-07-01 12:00:00',
+    updateTime: '2021-07-01 12:00:00',
+    author: {
+      linkMan: null,
+      username: null,
+      mobile: null,
+      nickName: null,
+      avatar: null,
+      school: null,
+      token: null
+    },
+    likeNum: 0,
+    commentNum: 0,
+    comments: [],
+    collectNum: 0,
+    viewNum: 0,
+    shareNum: 0,
+    isLike: false,
+    isCollect: false,
+    status: ''
+  },
+  {
+    id: '123',
+    title: '这是一个标题',
+    intro: '这是一个内容',
+    imgs: [
+      {
+        id: '1709060796295192577',
+        url: 'https://img.yzcdn.cn/vant/cat.jpeg',
+        show: true
+      },
+      {
+        id: '1709060783720669185',
+        url: 'https://img.yzcdn.cn/vant/cat.jpeg',
+        show: true
+      },
+      {
+        id: '3',
+        url: 'https://img.yzcdn.cn/vant/cat.jpeg',
+        show: true
+      }
+    ],
+    createTime: '2021-07-01 12:00:00',
+    updateTime: '2021-07-01 12:00:00',
+    author: {
+      linkMan: null,
+      username: null,
+      mobile: null,
+      nickName: null,
+      avatar: null,
+      school: null,
+      token: null
+    },
+    likeNum: 0,
+    commentNum: 0,
+    comments: [],
+    collectNum: 0,
+    viewNum: 0,
+    shareNum: 0,
+    isLike: false,
+    isCollect: false,
+    status: ''
+  },
+  {
+    id: '123',
+    title: '这是一个标题',
+    intro: '这是一个内容',
+    imgs: [
+      {
+        id: '1709060796295192577',
+        url: 'https://img.yzcdn.cn/vant/cat.jpeg',
+        show: true
+      },
+      {
+        id: '1709060783720669185',
+        url: 'https://img.yzcdn.cn/vant/cat.jpeg',
+        show: true
+      },
+      {
+        id: '3',
+        url: 'https://img.yzcdn.cn/vant/cat.jpeg',
+        show: true
+      }
+    ],
+    createTime: '2021-07-01 12:00:00',
+    updateTime: '2021-07-01 12:00:00',
+    author: {
+      linkMan: null,
+      username: null,
+      mobile: null,
+      nickName: null,
+      avatar: null,
+      school: null,
+      token: null
+    },
+    likeNum: 0,
+    commentNum: 0,
+    comments: [],
+    collectNum: 0,
+    viewNum: 0,
+    shareNum: 0,
+    isLike: false,
+    isCollect: false,
+    status: ''
+  },
+  {
+    id: '123',
+    title: '这是一个标题',
+    intro: '这是一个内容',
+    imgs: [
+      {
+        id: '1709060796295192577',
+        url: 'https://img.yzcdn.cn/vant/cat.jpeg',
+        show: true
+      },
+      {
+        id: '1709060783720669185',
+        url: 'https://img.yzcdn.cn/vant/cat.jpeg',
+        show: true
+      },
+      {
+        id: '3',
+        url: 'https://img.yzcdn.cn/vant/cat.jpeg',
+        show: true
+      }
+    ],
+    createTime: '2021-07-01 12:00:00',
+    updateTime: '2021-07-01 12:00:00',
+    author: {
+      linkMan: null,
+      username: null,
+      mobile: null,
+      nickName: null,
+      avatar: null,
+      school: null,
+      token: null
+    },
+    likeNum: 0,
+    commentNum: 0,
+    comments: [],
+    collectNum: 0,
+    viewNum: 0,
+    shareNum: 0,
+    isLike: false,
+    isCollect: false,
+    status: ''
+  },
+  {
+    id: '123',
+    title: '这是一个标题',
+    intro: '这是一个内容',
+    imgs: [
+      {
+        id: '1709060796295192577',
+        url: 'https://img.yzcdn.cn/vant/cat.jpeg',
+        show: true
+      },
+      {
+        id: '1709060783720669185',
+        url: 'https://img.yzcdn.cn/vant/cat.jpeg',
+        show: true
+      },
+      {
+        id: '3',
+        url: 'https://img.yzcdn.cn/vant/cat.jpeg',
+        show: true
+      }
+    ],
+    createTime: '2021-07-01 12:00:00',
+    updateTime: '2021-07-01 12:00:00',
+    author: {
+      linkMan: null,
+      username: null,
+      mobile: null,
+      nickName: null,
+      avatar: null,
+      school: null,
+      token: null
+    },
+    likeNum: 0,
+    commentNum: 0,
+    comments: [],
+    collectNum: 0,
+    viewNum: 0,
+    shareNum: 0,
+    isLike: false,
+    isCollect: false,
+    status: ''
+  },
+  {
+    id: '123',
+    title: '这是一个标题',
+    intro: '这是一个内容',
+    imgs: [
+      {
+        id: '1709060796295192577',
+        url: 'https://img.yzcdn.cn/vant/cat.jpeg',
+        show: true
+      },
+      {
+        id: '1709060783720669185',
+        url: 'https://img.yzcdn.cn/vant/cat.jpeg',
+        show: true
+      },
+      {
+        id: '3',
+        url: 'https://img.yzcdn.cn/vant/cat.jpeg',
+        show: true
+      }
+    ],
+    createTime: '2021-07-01 12:00:00',
+    updateTime: '2021-07-01 12:00:00',
+    author: {
+      linkMan: null,
+      username: null,
+      mobile: null,
+      nickName: null,
+      avatar: null,
+      school: null,
+      token: null
+    },
+    likeNum: 0,
+    commentNum: 0,
+    comments: [],
+    collectNum: 0,
+    viewNum: 0,
+    shareNum: 0,
+    isLike: false,
+    isCollect: false,
+    status: ''
+  }
+])
+
+const fetchList = () => {
+  loadMsg.value = '加载中...'
+  PostApi.getPostsList(pageNum.value, pageSize.value)
+    .then((resp) => {
+      postList.value = postList.value.concat(resp.data?.data || [])
+      console.log(resp.data)
+    })
+    .catch((error) => {
+      toast.showToast({
+        title: error.message,
+        icon: 'error'
+      })
+    })
+    .finally(() => {
+      loadMsg.value = '暂无更多数据'
+    })
+}
+
+onReachBottom(() => {
+  console.log('触底了')
+  pageNum.value++
+  fetchList()
+})
 </script>
 
 <style lang="scss" scoped>
@@ -108,6 +606,8 @@ const openDetial = (item) => {
   box-sizing: border-box;
   background: #f4f9ff;
   padding: 0 24rpx 24rpx;
+  // 不显示左右滚动条
+  overflow-x: hidden;
   .header {
     margin-bottom: 24rpx;
   }
@@ -121,14 +621,24 @@ const openDetial = (item) => {
       font-size: 20rpx;
       color: #646566;
     }
+    .postItem {
+      margin-bottom: 24rpx;
+    }
+    .info {
+      font-size: 35rpx;
+      color: #64656695;
+      // 居中
+      display: flex;
+      justify-content: center;
+    }
   }
 }
 .addBtn {
   width: 100rpx;
   height: 100rpx;
   position: fixed;
-  bottom: 120rpx;
-  left: 24rpx;
+  bottom: 80rpx;
+  left: 30rpx;
   border-radius: 50%;
   // 阴影
   box-shadow: 3rpx 3rpx 20rpx 0rpx rgba(64, 109, 255, 0.665);
@@ -143,26 +653,34 @@ const openDetial = (item) => {
 }
 .swiper-box {
   height: 380upx;
-}
+  padding-top: 5rpx;
 
-.swiper-item {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  background-color: #999;
-  color: #fff;
-  margin: 10rpx 10rpx 10rpx 10px;
-  border-radius: 50upx;
-  /* app上运行不显示图片，就需要加下面这行，设置高度 */
-  height: 320upx;
-}
-.image {
-  width: 100%;
-  height: 320upx;
-  // 图片的圆角
-  border-radius: 50upx;
-  // 阴影
-  box-shadow: 3rpx 3rpx 20rpx 0rpx rgba(0, 0, 0, 0.186);
+  .swiper-item {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: #999;
+    color: #fff;
+    margin: 10rpx 10rpx 10rpx 10px;
+    border-radius: 50upx;
+    /* app上运行不显示图片，就需要加下面这行，设置高度 */
+    height: 320upx;
+    .image {
+      width: 100%;
+      height: 320upx;
+      // 图片的圆角
+      border-radius: 50upx;
+      // 阴影
+      box-shadow: 3rpx 3rpx 20rpx 0rpx rgba(0, 0, 0, 0.186);
+    }
+    .text {
+      // 没有高度体积，放置在右下角
+      position: absolute;
+      bottom: 60rpx;
+      right: 50rpx;
+      padding: 10rpx;
+    }
+  }
 }
 </style>

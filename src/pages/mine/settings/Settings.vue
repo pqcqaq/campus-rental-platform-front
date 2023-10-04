@@ -122,8 +122,8 @@ const handleChangeAvatar = () => {
               url: baseURL + '/common/avatar',
               filePath: tempFilePaths[0],
               name: 'avatar',
-              formData: {
-                token: userInfo.value?.token || null
+              header: {
+                token: userInfo.value?.token || 'null'
               },
               success: (res) => {
                 const result = JSON.parse(res.data)

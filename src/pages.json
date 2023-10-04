@@ -16,7 +16,8 @@
       "name": "add",
       "style": {
         "navigationBarTitleText": "发布",
-        "navigationBarBackgroundColor": "#E7F0FF"
+        "navigationBarBackgroundColor": "#E7F0FF",
+        "onReachBottonDistance": 50
       }
     },
     {
