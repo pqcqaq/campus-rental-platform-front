@@ -93,8 +93,6 @@ const doDelPost = (postId: string) => {
       postList.value = postList.value.filter((item) => item.id !== postId)
       // 更新总数
       total.value--
-      // 更新我的发布记录
-      useInfoRecords().subPublish()
     })
     .catch((error) => {
       toast.showToast({

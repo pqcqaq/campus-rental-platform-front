@@ -151,13 +151,11 @@ const handleCollect = (e: MouseEvent) => {
         btnIconColor.value = '#F7CA59'
         // 更新点赞数目
         collectNum.value++
-        useInfoRecords().addCollect()
       } else {
         // 取消点赞
         btnIconColor.value = '#fff'
         // 更新点赞数目
         collectNum.value--
-        useInfoRecords().subCollect()
       }
       props.handleAction(props.post.id, resp.data)
     })

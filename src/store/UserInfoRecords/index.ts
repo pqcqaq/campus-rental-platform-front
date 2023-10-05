@@ -36,30 +36,6 @@ export const useInfoRecords = defineStore('userInfoRecords', {
   actions: {
     setRecords(records: myRecord[]) {
       this.infoRecords = records
-    },
-    addLease() {
-      this.infoRecords[0].value++
-    },
-    subLease() {
-      this.infoRecords[0].value--
-    },
-    addHire() {
-      this.infoRecords[1].value++
-    },
-    subHire() {
-      this.infoRecords[1].value--
-    },
-    addCollect() {
-      this.infoRecords[2].value++
-    },
-    subCollect() {
-      this.infoRecords[2].value--
-    },
-    addPublish() {
-      this.infoRecords[3].value++
-    },
-    subPublish() {
-      this.infoRecords[3].value--
     }
   }
 })

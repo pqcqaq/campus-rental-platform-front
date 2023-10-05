@@ -184,10 +184,6 @@ const doDelPost = (postId: string, author: UserInfo) => {
         title: '删除成功',
         icon: 'success'
       })
-      // 判断一下，如果是自己发布的，更新发布记录
-      if (userInfo.value?.username === author.username) {
-        useInfoRecords().subPublish()
-      }
       // 从列表中删除
       postList.value = postList.value.filter((item) => item.id !== postId)
     })

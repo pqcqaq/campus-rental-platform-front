@@ -141,7 +141,6 @@ const handlePublish = () => {
         title: '发布成功',
         icon: 'success'
       })
-      useInfoRecords().addPublish()
       router.replaceAll({ name: 'home' })
     })
     .catch((error) => {

@@ -85,10 +85,6 @@ onMounted(() => {
     UserApi.refreshToken()
       .then((resp: any) => {
         userInfo.value = resp.data
-        // 获取我的信息
-        UserApi.getMyInfo().then((resp) => {
-          infoRecords.value = resp.data || []
-        })
       })
       .catch((error) => {
         toast.showToast({
@@ -97,6 +93,13 @@ onMounted(() => {
         })
       })
   }
+})
+
+onShow(() => {
+  // 获取我的信息
+  UserApi.getMyInfo().then((resp) => {
+    infoRecords.value = resp.data || []
+  })
 })
 </script>
 
