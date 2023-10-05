@@ -2,6 +2,7 @@ import http from '@/http/HttpClient'
 import BaseResponse from '@/model/BaseResponse'
 import myRecord from '@/model/myRecord'
 import UserInfo from '@/model/UserInfo'
+
 export default class UserAPI {
   /**
    * 登录

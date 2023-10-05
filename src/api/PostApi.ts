@@ -1,6 +1,5 @@
 import http from '@/http/HttpClient'
 import BaseResponse from '@/model/BaseResponse'
-import Chanel from '@/model/Chanel'
 import PageResult from '@/model/PageResult'
 import Post from '@/model/Post'
 
