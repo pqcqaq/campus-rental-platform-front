@@ -43,12 +43,10 @@
 
 <script lang="ts" setup>
 import PostApi from '@/api/PostApi'
-import ImgSelect from '@/model/ImgSelect'
 import Post from '@/model/Post'
 import router from '@/router'
 import { transIdToUrl } from '@/utils/ImageUtils'
 import { ref } from 'vue'
-import { useInfoRecords } from '@/store/UserInfoRecords'
 import UserInfo from '@/model/UserInfo'
 
 onMounted(async () => {

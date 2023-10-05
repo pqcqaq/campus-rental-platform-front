@@ -42,11 +42,14 @@
         <text class="info">{{ loadMsg }}</text>
       </div>
     </view>
-    <!-- 悬浮在左下角的发布按钮（圆形加号） -->
-    <button class="addBtn" color="#E1EDF9" @click="doAdd">
-      <hd-icon class="icon" name="ic_add_line" size="110rpx" color="#71ADE9"></hd-icon>
-    </button>
   </view>
+  <DragBall>
+    <template #body>
+      <button class="addBtn" color="#E1EDF9" @click="doAdd">
+        <hd-icon class="icon" name="ic_add_line" size="110rpx" color="#71ADE9"></hd-icon>
+      </button>
+    </template>
+  </DragBall>
 </template>
 
 <script lang="ts" setup>
@@ -60,6 +63,7 @@ import Post from '@/model/Post'
 import PostApi from '@/api/PostApi'
 import { transIdToUrl } from '@/utils/ImageUtils'
 import UserInfo from '@/model/UserInfo'
+import DragBall from '@/components/DragBall.vue'
 
 const loading = useLoading()
 const toast = useToast()
@@ -226,12 +230,11 @@ const doDelPost = (postId: string, author: UserInfo) => {
     }
   }
 }
+
 .addBtn {
   width: 100rpx;
   height: 100rpx;
-  position: fixed;
-  bottom: 80rpx;
-  left: 30rpx;
+  z-index: 999;
   border-radius: 50%;
   // 阴影
   box-shadow: 3rpx 3rpx 20rpx 0rpx rgba(64, 109, 255, 0.665);
