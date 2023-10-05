@@ -1,7 +1,9 @@
 <template>
   <view class="content">
+    <hd-loading></hd-loading>
+    <hd-toast></hd-toast>
+    <hd-modal></hd-modal>
     <view class="nav">
-      <!-- 选项卡水平方向滑动，scroll-with-animation是滑动到下一个选项时，有一个延时效果 -->
       <scroll-view class="tab-scroll" scroll-x="true" scroll-with-animation :scroll-left="scrollLeft">
         <view class="tab-scroll_box">
           <!-- 选项卡类别列表 -->
@@ -11,39 +13,72 @@
         </view>
       </scroll-view>
     </view>
-    <!-- 选项卡内容轮播滑动显示，current为当前第几个swiper子项 -->
     <swiper @change="change" :current="isActive" class="swiper-content" :style="fullHeight">
       <swiper-item class="swiperitem-content">
         <scroll-view scroll-y style="height: 100%">
-          <view class="nav_item">详情界面</view>
+          <view class="nav_item">
+            <Info :post="postShowNow" />
+          </view>
         </scroll-view>
       </swiper-item>
       <swiper-item class="swiperitem-content">
         <scroll-view scroll-y style="height: 100%">
-          <view class="nav_item">评论界面</view>
+          <view class="nav_item">
+            <Comments :post="usePostShowNowStore().postShowNow" />
+          </view>
         </scroll-view>
       </swiper-item>
     </swiper>
   </view>
 </template>
 <script lang="ts" setup>
+import { usePostShowNowStore } from '@/store/postShowNow'
 import { onMounted, ref } from 'vue'
+import Info from '@/pages/posts/detail/cpns/Info.vue'
+import Comments from '@/pages/posts/detail/cpns/Comments.vue'
+import PostApi from '@/api/PostApi'
+import { useLoading, useToast, useModal } from '@/uni_modules/fant-mini-plus'
 
-const route = useRoute() as any
-const id = ref(route.params.id)
+const loading = useLoading()
+const toast = useToast()
+const modal = useModal()
+
+//解构
+const { postShowNow, postId } = storeToRefs(usePostShowNowStore())
 
 onMounted(() => {
-  console.log('id', id)
+  //显示加载中
+  loading.showLoading({
+    title: '加载中'
+  })
+  PostApi.getPostDetail(postId.value)
+    .then((res) => {
+      postShowNow.value = res.data || {}
+    })
+    .catch((_err) => {
+      toast.showToast({
+        title: '加载失败！',
+        duration: 2000,
+        icon: 'error'
+      })
+    })
+    .finally(() => {
+      loading.hideLoading()
+    })
+  //获取手机屏幕的高度，让其等于swiper的高度，从而使屏幕充满
+  uni.getSystemInfo({
+    success: function (res) {
+      fullHeight.value = 'height:' + res.windowHeight + 'px'
+    }
+  })
 })
 
 const isActive = ref<number>(0)
-const index = ref<number>(0)
 const currentindex = ref<number>(0)
 
-watch(currentindex, (newval, oldValue) => {
+watch(currentindex, (newval, _oldValue) => {
   isActive.value = newval
   scrollLeft.value = 0
-  // 滑动swiper后，每个选项距离其父元素最左侧的距离
   for (let i = 0; i < newval - 1; i++) {
     scrollLeft.value += category.value[i].width
   }
@@ -52,55 +87,21 @@ watch(currentindex, (newval, oldValue) => {
 const category = ref([
   {
     id: 1,
-    name: '   详情   ',
+    name: '详情',
     width: 0,
     left: 0
   },
   {
     id: 2,
-    name: '   评论   ',
+    name: '评论',
     width: 0,
     left: 0
   }
 ])
-const contentScrollW = ref<number>(0) // 导航区宽度
 const scrollLeft = ref<number>(0) // 横向滚动条位置
 const fullHeight = ref<string>('')
 
-onMounted(() => {
-  var that = this
-  //获取手机屏幕的高度，让其等于swiper的高度，从而使屏幕充满
-  uni.getSystemInfo({
-    success: function (res) {
-      fullHeight.value = 'height:' + res.windowHeight + 'px'
-    }
-  })
-  // 获取标题区域宽度，和每个子元素节点的宽度
-  getScrollW()
-})
-
-const getScrollW = () => {
-  const query = uni.createSelectorQuery().in(this)
-  query
-    .select('.tab-scroll')
-    .boundingClientRect((data: any) => {
-      // 拿到 scroll-view 组件宽度
-      contentScrollW.value = data.width
-    })
-    .exec()
-  query
-    .selectAll('.tab-scroll_item')
-    .boundingClientRect((data: any) => {
-      let dataLen = data.length
-      for (let i = 0; i < dataLen; i++) {
-        //  scroll-view 子元素组件距离左边栏的距离
-        category.value[i].left = data[i].left
-        //  scroll-view 子元素组件宽度
-        category.value[i].width = data[i].width
-      }
-    })
-    .exec()
-}
+onMounted(() => {})
 
 // 当前点击子元素靠左留一个选项展示，子元素宽度不相同也可实现
 const chenked = (index) => {
@@ -160,13 +161,14 @@ page {
     }
   }
   .swiper-content {
-    padding-top: 120rpx;
+    padding-top: 100rpx;
     flex: 1;
     .swiperitem-content {
       background-color: #ffffff;
       .nav_item {
-        background-color: #ffffff;
-        padding: 20rpx 40rpx 0rpx 40rpx;
+        background-color: #e3ecff;
+        height: 100%;
+        padding: 20rpx;
       }
     }
   }
@@ -180,12 +182,16 @@ page {
   content: '';
   position: absolute;
   width: 100%;
-  height: 4rpx;
+  height: 10rpx;
   background-color: #3b69ff;
   left: 0px;
   right: 0px;
-  bottom: 0px;
+  bottom: 5px;
   margin: auto;
+  // 阴影
+  box-shadow: 3rpx 3rpx 20rpx 0rpx rgba(0, 0, 0, 0.186);
+  // 圆角
+  border-radius: 20rpx;
 }
 .uni-scroll-view::-webkit-scrollbar {
   display: none;

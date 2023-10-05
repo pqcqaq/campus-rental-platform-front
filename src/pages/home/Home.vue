@@ -64,6 +64,7 @@ import PostApi from '@/api/PostApi'
 import { transIdToUrl } from '@/utils/ImageUtils'
 import UserInfo from '@/model/UserInfo'
 import DragBall from '@/components/DragBall.vue'
+import { usePostShowNowStore } from '@/store/postShowNow'
 
 const loading = useLoading()
 const toast = useToast()
@@ -121,7 +122,10 @@ onPullDownRefresh(() => {
 })
 
 const openDetial = (item) => {
-  router.push({ name: 'detail', params: { id: item.postId } })
+  //存储打开的帖子到本地
+  usePostShowNowStore().setPostShowNow(item)
+  usePostShowNowStore().setPostId(item.postId)
+  router.push({ name: 'detail' })
 }
 
 const postList = ref<Post[]>([])

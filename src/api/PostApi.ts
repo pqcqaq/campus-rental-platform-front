@@ -52,4 +52,11 @@ export default class PostApi {
       .delete(`posts/${postId}`)
       .then((res) => res.data)
   }
+
+  static getPostDetail(postId: string): Promise<BaseResponse<Post>> {
+    return http
+      .server()
+      .get(`posts/${postId}`)
+      .then((res) => res.data)
+  }
 }

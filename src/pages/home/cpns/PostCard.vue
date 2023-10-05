@@ -48,6 +48,7 @@ import router from '@/router'
 import { transIdToUrl } from '@/utils/ImageUtils'
 import { ref } from 'vue'
 import UserInfo from '@/model/UserInfo'
+import { usePostShowNowStore } from '@/store/postShowNow'
 
 onMounted(async () => {
   const imgList = props.post.imgs || []
@@ -131,8 +132,11 @@ const touchE = (e: TouchEvent) => {
 }
 
 const handleClickPost = (e: MouseEvent) => {
+  //存储打开的帖子到本地
+  usePostShowNowStore().setPostShowNow(props.post)
+  usePostShowNowStore().setPostId(props.post.id || '')
   // 处理点击事件
-  router.push({ name: 'detail', params: { id: props.post.id || '' } })
+  router.push({ name: 'detail' })
 }
 
 // 收藏数量
