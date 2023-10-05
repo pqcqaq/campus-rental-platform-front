@@ -52,20 +52,15 @@
 <script lang="ts" setup>
 import CommonApi from '@/api/CommonApi'
 import DemoApi from '@/api/DemoApi'
-import Chanel from '@/model/Chanel'
 import { SwiperItem } from '@/model/Swiper'
 import { useLoading, useToast, useModal } from '@/uni_modules/fant-mini-plus'
-import axios from 'axios'
 import { ref, onMounted } from 'vue'
 import PostCard from './cpns/PostCard.vue'
 import Post from '@/model/Post'
 import PostApi from '@/api/PostApi'
 import { transIdToUrl } from '@/utils/ImageUtils'
-import UserApi from '@/api/UserAPI'
-import { useInfoRecords } from '@/store/UserInfoRecords'
 import UserInfo from '@/model/UserInfo'
 
-const { userInfo } = storeToRefs(useAuthStore()) // 解构pinia的store
 const loading = useLoading()
 const toast = useToast()
 const modal = useModal()
@@ -82,13 +77,6 @@ const loadMsg = ref<string>('暂无更多数据')
 onMounted(() => {
   fetchData()
 })
-
-/**
- * 跳转至路由演示页面
- */
-function doNav() {
-  router.push({ name: 'routerDemo' })
-}
 
 function doAdd() {
   router.push({ name: 'add' })
@@ -125,7 +113,7 @@ function fetchData() {
 onPullDownRefresh(() => {
   pageNum.value = 1
   postList.value = []
-  fetchList()
+  fetchData()
 })
 
 const openDetial = (item) => {
