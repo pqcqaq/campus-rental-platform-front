@@ -1,12 +1,3 @@
-<!--
- * @Author: weisheng
- * @Date: 2021-12-22 16:52:06
- * @LastEditTime: 2023-03-22 11:03:01
- * @LastEditors: weisheng
- * @Description: 
- * @FilePath: \fant-mini-plus\src\uni_modules\fant-mini\components\hd-calendar\header.vue
- * 记得注释
--->
 <template>
   <view class="header">
     <hd-icon :custom-style="iconCustomStyle" size="44rpx" color="#666666" name="ic_close_line" @click="doClose"></hd-icon>

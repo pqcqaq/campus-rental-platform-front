@@ -1,12 +1,3 @@
-/*
- * @Author: weisheng
- * @Date: 2023-04-18 21:48:30
- * @LastEditTime: 2023-04-19 16:42:21
- * @LastEditors: weisheng
- * @Description: 
- * @FilePath: \uniapp-vue3-fant-ts\koa-mock\app.js
- * 记得注释
- */
 const Koa = require('koa')
 const Router = require("koa-router");
 const app = new Koa()

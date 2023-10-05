@@ -1,12 +1,3 @@
-<!--
- * @Author: weisheng
- * @Date: 2022-02-16 13:21:51
- * @LastEditTime: 2023-09-20 12:56:46
- * @LastEditors: weisheng
- * @Description: Circle 环形进度条
- * @FilePath: \fant-mini-plus\src\uni_modules\fant-mini-plus\components\hd-circle\hd-circle.vue
- * 记得注释
--->
 <template>
   <view class="hd-circle" :style="style">
     <canvas :width="canvasHeight" :height="canvasHeight" class="hd-circle-canvas" :style="style" :id="canvasId" :canvas-id="canvasId"></canvas>

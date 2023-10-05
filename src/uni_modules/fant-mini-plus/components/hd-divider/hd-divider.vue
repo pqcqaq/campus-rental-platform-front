@@ -1,12 +1,3 @@
-<!--
- * @Author: weisheng
- * @Date: 2023-03-14 19:06:18
- * @LastEditTime: 2023-03-23 16:59:01
- * @LastEditors: weisheng
- * @Description: 
- * @FilePath: \fant-mini-plus\src\uni_modules\fant-mini\components\hd-divider\hd-divider.vue
- * 记得注释
--->
 <template>
   <view class="hd-divider" :class="[hairline ? 'hd-divider--hairline' : '', dashed ? 'hd-divider--dashed' : '']" :style="style">
     <!-- 分割线中间自定义内容 -->

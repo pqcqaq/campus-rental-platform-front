@@ -1,12 +1,3 @@
-<!--
- * @Author: weisheng
- * @Date: 2023-02-21 13:46:13
- * @LastEditTime: 2023-06-06 19:36:41
- * @LastEditors: weisheng
- * @Description: 
- * @FilePath: \fant-mini-plus\src\uni_modules\fant-mini-plus\components\fan-loading\fan-loading.vue
- * 记得注释
--->
 <template>
   <view :class="rootClass">
     <view :class="['fan-loading--spinner', `fan-loading--spinner--${type}`]" :style="spinnerStyle">

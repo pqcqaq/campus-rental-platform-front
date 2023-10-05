@@ -1,12 +1,3 @@
-<!--
- * @Author: weisheng
- * @Date: 2021-12-31 13:26:22
- * @LastEditTime: 2023-05-23 15:50:50
- * @LastEditors: weisheng
- * @Description: 
- * @FilePath: \fant-mini-plus\src\uni_modules\fant-mini-plus\components\hd-collapse\hd-collapse.vue
- * 记得注释
--->
 <template>
   <view :class="['hd-collapse', border ? 'hd-hairline--top-bottom' : '']">
     <!-- hd-collapse内部自定义内容，通常配合hd-collapse-item使用 -->

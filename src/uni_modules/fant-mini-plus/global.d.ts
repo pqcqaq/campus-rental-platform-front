@@ -1,12 +1,3 @@
-/*
- * @Author: weisheng
- * @Date: 2022-12-14 13:31:35
- * @LastEditTime: 2023-02-23 19:37:35
- * @LastEditors: weisheng
- * @Description:
- * @FilePath: \fant-mini\src\uni_modules\fant-mini\global.d.ts
- * 记得注释
- */
 interface Operation {
   text: string // 操作项文字
   value: string // 操作项值

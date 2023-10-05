@@ -1,12 +1,3 @@
-/*
- * @Author: weisheng
- * @Date: 2022-12-14 17:33:21
- * @LastEditTime: 2023-09-14 21:33:45
- * @LastEditors: weisheng
- * @Description:
- * @FilePath: \fant-mini-plus\src\uni_modules\fant-mini-plus\components\hd-calendar\index.ts
- * 记得注释
- */
 import { type InjectionKey, type Ref, nextTick, provide, ref } from 'vue'
 import type { Calendar } from './types'
 

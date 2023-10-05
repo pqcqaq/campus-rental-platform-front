@@ -1,12 +1,3 @@
-/*
- * @Author: weisheng
- * @Date: 2023-04-17 11:58:46
- * @LastEditTime: 2023-04-18 18:11:53
- * @LastEditors: weisheng
- * @Description: 登录信息
- * @FilePath: \uniapp-vue3-fant-ts\src\model\UserInfo.ts
- * 记得注释
- */
 export default class UserInfo {
   // 联系方式
   linkMan: Nullable<string> = null

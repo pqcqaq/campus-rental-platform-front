@@ -1,12 +1,3 @@
-<!--
- * @Author: weisheng
- * @Date: 2023-04-10 18:27:41
- * @LastEditTime: 2023-09-14 21:22:13
- * @LastEditors: weisheng
- * @Description: 
- * @FilePath: \fant-mini-plus\src\uni_modules\fant-mini-plus\components\hd-image\hd-image.vue
- * 记得注释
--->
 <template>
   <view :class="rootClass" :style="rootStyle">
     <view v-if="loading && showLoading" class="hd-image-loading">

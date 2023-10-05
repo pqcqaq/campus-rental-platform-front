@@ -1,12 +1,3 @@
-<!--
- * @Author: weisheng
- * @Date: 2021-12-22 15:19:08
- * @LastEditTime: 2023-05-31 14:51:14
- * @LastEditors: weisheng
- * @Description: 
- * @FilePath: \uniapp-vue3-fant-ts\src\pages\routerDemo\cmp\Test.vue
- * 记得注释
--->
 <template>
   <view class="test">
     <view class="title">当前路由信息</view>

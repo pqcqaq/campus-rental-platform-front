@@ -1,12 +1,3 @@
-<!--
- * @Author: weisheng
- * @Date: 2021-12-22 15:19:08
- * @LastEditTime: 2023-05-09 20:54:39
- * @LastEditors: weisheng
- * @Description: 
- * @FilePath: \uniapp-vue3-fant-ts\src\pages\mine\Mine.vue
- * 记得注释
--->
 <template>
   <hd-modal></hd-modal>
   <hd-toast></hd-toast>
