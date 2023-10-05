@@ -8,7 +8,9 @@
           "allowsBounceVertical": "NO"
         },
         "navigationBarTitleText": "首页",
-        "navigationBarBackgroundColor": "#E7F0FF"
+        "navigationBarBackgroundColor": "#E7F0FF",
+        "enablePullDownRefresh": true,
+        "onReachBottonDistance": 100
       }
     },
     {
@@ -16,8 +18,7 @@
       "name": "add",
       "style": {
         "navigationBarTitleText": "发布",
-        "navigationBarBackgroundColor": "#E7F0FF",
-        "onReachBottonDistance": 50
+        "navigationBarBackgroundColor": "#E7F0FF"
       }
     },
     {

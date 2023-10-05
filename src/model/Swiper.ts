@@ -5,6 +5,8 @@ export class SwiperItem {
   img: Nullable<string> = null
   // 文字
   text: Nullable<string> = null
+  // 类型
+  type: Nullable<string> = null
 }
 
 export interface Swiper {

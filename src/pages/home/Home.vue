@@ -18,6 +18,16 @@
           <view class="swiper-item" @click="openDetial(item)">
             <image class="image" mode="aspectFill" :src="item.img"></image>
             <text class="text">{{ item.text }}</text>
+            <div class="logos">
+              <!-- 收藏数目 -->
+              <div class="collect" v-if="item.type == 'collect'">
+                <image src="@/static/star-fill.png"></image>
+              </div>
+              <!-- 点赞数目 -->
+              <div class="like" v-if="item.type == 'like'">
+                <image src="@/static/like.png"></image>
+              </div>
+            </div>
           </view>
         </swiper-item>
       </swiper>
@@ -105,6 +115,12 @@ function fetchData() {
   // 获取帖子列表
   fetchList()
 }
+
+onPullDownRefresh(() => {
+  pageNum.value = 1
+  postList.value = []
+  fetchList()
+})
 
 const openDetial = (item) => {
   router.push({ name: 'detail', params: { id: item.postId } })
@@ -231,6 +247,30 @@ onReachBottom(() => {
       box-shadow: 3rpx 3rpx 20rpx 0rpx rgba(0, 0, 0, 0.186);
       // 阴影模糊效果
       backdrop-filter: blur(10rpx);
+    }
+    .logos {
+      position: absolute;
+      left: 30rpx;
+      bottom: 60rpx;
+      display: flex;
+      padding: 5rpx;
+      // 文字背景
+      border-radius: 20rpx 20rpx 20rpx 20rpx;
+      // 标题颜色
+      color: #000000ae;
+      image {
+        width: 25rpx;
+        height: 25rpx;
+        margin-right: 10rpx;
+      }
+      .collect {
+        margin-left: 10rpx;
+        margin-right: 10rpx;
+      }
+      .like {
+        margin-left: 10rpx;
+        margin-right: 10rpx;
+      }
     }
   }
 }

@@ -1,6 +1,6 @@
 <template>
   <div :style="postStyle" class="postCard" ref="postCard" @touchstart="touchS" @touchmove="touchM" @touchend="touchE">
-    <div class="img" @click="handleClickPost">
+    <div class="img" @click="handleClickPost" :lazy-load="true">
       <image class="img" ref="img" :src="firstImageUrl" mode="aspectFill" />
     </div>
     <div class="info">
@@ -179,6 +179,12 @@ const isAdmin = useAuthStore().isAdmin()
       backdrop-filter: blur(10rpx);
       // 阴影
       box-shadow: 3rpx 3rpx 20rpx 0rpx rgba(0, 0, 0, 0.186);
+      padding: 5rpx;
+      // 文字背景
+      background: rgba(218, 218, 218, 0.5);
+      border-radius: 20rpx 20rpx 20rpx 20rpx;
+      // 标题颜色
+      color: #000000ae;
       image {
         width: 25rpx;
         height: 25rpx;
@@ -197,12 +203,6 @@ const isAdmin = useAuthStore().isAdmin()
         font-size: 25rpx;
         color: #000000ae;
       }
-      padding: 5rpx;
-      // 文字背景
-      background: rgba(218, 218, 218, 0.5);
-      border-radius: 20rpx 20rpx 20rpx 20rpx;
-      // 标题颜色
-      color: #000000ae;
     }
   }
   .img {

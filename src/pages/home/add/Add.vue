@@ -16,7 +16,7 @@
     </view>
     <view class="info">
       <!-- 信息输入框 -->
-      <Inputfield class="field" clearable placeholder="请输入标题" type="text" v-model="title" :maxlength="30">
+      <Inputfield class="field" clearable placeholder="请输入标题" type="text" v-model="title" :maxlength="20">
         <template #title>
           <div><hd-icon name="ic_edit_line"></hd-icon></div>
         </template>
