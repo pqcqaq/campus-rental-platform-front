@@ -245,7 +245,7 @@ const isAdmin = useAuthStore().isAdmin()
   .postActions {
     position: absolute;
     top: 0;
-    right: -100px;
+    right: -30%;
     height: 100%;
     display: flex;
     flex-direction: column;
