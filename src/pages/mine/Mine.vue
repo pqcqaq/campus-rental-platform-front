@@ -30,9 +30,9 @@
         </view>
       </view>
       <view class="header-target">
-        <view class="header-target-item" v-for="(item, key) of target" :key="key" @click="handlePageShow(item)">
+        <view class="header-target-item" v-for="item of infoRecords" :key="item.name" @click="handlePageShow(item)">
           <text class="label">{{ item.value }}</text>
-          <text class="value">{{ key }}</text>
+          <text class="value">{{ item.name }}</text>
         </view>
       </view>
     </view>
@@ -44,32 +44,16 @@
 </template>
 
 <script lang="ts" setup>
-import myRecord from '@/model/myRecord'
 import { useModal, useToast } from '@/uni_modules/fant-mini-plus'
 import UserApi from '@/api/UserAPI'
+import { useInfoRecords } from '@/store/UserInfoRecords'
 const modal = useModal()
 const toast = useToast()
 
 const { userInfo } = storeToRefs(useAuthStore()) // 解构pinia的store
+const { infoRecords } = storeToRefs(useInfoRecords()) // 解构
+
 const router = useRouter()
-const target = ref<Record<string, myRecord>>({
-  我的租赁: {
-    value: 0,
-    routerName: 'lease'
-  },
-  我的出租: {
-    value: 0,
-    routerName: 'hire'
-  },
-  我的收藏: {
-    value: 0,
-    routerName: 'collect'
-  },
-  我的发布: {
-    value: 0,
-    routerName: 'publish'
-  }
-})
 
 const handlePageShow = (item) => {
   router.push({ name: item.routerName })
@@ -98,11 +82,13 @@ onMounted(() => {
     userInfo.value = null
     router.replaceAll({ name: 'login' })
   } else {
-    console.log('刷新用户信息')
-
     UserApi.refreshToken()
       .then((resp: any) => {
         userInfo.value = resp.data
+        // 获取我的信息
+        UserApi.getMyInfo().then((resp) => {
+          infoRecords.value = resp.data || []
+        })
       })
       .catch((error) => {
         toast.showToast({

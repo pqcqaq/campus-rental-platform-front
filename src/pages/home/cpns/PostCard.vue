@@ -1,7 +1,7 @@
 <template>
   <div :style="postStyle" class="postCard" ref="postCard" @touchstart="touchS" @touchmove="touchM" @touchend="touchE">
-    <div class="img" @click="handleClickPost" :lazy-load="true">
-      <image class="img" ref="img" :src="firstImageUrl" mode="aspectFill" />
+    <div class="img" @click="handleClickPost">
+      <image class="img" ref="img" :src="firstImageUrl" mode="aspectFill" lazy-load :lazy-load-margin="1" @error="imageError($event)" />
     </div>
     <div class="info">
       <div class="title">
@@ -11,24 +11,32 @@
       <div class="nums">
         <!-- 收藏数目 -->
         <div class="collect">
-          <image src="@/static/star-fill.png"></image>
+          <image src="@/static/star-fill.png" lazy-load :lazy-load-margin="1"></image>
           <text class="numText">{{ collectNum }}</text>
         </div>
         <!-- 点赞数目 -->
         <div class="like">
-          <image src="@/static/like.png"></image>
+          <image src="@/static/like.png" lazy-load :lazy-load-margin="1"></image>
           <text class="numText">{{ likeNum }}</text>
         </div>
       </div>
     </div>
     <div class="postActions" ref="postActions">
-      <button class="likeButton" @click="handleLike">
-        <hd-icon class="likeBtn" name="ic_collection_fill" :color="btnIconColor" size="50rpx"></hd-icon>
-      </button>
-      <!-- 编辑按钮 -->
-      <button v-if="props.post.editable || isAdmin" class="likeButton" @click="handleEdit">
-        <hd-icon class="likeBtn" name="ic_edit_line" color="#fff" size="50rpx"></hd-icon>
-      </button>
+      <div class="action" v-if="props.showAction">
+        <button class="likeButton" @click="handleCollect">
+          <hd-icon class="likeBtn" name="ic_collection_fill" :color="btnIconColor" size="50rpx"></hd-icon>
+        </button>
+      </div>
+      <div class="exAction">
+        <!-- 编辑按钮 -->
+        <button v-if="props.post.editable || isAdmin" class="editButton" @click="handleEdit">
+          <hd-icon class="editBtn" name="ic_edit_line" color="#863B3B" size="50rpx"></hd-icon>
+        </button>
+        <!-- 删除按钮 -->
+        <button v-if="props.post.editable && props.showDel" class="delButton" @click="props.handleDel(props.post.id, props.post.author)">
+          <hd-icon class="delBtn" name="ic_close_line" color="#000" size="50rpx"></hd-icon>
+        </button>
+      </div>
     </div>
   </div>
 </template>
@@ -40,6 +48,8 @@ import Post from '@/model/Post'
 import router from '@/router'
 import { transIdToUrl } from '@/utils/ImageUtils'
 import { ref } from 'vue'
+import { useInfoRecords } from '@/store/UserInfoRecords'
+import UserInfo from '@/model/UserInfo'
 
 onMounted(async () => {
   const imgList = props.post.imgs || []
@@ -50,13 +60,18 @@ onMounted(async () => {
     firstImageUrl.value = 'https://t.mwm.moe/ai/'
   }
   // 设置按钮颜色
-  btnIconColor.value = props.post.isLike ? '#F7CA59' : '#fff'
+  btnIconColor.value = props.post.isCollect ? '#F7CA59' : '#fff'
 })
+
+const imageError = (e: Event) => {
+  // 图片加载失败
+  firstImageUrl.value = 'https://t.mwm.moe/ai/'
+}
 
 const props = defineProps({
   height: {
     type: String,
-    default: '400rpx'
+    default: '380rpx'
   },
   width: {
     type: String,
@@ -65,6 +80,22 @@ const props = defineProps({
   post: {
     type: Post,
     required: true
+  },
+  showAction: {
+    type: Boolean,
+    default: true
+  },
+  handleAction: {
+    type: Function,
+    default: (postId: string, action: boolean) => {}
+  },
+  showDel: {
+    type: Boolean,
+    default: false
+  },
+  handleDel: {
+    type: Function,
+    default: (postId: string, author: UserInfo) => {}
   }
 })
 
@@ -111,8 +142,8 @@ const collectNum = ref<number>(props.post.collectNum || 0)
 // 点赞数量
 const likeNum = ref<number>(props.post.likeNum || 0)
 
-const handleLike = (e: MouseEvent) => {
-  // 处理点赞事件
+const handleCollect = (e: MouseEvent) => {
+  // 处理收藏事件
   PostApi.collectPost(props.post.id || '')
     .then((resp) => {
       if (resp.data) {
@@ -120,12 +151,15 @@ const handleLike = (e: MouseEvent) => {
         btnIconColor.value = '#F7CA59'
         // 更新点赞数目
         collectNum.value++
+        useInfoRecords().addCollect()
       } else {
         // 取消点赞
         btnIconColor.value = '#fff'
         // 更新点赞数目
         collectNum.value--
+        useInfoRecords().subCollect()
       }
+      props.handleAction(props.post.id, resp.data)
     })
     .catch((error) => {
       console.log(error)
@@ -241,6 +275,52 @@ const isAdmin = useAuthStore().isAdmin()
   }
   .likeButton:hover {
     background-color: #4c8fcb;
+  }
+  .exAction {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+  .editButton {
+    width: 120rpx;
+    height: 120rpx;
+    margin-top: 10rpx;
+    background-color: #ffd5d0;
+    color: #fff;
+    border: none;
+    border-radius: 50%;
+    margin-bottom: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease-in-out;
+    // 阴影
+    box-shadow: 3rpx 3rpx 20rpx 0rpx rgba(0, 0, 0, 0.186);
+    .editBtn {
+      transition: transform 0.3s ease-in-out;
+    }
+  }
+  .editButton:hover {
+    background-color: #ff967e;
+  }
+  .delButton {
+    width: 120rpx;
+    height: 120rpx;
+    margin-top: 10rpx;
+    background-color: #ff7869;
+    color: #fff;
+    border: none;
+    border-radius: 50%;
+    margin-bottom: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease-in-out;
+    // 阴影
+    box-shadow: 3rpx 3rpx 20rpx 0rpx rgba(0, 0, 0, 0.186);
+    .delBtn {
+      transition: transform 0.3s ease-in-out;
+    }
+  }
+  .delButton:hover {
+    background-color: #ff2a13;
   }
 }
 </style>

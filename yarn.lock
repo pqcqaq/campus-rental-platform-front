@@ -13355,6 +13355,11 @@
     "@intlify/shared" "9.5.0"
     "@vue/devtools-api" "^6.5.0"
 
+"vue-lazyload@^3.0.0":
+  "integrity" "sha512-h2keL/Rj550dLgesgOtXJS9qOiSMmuJNeVlfNAYV1/IYwOQYaWk5mFJlwRxmZDK9YC5gECcFLYYj7z1lKSf9ug=="
+  "resolved" "https://registry.npmmirror.com/vue-lazyload/-/vue-lazyload-3.0.0.tgz"
+  "version" "3.0.0"
+
 "vue-router@^4.1.6":
   "integrity" "sha512-DIUpKcyg4+PTQKfFPX88UWhlagBEBEfJ5A8XDXRJLUnZOvcpMF8o/dnL90vpVkGaPbjvXazV/rC1qBKrZlFugw=="
   "resolved" "https://registry.npmmirror.com/vue-router/-/vue-router-4.2.5.tgz"

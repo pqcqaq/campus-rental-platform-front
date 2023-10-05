@@ -1,5 +1,6 @@
 import http from '@/http/HttpClient'
 import BaseResponse from '@/model/BaseResponse'
+import myRecord from '@/model/myRecord'
 import UserInfo from '@/model/UserInfo'
 export default class UserAPI {
   /**
@@ -47,6 +48,13 @@ export default class UserAPI {
     return http
       .server()
       .post('user/refreshToken')
+      .then((res) => res.data)
+  }
+
+  static getMyInfo(): Promise<BaseResponse<myRecord[]>> {
+    return http
+      .server()
+      .get('user/getUserInfoRecords')
       .then((res) => res.data)
   }
 }

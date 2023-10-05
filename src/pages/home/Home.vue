@@ -1,6 +1,7 @@
 <template>
   <hd-loading></hd-loading>
   <hd-toast></hd-toast>
+  <hd-modal></hd-modal>
   <view class="home">
     <view class="header">
       <swiper
@@ -14,17 +15,17 @@
         previous-margin="20px"
         next-margin="20px"
       >
-        <swiper-item class="swiper-box" :autoplay="true" :interval="1000" v-for="item in swiperList" :key="item">
+        <swiper-item class="swiper-box" :autoplay="true" :interval="1000" v-for="item in swiperList" :key="item.postId">
           <view class="swiper-item" @click="openDetial(item)">
             <image class="image" mode="aspectFill" :src="item.img"></image>
             <text class="text">{{ item.text }}</text>
             <div class="logos">
               <!-- 收藏数目 -->
-              <div class="collect" v-if="item.type == 'collect'">
+              <div class="collect" v-if="item.type?.includes('collect')">
                 <image src="@/static/star-fill.png"></image>
               </div>
               <!-- 点赞数目 -->
-              <div class="like" v-if="item.type == 'like'">
+              <div class="like" v-if="item.type?.includes('like')">
                 <image src="@/static/like.png"></image>
               </div>
             </div>
@@ -35,8 +36,8 @@
 
     <view class="main">
       <div class="postList">
-        <div v-for="(item, index) in postList" :key="index" class="postItem">
-          <PostCard :postId="item.id || ''" :post="item"></PostCard>
+        <div v-for="item in postList" :key="item.id" class="postItem">
+          <PostCard :postId="item.id || ''" :post="item" :showDel="item.editable" :handleDel="handleDelPost"></PostCard>
         </div>
         <text class="info">{{ loadMsg }}</text>
       </div>
@@ -53,16 +54,21 @@ import CommonApi from '@/api/CommonApi'
 import DemoApi from '@/api/DemoApi'
 import Chanel from '@/model/Chanel'
 import { SwiperItem } from '@/model/Swiper'
-import { useLoading, useToast } from '@/uni_modules/fant-mini-plus'
+import { useLoading, useToast, useModal } from '@/uni_modules/fant-mini-plus'
 import axios from 'axios'
 import { ref, onMounted } from 'vue'
 import PostCard from './cpns/PostCard.vue'
 import Post from '@/model/Post'
-import { userInfo } from 'os'
 import PostApi from '@/api/PostApi'
 import { transIdToUrl } from '@/utils/ImageUtils'
+import UserApi from '@/api/UserAPI'
+import { useInfoRecords } from '@/store/UserInfoRecords'
+import UserInfo from '@/model/UserInfo'
+
+const { userInfo } = storeToRefs(useAuthStore()) // 解构pinia的store
 const loading = useLoading()
 const toast = useToast()
+const modal = useModal()
 const router = useRouter()
 const swiperList = ref<SwiperItem[]>([])
 const indicatorDots = ref<boolean>(true)
@@ -156,6 +162,45 @@ const fetchList = () => {
 onReachBottom(() => {
   fetchList()
 })
+
+const handleDelPost = (postId: string, author: UserInfo) => {
+  // 确认删除
+  modal.showModal({
+    title: '提示',
+    content: '确认删除该帖子吗？',
+    success: (res) => {
+      if (res.confirm) {
+        doDelPost(postId, author)
+      }
+    }
+  })
+}
+
+const doDelPost = (postId: string, author: UserInfo) => {
+  loading.showLoading({})
+  PostApi.delPost(postId)
+    .then((_resp) => {
+      toast.showToast({
+        title: '删除成功',
+        icon: 'success'
+      })
+      // 判断一下，如果是自己发布的，更新发布记录
+      if (userInfo.value?.username === author.username) {
+        useInfoRecords().subPublish()
+      }
+      // 从列表中删除
+      postList.value = postList.value.filter((item) => item.id !== postId)
+    })
+    .catch((error) => {
+      toast.showToast({
+        title: error.message,
+        icon: 'error'
+      })
+    })
+    .finally(() => {
+      loading.hideLoading()
+    })
+}
 </script>
 
 <style lang="scss" scoped>
@@ -183,6 +228,9 @@ onReachBottom(() => {
     .postList {
       .postItem {
         margin-bottom: 24rpx;
+        //放置在中间
+        display: flex;
+        justify-content: center;
       }
       .info {
         font-size: 35rpx;

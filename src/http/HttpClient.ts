@@ -107,7 +107,9 @@ export default class ApiClient {
             }, 300)
             useAuthStore().logout()
             break
-
+          case 402:
+            error.msg = `${error.status} 用户已禁用!`
+            break
           case 403:
             error.msg = `${error.status} 禁止访问!`
             break

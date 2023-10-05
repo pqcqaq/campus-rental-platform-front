@@ -4,7 +4,7 @@
   <view class="main">
     <!-- 添加九宫格 -->
     <view class="grid">
-      <view v-for="(item, index) in imgs" :key="index" class="grid-item">
+      <view v-for="(item, index) in imgs" :key="item.id" class="grid-item">
         <!-- 如果当前格子有图片，则显示图片 -->
         <hd-icon @click="handleDelImg(item)" class="del" name="ic_deletepic_fill" size="55rpx" color="#FA6A6A"></hd-icon>
         <image class="img" :src="item.url" @click="lookImg(index)" mode="aspectFill"></image>
@@ -36,6 +36,7 @@ import router from '@/router'
 import { useToast } from '@/uni_modules/fant-mini-plus'
 import Inputfield from '@/components/Inputfield.vue'
 import PostApi from '@/api/PostApi'
+import { useInfoRecords } from '@/store/UserInfoRecords'
 
 onMounted(() => {
   if (useAuthStore().isVisitor) {
@@ -140,6 +141,7 @@ const handlePublish = () => {
         title: '发布成功',
         icon: 'success'
       })
+      useInfoRecords().addPublish()
       router.replaceAll({ name: 'home' })
     })
     .catch((error) => {

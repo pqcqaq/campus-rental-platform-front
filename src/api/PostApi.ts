@@ -22,14 +22,35 @@ export default class PostApi {
   static likePost(postId: string): Promise<BaseResponse<boolean>> {
     return http
       .server()
-      .get(`posts/like/${postId}`)
+      .put(`posts/like/${postId}`)
       .then((res) => res.data)
   }
 
   static collectPost(postId: string): Promise<BaseResponse<boolean>> {
     return http
       .server()
-      .get(`posts/collect/${postId}`)
+      .put(`posts/collect/${postId}`)
+      .then((res) => res.data)
+  }
+
+  static getMyPublishPosts(page: number, size: number): Promise<BaseResponse<PageResult<Post>>> {
+    return http
+      .server()
+      .get(`posts/publish/${page}/${size}`)
+      .then((res) => res.data)
+  }
+
+  static getMyCollectPosts(page: number, size: number): Promise<BaseResponse<PageResult<Post>>> {
+    return http
+      .server()
+      .get(`posts/collect/${page}/${size}`)
+      .then((res) => res.data)
+  }
+
+  static delPost(postId: string): Promise<BaseResponse<string>> {
+    return http
+      .server()
+      .delete(`posts/${postId}`)
       .then((res) => res.data)
   }
 }
