@@ -6,12 +6,12 @@
     <div class="body">
       <div class="header">
         <view class="header-user">
-          <image v-if="props.post.author?.avatar != ''" :src="props.post.author?.avatar" class="header-user-avatar"></image>
+          <image v-if="post.author?.avatar != ''" :src="post.author?.avatar" class="header-user-avatar"></image>
           <image v-else src="@/static/guest.png" class="header-user-avatar" />
           <view class="header-user-nickname">
-            <view class="nickname">{{ props.post.author?.nickName }}</view>
-            <view class="info">{{ props.post.author?.school }}</view>
-            <view class="phone">{{ props.post.author?.mobile }}</view>
+            <view class="nickname">{{ post.author?.nickName }}</view>
+            <view class="info">{{ post.author?.school }}</view>
+            <view class="phone">{{ post.author?.mobile }}</view>
           </view>
         </view>
       </div>
@@ -30,7 +30,7 @@
           >
             <swiper-item class="swiper-box" :autoplay="true" :interval="1000" v-for="(item, index) in swiperList" :key="index">
               <view class="swiper-item" @click="previewImg(item)">
-                <image class="image" mode="aspectFill" :src="item"></image>
+                <image class="image" mode="aspectFill" :src="item" lazy-load :lazy-load-margin="0"></image>
               </view>
             </swiper-item>
           </swiper>
@@ -46,6 +46,7 @@ import { SwiperItem } from '@/model/Swiper'
 import { useLoading, useToast, useModal } from '@/uni_modules/fant-mini-plus'
 import { transIdToUrl } from '@/utils/ImageUtils'
 import { usePostShowNowStore } from '@/store/postShowNow'
+import PostApi from '@/api/PostApi'
 
 const loading = useLoading()
 const toast = useToast()
@@ -55,13 +56,10 @@ const indicatorDots = ref<boolean>(true)
 const autoplay = ref<boolean>(true)
 const interval = ref<number>(5000)
 const duration = ref<number>(1000)
+//解构
+const { postShowNow, postId } = storeToRefs(usePostShowNowStore())
 
-const props = defineProps({
-  post: {
-    type: Post,
-    required: true
-  }
-})
+const post = ref<Post>({})
 
 const previewImg = (item: string) => {
   uni.previewImage({
@@ -70,22 +68,29 @@ const previewImg = (item: string) => {
   })
 }
 
-onShow(async () => {
-  console.log('onShow')
-
-  // 显示加载中
+onMounted(async () => {
   loading.showLoading({
     title: '加载中'
   })
-  const imgList = usePostShowNowStore().postShowNow.imgs || []
-  const list: string[] = []
-  for (const item of imgList) {
-    list.push(await transIdToUrl(item.id))
-    console.log('list', list)
+  try {
+    const res = await PostApi.getPostDetail(postId.value)
+    post.value = res.data || {}
+    const imgList = res.data?.imgs || []
+    const list: string[] = []
+    for (const item of imgList) {
+      list.push(await transIdToUrl(item.id))
+    }
+    swiperList.value = list
+    // 隐藏加载中
+  } catch (error) {
+    toast.showToast({
+      title: '加载失败！',
+      duration: 2000,
+      icon: 'error'
+    })
+  } finally {
+    loading.hideLoading()
   }
-  swiperList.value = list
-  // 隐藏加载中
-  loading.hideLoading()
 })
 </script>
 

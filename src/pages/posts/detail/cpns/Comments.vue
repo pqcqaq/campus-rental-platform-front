@@ -13,13 +13,6 @@ import { useLoading, useToast, useModal } from '@/uni_modules/fant-mini-plus'
 const loading = useLoading()
 const toast = useToast()
 const modal = useModal()
-
-defineProps({
-  post: {
-    type: Post,
-    required: true
-  }
-})
 </script>
 
 <style lang="stylus" scoped></style>

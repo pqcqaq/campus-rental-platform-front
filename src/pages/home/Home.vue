@@ -123,7 +123,6 @@ onPullDownRefresh(() => {
 
 const openDetial = (item) => {
   //存储打开的帖子到本地
-  usePostShowNowStore().setPostShowNow(item)
   usePostShowNowStore().setPostId(item.postId)
   router.push({ name: 'detail' })
 }

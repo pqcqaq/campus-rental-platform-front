@@ -17,14 +17,14 @@
       <swiper-item class="swiperitem-content">
         <scroll-view scroll-y style="height: 100%">
           <view class="nav_item">
-            <Info :post="postShowNow" />
+            <Info />
           </view>
         </scroll-view>
       </swiper-item>
       <swiper-item class="swiperitem-content">
         <scroll-view scroll-y style="height: 100%">
           <view class="nav_item">
-            <Comments :post="usePostShowNowStore().postShowNow" />
+            <Comments />
           </view>
         </scroll-view>
       </swiper-item>
@@ -38,33 +38,13 @@ import Info from '@/pages/posts/detail/cpns/Info.vue'
 import Comments from '@/pages/posts/detail/cpns/Comments.vue'
 import PostApi from '@/api/PostApi'
 import { useLoading, useToast, useModal } from '@/uni_modules/fant-mini-plus'
+import Post from '@/model/Post'
 
 const loading = useLoading()
 const toast = useToast()
 const modal = useModal()
 
-//解构
-const { postShowNow, postId } = storeToRefs(usePostShowNowStore())
-
-onMounted(() => {
-  //显示加载中
-  loading.showLoading({
-    title: '加载中'
-  })
-  PostApi.getPostDetail(postId.value)
-    .then((res) => {
-      postShowNow.value = res.data || {}
-    })
-    .catch((_err) => {
-      toast.showToast({
-        title: '加载失败！',
-        duration: 2000,
-        icon: 'error'
-      })
-    })
-    .finally(() => {
-      loading.hideLoading()
-    })
+onMounted(async () => {
   //获取手机屏幕的高度，让其等于swiper的高度，从而使屏幕充满
   uni.getSystemInfo({
     success: function (res) {
@@ -100,8 +80,6 @@ const category = ref([
 ])
 const scrollLeft = ref<number>(0) // 横向滚动条位置
 const fullHeight = ref<string>('')
-
-onMounted(() => {})
 
 // 当前点击子元素靠左留一个选项展示，子元素宽度不相同也可实现
 const chenked = (index) => {
