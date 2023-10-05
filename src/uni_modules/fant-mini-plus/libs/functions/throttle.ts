@@ -1,14 +1,3 @@
-/* eslint-disable prefer-rest-params */
-/* eslint-disable @typescript-eslint/ban-types */
-/*
- * @Author: weisheng
- * @Date: 2021-12-21 14:23:23
- * @LastEditTime: 2023-04-18 16:56:37
- * @LastEditors: weisheng
- * @Description: 节流函数
- * @FilePath: \fant-mini-plus\src\uni_modules\fant-mini-plus\libs\functions\throttle.ts
- * 记得注释
- */
 
 let timer: Nullable<number> | any = null // 定时器
 

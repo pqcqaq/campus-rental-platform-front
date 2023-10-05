@@ -1,12 +1,3 @@
-<!--
- * @Author: weisheng
- * @Date: 2023-04-05 21:32:56
- * @LastEditTime: 2023-09-18 18:44:57
- * @LastEditors: weisheng
- * @Description: 水印组件
- * @FilePath: \fant-mini-plus\src\uni_modules\fant-mini-plus\components\hd-water-mark\hd-water-mark.vue
- * 记得注释
--->
 <template>
   <view :class="rootClass" :style="rootStyle">
     <canvas

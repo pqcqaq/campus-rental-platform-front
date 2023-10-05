@@ -1,12 +1,3 @@
-<!--
- * @Author: 刘湘
- * @Date: 2021-05-25 16:34:27
- * @LastEditTime: 2023-06-06 22:30:16
- * @LastEditors: weisheng
- * @Description: 
- * @FilePath: \fant-mini-plus\src\uni_modules\fant-mini-plus\components\hd-toast\hd-toast.vue
- * 记得注释
--->
 <template>
   <hd-transition :show="innerData.visible" :customStyle="`z-index:${innerData.zIndex};position:fixed;`" @after-leave="afterLeave">
     <view @click="click" :class="['hd-toast', `hd-toast-${innerData.type}`, `hd-toast--${size}`]" :style="rootStyle">

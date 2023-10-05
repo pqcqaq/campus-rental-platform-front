@@ -1,12 +1,3 @@
-<!--
- * @Author: weisheng
- * @Date: 2022-02-22 19:27:37
- * @LastEditTime: 2023-09-14 21:42:17
- * @LastEditors: weisheng
- * @Description: Notify 消息提示 
- * @FilePath: \fant-mini-plus\src\uni_modules\fant-mini-plus\components\hd-notify\hd-notify.vue
- * 记得注释
--->
 <template>
   <hd-transition key="hd-notify" name="slide-down" :customStyle="transitionStyle" :show="visiable">
     <view class="hd-notify" :class="['hd-notify', 'hd-notify-' + innerType]" :style="style" @click="onTap">

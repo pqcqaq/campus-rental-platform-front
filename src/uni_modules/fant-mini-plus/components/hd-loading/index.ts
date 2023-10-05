@@ -1,12 +1,3 @@
-/*
- * @Author: weisheng
- * @Date: 2022-12-14 17:33:21
- * @LastEditTime: 2023-05-19 16:44:07
- * @LastEditors: weisheng
- * @Description:
- * @FilePath: \fant-mini-plus\src\uni_modules\fant-mini-plus\components\hd-loading\index.ts
- * 记得注释
- */
 import { type InjectionKey, type Ref, nextTick, provide, ref } from 'vue'
 import { CommonUtil } from '../../index'
 import type { Loading, LoadingOptions } from './types'

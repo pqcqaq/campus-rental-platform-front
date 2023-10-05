@@ -1,12 +1,3 @@
-<!--
- * @Author: weisheng
- * @Date: 2021-10-14 19:28:57
- * @LastEditTime: 2023-03-27 14:10:15
- * @LastEditors: weisheng
- * @Description: 
- * @FilePath: \fant-mini-plus\src\uni_modules\fant-mini\components\hd-tab\hd-tab.vue
- * 记得注释
--->
 <template>
   <view v-show="showContent">
     <slot></slot>

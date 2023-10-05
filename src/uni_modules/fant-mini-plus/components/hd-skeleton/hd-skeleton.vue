@@ -1,12 +1,3 @@
-<!--
- * @Author: weisheng
- * @Date: 2023-04-05 21:32:56
- * @LastEditTime: 2023-04-06 11:45:27
- * @LastEditors: weisheng
- * @Description: 骨架屏
- * @FilePath: \fant-mini-plus\src\uni_modules\fant-mini-plus\components\hd-skeleton\hd-skeleton.vue
- * 记得注释
--->
 <template>
   <view class="hd-skeleton"></view>
 </template>

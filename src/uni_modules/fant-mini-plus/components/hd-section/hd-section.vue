@@ -1,12 +1,3 @@
-<!--
- * @Author: weisheng
- * @Date: 2023-03-21 22:52:15
- * @LastEditTime: 2023-06-23 13:49:01
- * @LastEditors: weisheng
- * @Description: 
- * @FilePath: \fant-mini-plus\src\uni_modules\fant-mini-plus\components\hd-section\hd-section.vue
- * 记得注释
--->
 <template>
   <view class="hd-section" :style="subsectionStyle">
     <view

@@ -1,12 +1,3 @@
-/*
- * @Author: weisheng
- * @Date: 2022-12-15 14:24:08
- * @LastEditTime: 2023-03-21 21:50:29
- * @LastEditors: weisheng
- * @Description:
- * @FilePath: \fant-mini-plus\src\uni_modules\fant-mini\components\hd-modal\types.ts
- * 记得注释
- */
 
 export type ModalRes = {
   /**
