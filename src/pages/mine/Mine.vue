@@ -28,7 +28,7 @@
           <view class="phone">{{ userInfo?.mobile }}</view>
         </view>
         <view class="header-user-more" @click="handleChangeBackground">
-          <hd-icon name="ic_sort_fill" size="48rpx" color="#BEC0C7"></hd-icon>
+          <hd-icon name="ic_sort_fill" size="48rpx" color="#8d8d8d"></hd-icon>
         </view>
       </view>
       <view class="header-target">
