@@ -221,6 +221,8 @@ const doChangeBackground = () => {
       padding: 10rpx;
       // 白色边框
       border: 1rpx solid #8d8d8d;
+      // 阴影
+      box-shadow: 0 2rpx 10rpx 0 rgba(0, 0, 0, 0.3);
 
       &-avatar {
         flex: 0 0 auto;
@@ -296,6 +298,8 @@ const doChangeBackground = () => {
   backdrop-filter: blur(10rpx);
   // 白色边框
   border: 1rpx solid #8d8d8d;
+  // 阴影
+  box-shadow: 0 2rpx 10rpx 0 rgba(0, 0, 0, 0.3);
   border-radius: 30rpx;
   margin-left: 10rpx;
   margin-right: 10rpx;
