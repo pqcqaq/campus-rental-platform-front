@@ -9,6 +9,8 @@ export default class UserInfo {
   nickName: Nullable<string> = null
   // 头像
   avatar: Nullable<string> = null
+  // 个人首页背景
+  background: Nullable<string> = null
   // 求学之所
   school: Nullable<string> = null
   // token

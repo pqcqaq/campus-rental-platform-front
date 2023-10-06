@@ -8,15 +8,16 @@
       <hd-icon name="ic_setup_fill" size="48rpx" color="#292C39" @click="setup"></hd-icon>
     </view>
     <view class="header">
+      <image :src="userInfo?.background" mode="aspectFill" class="background" />
       <view class="header-user">
-        <image v-if="userInfo?.avatar != ''" :src="userInfo?.avatar" class="header-user-avatar"></image>
+        <image v-if="userInfo?.avatar != ''" :src="userInfo?.avatar" class="header-user-avatar" />
         <image v-else src="@/static/guest.png" class="header-user-avatar" />
         <view class="header-user-nickname">
           <view class="nickname">{{ userInfo?.nickName }}</view>
           <view class="info">{{ userInfo?.school }}</view>
           <view class="phone">{{ userInfo?.mobile }}</view>
         </view>
-        <view class="header-user-more">
+        <view class="header-user-more" @click="handleChangeBackground">
           <hd-icon name="ic_sort_fill" size="48rpx" color="#BEC0C7"></hd-icon>
         </view>
       </view>
@@ -92,6 +93,10 @@ onShow(() => {
     infoRecords.value = resp.data || []
   })
 })
+
+const handleChangeBackground = () => {
+  console.log('handleChangeBackground')
+}
 </script>
 
 <style lang="scss" scoped>
@@ -109,6 +114,23 @@ onShow(() => {
     padding: 0 12rpx;
   }
   .header {
+    position: relative;
+
+    .background {
+      // 作为整个view的背景
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 1;
+      opacity: 0.1;
+      // 模糊
+      filter: blur(1rpx);
+      // 穿透
+      pointer-events: none;
+      border-radius: 16rpx;
+    }
     width: 100%;
     background: #f6f9fe;
     border-radius: 16rpx;
