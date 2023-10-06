@@ -65,4 +65,11 @@ export default class UserAPI {
       .post('user/saveAlterBackground', background)
       .then((res) => res.data)
   }
+
+  static follow(userId: string): Promise<BaseResponse<boolean>> {
+    return http
+      .server()
+      .put(`user/follow/${userId}`)
+      .then((res) => res.data)
+  }
 }

@@ -1,8 +1,11 @@
 <template>
+  <hd-loading></hd-loading>
+  <hd-toast></hd-toast>
+  <hd-modal></hd-modal>
   <div
     class="userInfo"
     :style="{
-      'background-image': 'url(' + props.user.background + ')',
+      'background-image': 'url(' + user?.background + ')',
       'background-repeat': 'no-repeat',
       width: '100%',
       height: '100%',
@@ -12,13 +15,17 @@
   >
     <view class="userInfo-user">
       <div class="blur">
-        <image v-if="props.user.avatar != ''" :src="props.user.avatar" class="userInfo-user-avatar" />
+        <image v-if="user?.avatar != ''" :src="user?.avatar" class="userInfo-user-avatar" />
         <image v-else src="@/static/guest.png" class="userInfo-user-avatar" />
         <view class="userInfo-user-nickname">
-          <view class="nickname">{{ props.user.nickName }}</view>
-          <view class="info">{{ props.user.school }}</view>
-          <view class="phone">{{ props.user.mobile }}</view>
+          <view class="nickname">{{ user?.nickName }}</view>
+          <view class="info">{{ user?.school }}</view>
+          <view class="phone">{{ user?.mobile }}</view>
         </view>
+      </div>
+      <div class="subscribe" @click="handleFollow">
+        <text class="subNum">{{ user?.fansNum }}</text>
+        <uni-icons class="subBtn" :color="user?.isFollow ? '#E76363' : '#DDDDDD'" type="heart-filled" size="60rpx" />
       </div>
     </view>
   </div>
@@ -26,16 +33,49 @@
 
 <script setup lang="ts">
 import UserInfo from '@/model/UserInfo'
-
+import { useLoading, useToast, useModal } from '@/uni_modules/fant-mini-plus'
+const toast = useToast()
 const props = defineProps({
   user: {
     type: UserInfo,
     required: false,
     default: () => new UserInfo()
+  },
+  handleFollow: {
+    type: Function,
+    required: false,
+    default: (userId: string) => {}
   }
 })
+
+const handleFollow = () => {
+  props.handleFollow(props.user.id)
+}
 </script>
 <style lang="scss" scoped>
+.subscribe {
+  // 上下对齐
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  // 居中
+  margin: auto;
+  margin-right: 10rpx;
+  // 圆角半透明阴影
+  border-radius: 30rpx;
+  box-shadow: 0 0 10rpx rgba(0, 0, 0, 0.1);
+  // 背景模糊
+  backdrop-filter: blur(10rpx);
+  padding: 5rpx 5rpx 5rpx 15rpx;
+  .subNum {
+    font-size: 40rpx;
+    font-weight: 550;
+    color: #152a89a0;
+    margin-bottom: 20rpx;
+    margin: auto auto;
+    margin-right: 10rpx;
+  }
+}
 .blur {
   // 阴影
   box-shadow: 0 2rpx 10rpx 0 rgba(0, 0, 0, 0.3);

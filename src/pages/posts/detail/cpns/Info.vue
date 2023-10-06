@@ -29,7 +29,7 @@
         </div>
       </div>
       <div class="main">
-        <UserInfo :user="post.author" />
+        <UserInfo :user="post.author" :handleFollow="handleFollow" />
         <view class="divLine" />
         <view class="context">
           {{ post.intro }}
@@ -63,6 +63,7 @@ import { transIdToUrl } from '@/utils/ImageUtils'
 import { usePostShowNowStore } from '@/store/postShowNow'
 import PostApi from '@/api/PostApi'
 import UserInfo from './UserInfo.vue'
+import UserAPI from '@/api/UserAPI'
 
 const loading = useLoading()
 const toast = useToast()
@@ -150,6 +151,28 @@ const handleLike = async () => {
         icon: 'error'
       })
     })
+}
+
+const handleFollow = () => {
+  UserAPI.follow(post.value.author?.id || '').then((res) => {
+    if (res.code === 200) {
+      if (res.data) {
+        toast.showToast({
+          title: '关注成功',
+          icon: 'success'
+        })
+        post.value.author!.fansNum = (post.value.author?.fansNum || 0) + 1
+        post.value.author!.isFollow = true
+      } else {
+        toast.showToast({
+          title: '取消关注成功',
+          icon: 'success'
+        })
+        post.value.author!.fansNum = (post.value.author?.fansNum || 0) - 1
+        post.value.author!.isFollow = false
+      }
+    }
+  })
 }
 </script>
 
