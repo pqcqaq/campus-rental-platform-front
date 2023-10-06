@@ -58,4 +58,11 @@ export default class UserAPI {
       .get('user/getUserInfoRecords')
       .then((res) => res.data)
   }
+
+  static saveAlterBackground(background: string): Promise<BaseResponse<string>> {
+    return http
+      .server()
+      .post('user/saveAlterBackground', background)
+      .then((res) => res.data)
+  }
 }

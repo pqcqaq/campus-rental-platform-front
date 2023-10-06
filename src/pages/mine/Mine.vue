@@ -94,8 +94,73 @@ onShow(() => {
   })
 })
 
+const baseURL = import.meta.env.VITE_BASEURL
 const handleChangeBackground = () => {
-  console.log('handleChangeBackground')
+  // 更换背景提示
+  modal.showModal({
+    title: '提示',
+    content: '是否更换背景',
+    showCancel: true,
+    cancelText: '取消',
+    confirmText: '确定',
+    success: (res) => {
+      if (res.confirm) {
+        // 确定，打开图片
+        doChangeBackground()
+      }
+    }
+  })
+}
+const doChangeBackground = () => {
+  uni.chooseImage({
+    count: 1,
+    sizeType: ['compressed'], //可以指定是原图还是压缩图，默认二者都有
+    sourceType: ['album', 'camera'], //从相册或者相机选择
+    success: async (res) => {
+      uni.uploadFile({
+        url: baseURL + '/attachment/img',
+        filePath: res.tempFilePaths[0],
+        name: 'img',
+        header: {
+          token: userInfo.value?.token || 'null'
+        },
+        success: (res) => {
+          const result = JSON.parse(res.data)
+          console.log(result)
+
+          if (result.code == 200) {
+            toast.showToast({
+              title: '上传成功',
+              icon: 'success'
+            })
+            UserApi.saveAlterBackground(result.data)
+              .then((_resp) => {
+                useAuthStore().setBackground(result.data || '')
+              })
+              .catch((error) => {
+                toast.showToast({
+                  title: error.msg,
+                  icon: 'error'
+                })
+              })
+          } else {
+            toast.showToast({
+              title: result.msg,
+              icon: 'error'
+            })
+          }
+        },
+        fail: (err) => {
+          console.log(err)
+
+          toast.showToast({
+            title: '上传失败',
+            icon: 'error'
+          })
+        }
+      })
+    }
+  })
 }
 </script>
 
@@ -124,9 +189,9 @@ const handleChangeBackground = () => {
       width: 100%;
       height: 100%;
       z-index: 1;
-      opacity: 0.1;
+      opacity: 0.4;
       // 模糊
-      filter: blur(1rpx);
+      filter: blur(10);
       // 穿透
       pointer-events: none;
       border-radius: 16rpx;

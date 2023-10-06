@@ -15,6 +15,7 @@ export default class Post {
     mobile: null,
     nickName: null,
     avatar: null,
+    background: null,
     school: null,
     token: null,
     role: null

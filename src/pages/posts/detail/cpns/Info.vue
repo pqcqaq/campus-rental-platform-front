@@ -29,15 +29,7 @@
         </div>
       </div>
       <div class="main">
-        <view class="main-user">
-          <image v-if="post.author?.avatar != ''" :src="post.author?.avatar" class="main-user-avatar"></image>
-          <image v-else src="@/static/guest.png" class="main-user-avatar" />
-          <view class="main-user-nickname">
-            <view class="nickname">{{ post.author?.nickName }}</view>
-            <view class="info">{{ post.author?.school }}</view>
-            <view class="phone">{{ post.author?.mobile }}</view>
-          </view>
-        </view>
+        <UserInfo :user="post.author" />
         <view class="divLine" />
         <view class="context">
           {{ post.intro }}
@@ -70,6 +62,7 @@ import { useLoading, useToast, useModal } from '@/uni_modules/fant-mini-plus'
 import { transIdToUrl } from '@/utils/ImageUtils'
 import { usePostShowNowStore } from '@/store/postShowNow'
 import PostApi from '@/api/PostApi'
+import UserInfo from './UserInfo.vue'
 
 const loading = useLoading()
 const toast = useToast()
@@ -178,63 +171,15 @@ const handleLike = async () => {
   box-shadow: 0 0 10rpx rgba(0, 0, 0, 0.1);
   margin-bottom: 150rpx;
 }
-.main-user {
-  border: 1rpx solid #bdcfffa4;
-  padding: 10rpx;
-  box-shadow: 0 1rpx 10rpx rgba(0, 0, 0, 0.25);
-  border-radius: 30rpx;
-}
-
-.main-user:hover {
-  box-shadow: 0 1rpx 10rpx rgba(0, 0, 0, 0.25);
-  background: #e1ebff;
-}
 
 .main {
   width: 100%;
-  background: #f6f9ff;
-  border-radius: 16rpx;
+  background: #ffffff;
   margin-top: 20rpx;
-  padding: 32rpx;
+  padding: 15rpx;
   box-sizing: border-box;
-
-  &-user {
-    display: flex;
-    margin-bottom: 30rpx;
-    &-avatar {
-      flex: 0 0 auto;
-      border-radius: 50%;
-      width: 128rpx;
-      height: 128rpx;
-      overflow: hidden;
-    }
-    &-nickname {
-      flex: 1 1 auto;
-      margin-left: 32rpx;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      .nickname {
-        color: #292c39;
-        font-weight: 550;
-        font-size: 40rpx;
-        margin-bottom: 2rpx;
-      }
-      .info {
-        color: #c6c9cf;
-        font-size: 28rpx;
-      }
-      .phone {
-        color: #c6c9cf;
-        font-size: 20rpx;
-      }
-    }
-    &-more {
-      flex: 0 0 auto;
-      width: 48rpx;
-    }
-  }
 }
+
 .swiper-box {
   height: 380upx;
   padding-top: 5rpx;
@@ -257,19 +202,6 @@ const handleLike = async () => {
       border-radius: 50upx;
       // 阴影
       box-shadow: 3rpx 3rpx 20rpx 0rpx rgba(0, 0, 0, 0.186);
-    }
-    .text {
-      // 没有高度体积，放置在右下角
-      position: absolute;
-      bottom: 70rpx;
-      right: 30rpx;
-      padding: 15rpx;
-      // 阴影
-      background-color: #64656666;
-      border-radius: 20rpx;
-      box-shadow: 3rpx 3rpx 20rpx 0rpx rgba(0, 0, 0, 0.186);
-      // 阴影模糊效果
-      backdrop-filter: blur(10rpx);
     }
   }
 }

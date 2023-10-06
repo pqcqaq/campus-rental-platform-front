@@ -39,6 +39,12 @@ export const useAuthStore = defineStore('authState', {
     },
     isAdmin(): boolean {
       return this.userInfo?.role === 'ROLE_ADMIN'
+    },
+    setBackground(backgroundId: string): void {
+      const backgroundUrl = baseURL + '/common/img/' + backgroundId
+      this.userInfo!.background = backgroundUrl
+      // 保存背景
+      UserAPI.saveAlterBackground(backgroundUrl)
     }
   }
 })
