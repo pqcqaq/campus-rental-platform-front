@@ -11,13 +11,15 @@
     }"
   >
     <view class="userInfo-user">
-      <image v-if="props.user.avatar != ''" :src="props.user.avatar" class="userInfo-user-avatar" />
-      <image v-else src="@/static/guest.png" class="userInfo-user-avatar" />
-      <view class="userInfo-user-nickname">
-        <view class="nickname">{{ props.user.nickName }}</view>
-        <view class="info">{{ props.user.school }}</view>
-        <view class="phone">{{ props.user.mobile }}</view>
-      </view>
+      <div class="blur">
+        <image v-if="props.user.avatar != ''" :src="props.user.avatar" class="userInfo-user-avatar" />
+        <image v-else src="@/static/guest.png" class="userInfo-user-avatar" />
+        <view class="userInfo-user-nickname">
+          <view class="nickname">{{ props.user.nickName }}</view>
+          <view class="info">{{ props.user.school }}</view>
+          <view class="phone">{{ props.user.mobile }}</view>
+        </view>
+      </div>
     </view>
   </div>
 </template>
@@ -34,27 +36,34 @@ const props = defineProps({
 })
 </script>
 <style lang="scss" scoped>
+.blur {
+  // 阴影
+  box-shadow: 0 2rpx 10rpx 0 rgba(0, 0, 0, 0.3);
+  // 背景模糊
+  backdrop-filter: blur(10rpx);
+  // 白色边框
+  border: 1rpx solid #8d8d8d;
+  // 圆角
+  border-radius: 30rpx;
+  display: flex;
+  padding: 10rpx;
+  padding-right: 30rpx;
+}
 // 按下后颜色变暗的效果
-.userInfo-user:hover {
-  background-color: rgb(220, 236, 255);
-  border-radius: 16rpx;
+.blur:hover {
+  background-color: rgb(225, 234, 253);
+  border-radius: 30rpx;
   opacity: 0.8;
+  // 背景模糊
+  backdrop-filter: blur(10rpx);
 }
 .userInfo {
-  background-size: cover;
-  background-position: center;
-  padding: 10rpx;
-  position: relative;
-  width: 100%;
-  height: 100%;
+  padding: 16rpx;
 
   width: 100%;
   background: #f6f9fe;
-  border-radius: 16rpx;
-  margin-top: 20rpx;
+  border-radius: 20rpx;
   box-sizing: border-box;
-  // 阴影
-  box-shadow: 0 2rpx 10rpx 0 rgba(0, 0, 0, 0.3);
 
   &-user {
     display: flex;
@@ -65,7 +74,6 @@ const props = defineProps({
       border-radius: 50%;
       width: 128rpx;
       height: 128rpx;
-      overflow: hidden;
     }
     &-nickname {
       flex: 1 1 auto;
@@ -80,11 +88,11 @@ const props = defineProps({
         margin-bottom: 2rpx;
       }
       .info {
-        color: #c6c9cf;
+        color: #595959;
         font-size: 28rpx;
       }
       .phone {
-        color: #c6c9cf;
+        color: #595959;
         font-size: 20rpx;
       }
     }

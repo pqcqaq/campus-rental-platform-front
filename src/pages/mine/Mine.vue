@@ -7,8 +7,18 @@
       <hd-icon name="ic_scan_line" size="48rpx" color="#292C39" @click="doScan"></hd-icon>
       <hd-icon name="ic_setup_fill" size="48rpx" color="#292C39" @click="setup"></hd-icon>
     </view>
-    <view class="header">
-      <image :src="userInfo?.background" mode="aspectFill" class="background" />
+    <view
+      class="header"
+      :style="{
+        'background-image': 'url(' + userInfo?.background + ')',
+        'background-repeat': 'no-repeat',
+        width: '100%',
+        height: '100%',
+        'background-size': 'cover',
+        'background-position': 'center'
+      }"
+    >
+      <!-- <image :src="userInfo?.background" mode="aspectFill" class="background" /> -->
       <view class="header-user">
         <image v-if="userInfo?.avatar != ''" :src="userInfo?.avatar" class="header-user-avatar" />
         <image v-else src="@/static/guest.png" class="header-user-avatar" />
@@ -176,24 +186,26 @@ const doChangeBackground = () => {
   }
   .header {
     position: relative;
+    // 模糊效果
+    backdrop-filter: blur(10rpx);
 
-    .background {
-      // 作为整个view的背景
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      z-index: 1;
-      opacity: 0.4;
-      // 模糊
-      filter: blur(10);
-      // 穿透
-      pointer-events: none;
-      border-radius: 16rpx;
-    }
+    // .background {
+    //   // 作为整个view的背景
+    //   position: absolute;
+    //   top: 0;
+    //   left: 0;
+    //   width: 100%;
+    //   height: 100%;
+    //   z-index: 1;
+    //   opacity: 0.4;
+    //   // 模糊
+    //   filter: blur(10);
+    //   // 穿透
+    //   pointer-events: none;
+    //   border-radius: 16rpx;
+    // }
     width: 100%;
-    background: #f6f9fe;
+    // background: #f6f9fe;
     border-radius: 16rpx;
     padding: 32rpx;
     box-sizing: border-box;
@@ -203,12 +215,19 @@ const doChangeBackground = () => {
     &-user {
       display: flex;
       margin-bottom: 56rpx;
+      // 背景模糊
+      backdrop-filter: blur(10rpx);
+      border-radius: 30rpx;
+      padding: 10rpx;
+      // 白色边框
+      border: 1rpx solid #8d8d8d;
+
       &-avatar {
         flex: 0 0 auto;
         border-radius: 50%;
         width: 128rpx;
         height: 128rpx;
-        overflow: hidden;
+        // overflow: hidden;
       }
       &-nickname {
         flex: 1 1 auto;
@@ -223,11 +242,11 @@ const doChangeBackground = () => {
           margin-bottom: 2rpx;
         }
         .info {
-          color: #c6c9cf;
+          color: #595959;
           font-size: 28rpx;
         }
         .phone {
-          color: #c6c9cf;
+          color: #575757;
           font-size: 20rpx;
         }
       }
@@ -251,7 +270,8 @@ const doChangeBackground = () => {
           margin-bottom: 24rpx;
         }
         .value {
-          color: #3c3f49;
+          color: #3a3a3a;
+          mix-blend-mode: difference;
           font-size: 28rpx;
         }
       }
@@ -271,7 +291,15 @@ const doChangeBackground = () => {
 .header-target-item {
   /* 其他样式 */
   position: relative;
-  overflow: hidden;
+  // overflow: hidden;
+  // 背景模糊
+  backdrop-filter: blur(10rpx);
+  // 白色边框
+  border: 1rpx solid #8d8d8d;
+  border-radius: 30rpx;
+  margin-left: 10rpx;
+  margin-right: 10rpx;
+  padding: 10rpx;
 }
 
 .header-target-item::before {
