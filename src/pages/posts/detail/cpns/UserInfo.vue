@@ -33,8 +33,6 @@
 
 <script setup lang="ts">
 import UserInfo from '@/model/UserInfo'
-import { useLoading, useToast, useModal } from '@/uni_modules/fant-mini-plus'
-const toast = useToast()
 const props = defineProps({
   user: {
     type: UserInfo,

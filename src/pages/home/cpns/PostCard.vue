@@ -133,7 +133,6 @@ const touchE = (e: TouchEvent) => {
 
 const handleClickPost = (e: MouseEvent) => {
   //存储打开的帖子到本地
-  usePostShowNowStore().setPostShowNow(props.post)
   usePostShowNowStore().setPostId(props.post.id || '')
   // 处理点击事件
   router.push({ name: 'detail' })

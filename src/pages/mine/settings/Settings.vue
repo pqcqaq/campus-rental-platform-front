@@ -55,7 +55,6 @@ import { useModal, usePopup, useToast } from '@/uni_modules/fant-mini-plus'
 import { ref } from 'vue'
 import Inputfield from '@/components/Inputfield.vue'
 import UserAPI from '@/api/UserAPI'
-import router from '@/router'
 const baseURL = import.meta.env.VITE_BASEURL
 const popup = usePopup()
 const modal = useModal()

@@ -67,7 +67,6 @@ import UserAPI from '@/api/UserAPI'
 
 const loading = useLoading()
 const toast = useToast()
-const modal = useModal()
 const swiperList = ref<string[]>([])
 const indicatorDots = ref<boolean>(true)
 const autoplay = ref<boolean>(true)
@@ -76,7 +75,7 @@ const duration = ref<number>(1000)
 const collectBtnIconColor = ref<string>('#DDDDDD')
 const likeBtnInconColor = ref<string>('#DDDDDD')
 //解构
-const { postShowNow, postId } = storeToRefs(usePostShowNowStore())
+const { postId } = storeToRefs(usePostShowNowStore())
 
 const post = ref<Post>({})
 
@@ -154,25 +153,32 @@ const handleLike = async () => {
 }
 
 const handleFollow = () => {
-  UserAPI.follow(post.value.author?.id || '').then((res) => {
-    if (res.code === 200) {
-      if (res.data) {
-        toast.showToast({
-          title: '关注成功',
-          icon: 'success'
-        })
-        post.value.author!.fansNum = (post.value.author?.fansNum || 0) + 1
-        post.value.author!.isFollow = true
-      } else {
-        toast.showToast({
-          title: '取消关注成功',
-          icon: 'success'
-        })
-        post.value.author!.fansNum = (post.value.author?.fansNum || 0) - 1
-        post.value.author!.isFollow = false
+  UserAPI.follow(post.value.author?.id || '')
+    .then((res) => {
+      if (res.code === 200) {
+        if (res.data) {
+          toast.showToast({
+            title: '关注成功',
+            icon: 'success'
+          })
+          post.value.author!.fansNum = (post.value.author?.fansNum || 0) + 1
+          post.value.author!.isFollow = true
+        } else {
+          // toast.showToast({
+          //   title: '取消关注成功',
+          //   icon: 'success'
+          // })
+          post.value.author!.fansNum = (post.value.author?.fansNum || 0) - 1
+          post.value.author!.isFollow = false
+        }
       }
-    }
-  })
+    })
+    .catch((error) => {
+      toast.showToast({
+        title: error.message,
+        icon: 'error'
+      })
+    })
 }
 </script>
 
