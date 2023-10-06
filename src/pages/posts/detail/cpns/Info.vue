@@ -5,17 +5,7 @@
     <hd-modal></hd-modal>
     <div class="body">
       <div class="header">
-        <view class="header-user">
-          <image v-if="post.author?.avatar != ''" :src="post.author?.avatar" class="header-user-avatar"></image>
-          <image v-else src="@/static/guest.png" class="header-user-avatar" />
-          <view class="header-user-nickname">
-            <view class="nickname">{{ post.author?.nickName }}</view>
-            <view class="info">{{ post.author?.school }}</view>
-            <view class="phone">{{ post.author?.mobile }}</view>
-          </view>
-        </view>
-      </div>
-      <div class="main">
+        <div class="title">{{ post.title }}</div>
         <div class="swiper">
           <swiper
             v-if="swiperList.length > 0"
@@ -35,6 +25,18 @@
             </swiper-item>
           </swiper>
         </div>
+      </div>
+      <div class="main">
+        <view class="main-user">
+          <image v-if="post.author?.avatar != ''" :src="post.author?.avatar" class="main-user-avatar"></image>
+          <image v-else src="@/static/guest.png" class="main-user-avatar" />
+          <view class="main-user-nickname">
+            <view class="nickname">{{ post.author?.nickName }}</view>
+            <view class="info">{{ post.author?.school }}</view>
+            <view class="phone">{{ post.author?.mobile }}</view>
+          </view>
+        </view>
+        <view class="context"></view>
       </div>
     </div>
   </div>
@@ -92,9 +94,21 @@ onMounted(async () => {
     loading.hideLoading()
   }
 })
+
+onPullDownRefresh(() => {
+  uni.stopPullDownRefresh()
+})
 </script>
 
 <style lang="scss" scoped>
+.header {
+  .title {
+    font-size: 40rpx;
+    font-weight: 550;
+    color: #152a89a0;
+    margin-bottom: 20rpx;
+  }
+}
 .body {
   padding: 30rpx;
   box-sizing: border-box;
@@ -103,17 +117,18 @@ onMounted(async () => {
   border-radius: 16rpx;
   box-shadow: 0 0 10rpx rgba(0, 0, 0, 0.1);
 }
-.header:hover {
+.main:hover {
   cursor: pointer;
   // 阴影
   box-shadow: 0 5rpx 20rpx rgba(0, 0, 0, 0.25);
   // 变色
   background: #f6f9fe;
 }
-.header {
+.main {
   width: 100%;
   background: #f6f9fe;
   border-radius: 16rpx;
+  margin-top: 20rpx;
   padding: 32rpx;
   box-sizing: border-box;
   box-shadow: 0 5rpx 20rpx rgba(0, 0, 0, 0.35);
@@ -218,7 +233,6 @@ onMounted(async () => {
   }
 }
 .swiper {
-  margin-top: 20rpx;
   // 背景，圆角，阴影
   background: #fffdef;
   border-radius: 16rpx;

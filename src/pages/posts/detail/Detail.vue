@@ -4,29 +4,29 @@
     <hd-toast></hd-toast>
     <hd-modal></hd-modal>
     <view class="nav">
-      <scroll-view class="tab-scroll" scroll-x="true" scroll-with-animation :scroll-left="scrollLeft">
+      <view class="tab-scroll" scroll-x="true" scroll-with-animation :scroll-left="scrollLeft">
         <view class="tab-scroll_box">
           <!-- 选项卡类别列表 -->
           <view class="tab-scroll_item" v-for="(item, index) in category" :key="index" :class="{ active: isActive == index }" @click="chenked(index)">
             {{ item.name }}
           </view>
         </view>
-      </scroll-view>
+      </view>
     </view>
     <swiper @change="change" :current="isActive" class="swiper-content" :style="fullHeight">
       <swiper-item class="swiperitem-content">
-        <scroll-view scroll-y style="height: 100%">
+        <view scroll-y style="height: 100%">
           <view class="nav_item">
             <Info />
           </view>
-        </scroll-view>
+        </view>
       </swiper-item>
       <swiper-item class="swiperitem-content">
-        <scroll-view scroll-y style="height: 100%">
+        <view scroll-y style="height: 100%">
           <view class="nav_item">
             <Comments />
           </view>
-        </scroll-view>
+        </view>
       </swiper-item>
     </swiper>
   </view>

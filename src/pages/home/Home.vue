@@ -151,6 +151,7 @@ const fetchList = () => {
     .finally(() => {
       loadMsg.value = '暂无更多数据'
       loading.hideLoading()
+      uni.stopPullDownRefresh()
     })
 }
 
