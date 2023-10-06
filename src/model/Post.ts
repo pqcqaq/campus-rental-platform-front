@@ -10,6 +10,7 @@ export default class Post {
   updateTime?: string = ''
   // 作者
   author?: UserInfo = {
+    id: null,
     linkMan: null,
     username: null,
     mobile: null,
@@ -18,7 +19,10 @@ export default class Post {
     background: null,
     school: null,
     token: null,
-    role: null
+    role: null,
+    followNum: null,
+    fansNum: null,
+    isFollow: null
   }
   likeNum?: number = 0
   commentNum?: number = 0

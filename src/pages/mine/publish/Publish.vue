@@ -21,8 +21,7 @@
 import PostApi from '@/api/PostApi'
 import Post from '@/model/Post'
 import { useLoading, useToast, useModal } from '@/uni_modules/fant-mini-plus'
-import PostCard from '@/pages/home/cpns/PostCard.vue'
-import { useInfoRecords } from '@/store/UserInfoRecords'
+import PostCard from '@/components/PostCard.vue'
 const loading = useLoading()
 const toast = useToast()
 const modal = useModal()

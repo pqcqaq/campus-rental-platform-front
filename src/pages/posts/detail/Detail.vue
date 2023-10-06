@@ -32,7 +32,6 @@
   </view>
 </template>
 <script lang="ts" setup>
-import { usePostShowNowStore } from '@/store/postShowNow'
 import { onMounted, ref } from 'vue'
 import Info from '@/pages/posts/detail/cpns/Info.vue'
 import Comments from '@/pages/posts/detail/cpns/Comments.vue'

@@ -60,9 +60,9 @@ import Post from '@/model/Post'
 import { SwiperItem } from '@/model/Swiper'
 import { useLoading, useToast, useModal } from '@/uni_modules/fant-mini-plus'
 import { transIdToUrl } from '@/utils/ImageUtils'
-import { usePostShowNowStore } from '@/store/postShowNow'
+import { useShowNowStore } from '@/store/postShowNow'
 import PostApi from '@/api/PostApi'
-import UserInfo from './UserInfo.vue'
+import UserInfo from '@/components/UserInfo.vue'
 import UserAPI from '@/api/UserAPI'
 
 const loading = useLoading()
@@ -75,7 +75,7 @@ const duration = ref<number>(1000)
 const collectBtnIconColor = ref<string>('#DDDDDD')
 const likeBtnInconColor = ref<string>('#DDDDDD')
 //解构
-const { postId } = storeToRefs(usePostShowNowStore())
+const { postId } = storeToRefs(useShowNowStore())
 
 const post = ref<Post>({})
 

@@ -58,13 +58,13 @@ import DemoApi from '@/api/DemoApi'
 import { SwiperItem } from '@/model/Swiper'
 import { useLoading, useToast, useModal } from '@/uni_modules/fant-mini-plus'
 import { ref, onMounted } from 'vue'
-import PostCard from './cpns/PostCard.vue'
+import PostCard from '@/components/PostCard.vue'
 import Post from '@/model/Post'
 import PostApi from '@/api/PostApi'
 import { transIdToUrl } from '@/utils/ImageUtils'
 import UserInfo from '@/model/UserInfo'
 import DragBall from '@/components/DragBall.vue'
-import { usePostShowNowStore } from '@/store/postShowNow'
+import { useShowNowStore } from '@/store/postShowNow'
 
 const loading = useLoading()
 const toast = useToast()
@@ -123,7 +123,7 @@ onPullDownRefresh(() => {
 
 const openDetial = (item) => {
   //存储打开的帖子到本地
-  usePostShowNowStore().setPostId(item.postId)
+  useShowNowStore().setPostId(item.postId)
   router.push({ name: 'detail' })
 }
 

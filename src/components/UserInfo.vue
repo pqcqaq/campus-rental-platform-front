@@ -14,7 +14,7 @@
     }"
   >
     <view class="userInfo-user">
-      <div class="blur">
+      <div class="blur" @click="handleOpenDetails">
         <image v-if="user?.avatar != ''" :src="user?.avatar" class="userInfo-user-avatar" />
         <image v-else src="@/static/guest.png" class="userInfo-user-avatar" />
         <view class="userInfo-user-nickname">
@@ -33,6 +33,8 @@
 
 <script setup lang="ts">
 import UserInfo from '@/model/UserInfo'
+import router from '@/router'
+import { useShowNowStore } from '@/store/postShowNow'
 const props = defineProps({
   user: {
     type: UserInfo,
@@ -48,6 +50,11 @@ const props = defineProps({
 
 const handleFollow = () => {
   props.handleFollow(props.user.id)
+}
+
+const handleOpenDetails = () => {
+  useShowNowStore().setUserId(props.user.id || '')
+  router.push({ name: 'userDetails' })
 }
 </script>
 <style lang="scss" scoped>

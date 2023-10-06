@@ -1,21 +1,23 @@
 import Post from '@/model/Post'
 
-interface PostShowNow {
+interface ShowNow {
   // 当前展示的帖子
   postId: string
+  userId: string
 }
 
-export const usePostShowNowStore = defineStore('postShowNow', {
-  state: (): PostShowNow => ({
-    postId: ''
+export const useShowNowStore = defineStore('showNow', {
+  state: (): ShowNow => ({
+    postId: '',
+    userId: ''
   }),
   getters: {},
   actions: {
     setPostId(id: string) {
       this.postId = id
     },
-    clearPostId() {
-      this.postId = ''
+    setUserId(id: string) {
+      this.userId = id
     }
   }
 })

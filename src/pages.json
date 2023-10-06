@@ -89,6 +89,14 @@
       }
     },
     {
+      "path": "pages/mine/userDetails/UserDetails",
+      "name": "userDetails",
+      "style": {
+        "navigationBarTitleText": "用户详情",
+        "navigationBarBackgroundColor": "#E7F0FF"
+      }
+    },
+    {
       "path": "pages/cart/Cart",
       "name": "cart",
       "style": {
