@@ -126,8 +126,6 @@ const doChangeBackground = () => {
         },
         success: (res) => {
           const result = JSON.parse(res.data)
-          console.log(result)
-
           if (result.code == 200) {
             toast.showToast({
               title: '上传成功',
@@ -151,8 +149,6 @@ const doChangeBackground = () => {
           }
         },
         fail: (err) => {
-          console.log(err)
-
           toast.showToast({
             title: '上传失败',
             icon: 'error'
