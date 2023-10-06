@@ -91,8 +91,8 @@ export default class ApiClient {
           newError.msg = newError.errMsg || '请检查网络设置'
           return Promise.reject(newError)
         }
-        const pages = getCurrentPages() as any[]
-        const oauthStore = useAuthStore()
+        // const pages = getCurrentPages() as any[]
+        // const oauthStore = useAuthStore()
         switch (error.status) {
           // 小程序切换页面会导致正在处理中的请求返回状态码为0 这里还没有什么比较好的处理方案
           // case 0:

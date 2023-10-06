@@ -6,6 +6,8 @@
     <div class="body">
       <div class="header">
         <div class="title">{{ post.title }}</div>
+        <div class="time">发布于{{ post.createTime }}</div>
+        <view class="divLine" />
         <div class="swiper">
           <swiper
             v-if="swiperList.length > 0"
@@ -36,7 +38,26 @@
             <view class="phone">{{ post.author?.mobile }}</view>
           </view>
         </view>
-        <view class="context"></view>
+        <view class="divLine" />
+        <view class="context">
+          {{ post.intro }}
+        </view>
+      </div>
+      <div class="footer">
+        <view>
+          <div class="logos">
+            <!-- 收藏数目 -->
+            <div class="collect" @click="handleCollect">
+              <uni-icons class="collectBtn" type="star-filled" :color="collectBtnIconColor" size="100rpx" />
+              <div class="num">{{ post.collectNum }}</div>
+            </div>
+            <!-- 点赞数目 -->
+            <div class="like" @click="handleLike">
+              <uni-icons class="likeBtn" :color="likeBtnInconColor" type="heart-filled" size="100rpx" />
+              <div class="num">{{ post.likeNum }}</div>
+            </div>
+          </div>
+        </view>
       </div>
     </div>
   </div>
@@ -58,6 +79,8 @@ const indicatorDots = ref<boolean>(true)
 const autoplay = ref<boolean>(true)
 const interval = ref<number>(5000)
 const duration = ref<number>(1000)
+const collectBtnIconColor = ref<string>('#DDDDDD')
+const likeBtnInconColor = ref<string>('#DDDDDD')
 //解构
 const { postShowNow, postId } = storeToRefs(usePostShowNowStore())
 
@@ -83,6 +106,9 @@ onMounted(async () => {
       list.push(await transIdToUrl(item.id))
     }
     swiperList.value = list
+    // 设置按钮颜色
+    collectBtnIconColor.value = post.value.isCollect ? '#F7CA59' : '#DDDDDD'
+    likeBtnInconColor.value = post.value.isLike ? '#E76363' : '#DDDDDD'
     // 隐藏加载中
   } catch (error) {
     toast.showToast({
@@ -98,6 +124,40 @@ onMounted(async () => {
 onPullDownRefresh(() => {
   uni.stopPullDownRefresh()
 })
+
+const handleCollect = async () => {
+  // 发起请求
+  PostApi.collectPost(post.value.id || '')
+    .then((resp) => {
+      // 设置按钮颜色
+      collectBtnIconColor.value = resp.data ? '#F7CA59' : '#DDDDDD'
+      // 设置收藏数目
+      post.value.collectNum = resp.data ? (post.value.collectNum || 0) + 1 : (post.value.collectNum || 0) - 1
+    })
+    .catch((_error) => {
+      toast.showToast({
+        title: '收藏失败',
+        icon: 'error'
+      })
+    })
+}
+
+const handleLike = async () => {
+  // 发起请求
+  PostApi.likePost(post.value.id || '')
+    .then((resp) => {
+      // 设置按钮颜色
+      likeBtnInconColor.value = resp.data ? '#E76363' : '#DDDDDD'
+      // 设置点赞数目
+      post.value.likeNum = resp.data ? (post.value.likeNum || 0) + 1 : (post.value.likeNum || 0) - 1
+    })
+    .catch((_error) => {
+      toast.showToast({
+        title: '点赞失败',
+        icon: 'error'
+      })
+    })
+}
 </script>
 
 <style lang="scss" scoped>
@@ -110,32 +170,37 @@ onPullDownRefresh(() => {
   }
 }
 .body {
-  padding: 30rpx;
+  padding: 20rpx;
   box-sizing: border-box;
   // 背景，圆角，阴影
   background: #fff;
   border-radius: 16rpx;
   box-shadow: 0 0 10rpx rgba(0, 0, 0, 0.1);
+  margin-bottom: 150rpx;
 }
-.main:hover {
-  cursor: pointer;
-  // 阴影
-  box-shadow: 0 5rpx 20rpx rgba(0, 0, 0, 0.25);
-  // 变色
-  background: #f6f9fe;
+.main-user {
+  border: 1rpx solid #bdcfffa4;
+  padding: 10rpx;
+  box-shadow: 0 1rpx 10rpx rgba(0, 0, 0, 0.25);
+  border-radius: 30rpx;
 }
+
+.main-user:hover {
+  box-shadow: 0 1rpx 10rpx rgba(0, 0, 0, 0.25);
+  background: #e1ebff;
+}
+
 .main {
   width: 100%;
-  background: #f6f9fe;
+  background: #f6f9ff;
   border-radius: 16rpx;
   margin-top: 20rpx;
   padding: 32rpx;
   box-sizing: border-box;
-  box-shadow: 0 5rpx 20rpx rgba(0, 0, 0, 0.35);
 
   &-user {
     display: flex;
-    margin-bottom: 10rpx;
+    margin-bottom: 30rpx;
     &-avatar {
       flex: 0 0 auto;
       border-radius: 50%;
@@ -206,36 +271,79 @@ onPullDownRefresh(() => {
       // 阴影模糊效果
       backdrop-filter: blur(10rpx);
     }
-    .logos {
-      position: absolute;
-      left: 30rpx;
-      bottom: 60rpx;
-      display: flex;
+  }
+}
+.footer {
+  margin-top: 50rpx;
+  padding: 10rpx;
+  width: 60%;
+  margin-bottom: 30rpx;
+  // 背景，圆角，阴影
+  background: #eff2ff;
+  border-radius: 16rpx;
+  box-shadow: 0 0 10rpx rgba(0, 0, 0, 0.1);
+  // 居中显示
+  margin-left: auto;
+  margin-right: auto;
+
+  .logos {
+    display: flex;
+    padding: 5rpx;
+    // 文字背景
+    border-radius: 20rpx 20rpx 20rpx 20rpx;
+    // 居中显示
+    justify-content: center;
+    // 标题颜色
+    color: #000000ae;
+
+    image {
+      width: 100rpx;
+      height: 100rpx;
       padding: 5rpx;
-      // 文字背景
-      border-radius: 20rpx 20rpx 20rpx 20rpx;
-      // 标题颜色
-      color: #000000ae;
-      image {
-        width: 25rpx;
-        height: 25rpx;
-        margin-right: 10rpx;
-      }
-      .collect {
-        margin-left: 10rpx;
-        margin-right: 10rpx;
-      }
-      .like {
-        margin-left: 10rpx;
-        margin-right: 10rpx;
-      }
+      border-radius: 50%;
+    }
+    .collect {
+      margin-right: 50rpx;
+      // 竖着排列
+      flex-direction: column;
+    }
+    .like {
+      // 竖着排列
+      flex-direction: column;
+    }
+    .num {
+      //居中
+      text-align: center;
+      // 字体样式
+      font-size: 40rpx;
+      font-weight: 550;
+      color: #292c39;
     }
   }
+}
+.divLine {
+  background: #b3b4b9;
+  width: 100%;
+  height: 5rpx;
+  margin-top: 30rpx;
+  margin-bottom: 20rpx;
 }
 .swiper {
   // 背景，圆角，阴影
   background: #fffdef;
   border-radius: 16rpx;
   box-shadow: 0 0 10rpx rgba(0, 0, 0, 0.1);
+}
+.time {
+  font-size: 25rpx;
+  color: #292c3951;
+}
+.context {
+  margin-top: 20rpx;
+  white-space: pre-wrap;
+  // 正文样式
+  font-size: 32rpx;
+  color: #292c39;
+  line-height: 1.5;
 }
 </style>

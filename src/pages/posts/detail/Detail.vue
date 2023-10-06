@@ -147,6 +147,8 @@ page {
         background-color: #e3ecff;
         height: 100%;
         padding: 20rpx;
+        //可以上下滚动
+        overflow-y: auto;
       }
     }
   }
