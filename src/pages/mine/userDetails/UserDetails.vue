@@ -8,7 +8,6 @@
       <view class="nav">
         <view class="tab-scroll" scroll-x="true" scroll-with-animation :scroll-left="scrollLeft">
           <view class="tab-scroll_box">
-            <!-- 选项卡类别列表 -->
             <view
               class="tab-scroll_item"
               v-for="(item, index) in category"
@@ -212,9 +211,6 @@ const currentindex = ref<number>(0)
 watch(currentindex, (newval, _oldValue) => {
   isActive.value = newval
   scrollLeft.value = 0
-  for (let i = 0; i < newval - 1; i++) {
-    scrollLeft.value += category.value[i].width
-  }
 })
 
 const category = ref([
