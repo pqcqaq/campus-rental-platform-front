@@ -14,10 +14,17 @@
       </view>
     </view>
     <swiper @change="change" :current="isActive" class="swiper-content" :style="fullHeight">
-      <swiper-item class="swiperitem-content" v-for="item in category" :key="item.id">
+      <swiper-item class="swiperitem-content">
         <view scroll-y style="height: 100%">
           <view class="nav_item">
             <Info />
+          </view>
+        </view>
+      </swiper-item>
+      <swiper-item class="swiperitem-content">
+        <view scroll-y style="height: 100%">
+          <view class="nav_item">
+            <Comments />
           </view>
         </view>
       </swiper-item>

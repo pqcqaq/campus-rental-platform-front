@@ -95,6 +95,10 @@ const props = defineProps({
   handleDel: {
     type: Function,
     default: (postId: string, author: UserInfo) => {}
+  },
+  enableSideAction: {
+    type: Boolean,
+    default: true
   }
 })
 
@@ -120,6 +124,9 @@ const touchM = (e: TouchEvent) => {
 }
 
 const touchE = (e: TouchEvent) => {
+  if (!props.enableSideAction) {
+    return
+  }
   const offset = Math.abs(moveX)
   if (moveX < 0 && offset > 100) {
     // 触发滑动事件,左移30%
