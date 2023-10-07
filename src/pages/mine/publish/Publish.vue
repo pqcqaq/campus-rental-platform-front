@@ -1,5 +1,6 @@
 <template>
   <div class="home">
+    <hd-loading></hd-loading>
     <hd-modal></hd-modal>
     <hd-toast></hd-toast>
     <view class="header">
