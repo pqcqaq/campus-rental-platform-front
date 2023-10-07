@@ -2,13 +2,14 @@
   <hd-loading></hd-loading>
   <hd-toast></hd-toast>
   <hd-modal></hd-modal>
-  <div class="header">fanslist</div>
+  <div class="header">粉丝列表</div>
   <div class="body">
     <div v-if="fansList.length > 0">
       <div class="userInfo" v-for="item in fansList" :key="item.id!">
         <UserInfoCard :user="item" :handleOpenDetails="handleOpenDetails" />
       </div>
     </div>
+    <div v-else>暂无更多数据</div>
   </div>
   <div class="footer"></div>
 </template>
@@ -32,9 +33,14 @@ const pageSize = ref<number>(10)
 const fansList = ref<UserInfo[]>([])
 
 onMounted(() => {
+  fetchData()
+})
+
+const fetchData = () => {
   UserAPI.getFansList(pageNum.value, pageSize.value, useShowNowStore().userId)
     .then((res) => {
       fansList.value = res.data!.data
+      pageNum.value++
     })
     .catch((err) => {
       toast.showToast({
@@ -42,6 +48,11 @@ onMounted(() => {
         icon: 'error'
       })
     })
+}
+
+//触底自动刷新
+onReachBottom(() => {
+  fetchData()
 })
 
 const handleOpenDetails = (userId: string) => {

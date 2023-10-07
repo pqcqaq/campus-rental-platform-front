@@ -10,7 +10,7 @@
         "navigationBarTitleText": "首页",
         "navigationBarBackgroundColor": "#E7F0FF",
         "enablePullDownRefresh": true,
-        "onReachBottonDistance": 100
+        "onReachBottomDistance": 100
       }
     },
     {
@@ -93,7 +93,8 @@
       "name": "userDetails",
       "style": {
         "navigationBarTitleText": "用户详情",
-        "navigationBarBackgroundColor": "#E7F0FF"
+        "navigationBarBackgroundColor": "#E7F0FF",
+        "onReachBottomDistance": 100
       }
     },
     {

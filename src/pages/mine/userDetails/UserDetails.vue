@@ -7,7 +7,7 @@
     <div class="body">
       <view class="nav">
         <view class="tab-scroll" scroll-x="true" scroll-with-animation :scroll-left="scrollLeft">
-          <view class="tab-scroll_box" id="scroll">
+          <view class="tab-scroll_box">
             <!-- 选项卡类别列表 -->
             <view
               class="tab-scroll_item"
@@ -23,16 +23,14 @@
       </view>
       <swiper @change="change" :current="isActive" class="swiper-content" :style="fullHeight">
         <swiper-item class="swiperitem-content">
-          <view scroll-y style="height: 100%">
-            <view class="nav_item">
-              <div class="postList">
-                <div v-for="item in postList" :key="item.id" class="postItem">
-                  <PostCard :showAction="true" :postId="item.id || ''" :post="item" :enable-side-action="false"></PostCard>
-                </div>
-                <text class="info">{{ loadMsg }}</text>
+          <scroll-view :scroll-y="true" class="nav_item" @scrolltolower="handleTouchButtom">
+            <div class="postList">
+              <div v-for="item in postList" :key="item.id" class="postItem">
+                <PostCard :showAction="true" :postId="item.id || ''" :post="item" :enable-side-action="false" />
               </div>
-            </view>
-          </view>
+              <text class="info">{{ loadMsg }}</text>
+            </div>
+          </scroll-view>
         </swiper-item>
         <swiper-item class="swiperitem-content">
           <view scroll-y style="height: 100%">
@@ -159,10 +157,10 @@ const fetchData = async () => {
     })
 }
 
-//触底自动刷新
-onReachBottom(() => {
+// 触底自动刷新
+const handleTouchButtom = () => {
   fetchData()
-})
+}
 
 onMounted(async () => {
   //获取手机屏幕的高度，让其等于swiper的高度，从而使屏幕充满
@@ -245,7 +243,6 @@ const change = (e) => {
     // 居中
     display: flex;
     justify-content: center;
-    margin-bottom: 100rpx;
   }
 }
 .body {
@@ -294,9 +291,11 @@ const change = (e) => {
       .nav_item {
         background-color: #e3ecff;
         height: 100%;
-        padding: 20rpx;
         //可以上下滚动
         overflow-y: auto;
+        // 左右居中
+        display: flex;
+        justify-content: center;
       }
     }
   }
