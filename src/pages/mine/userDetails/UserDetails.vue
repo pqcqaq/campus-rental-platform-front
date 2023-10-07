@@ -232,7 +232,7 @@ const change = (e) => {
 }
 .postList {
   .postItem {
-    margin-bottom: 24rpx;
+    margin-top: 24rpx;
     //放置在中间
     display: flex;
     justify-content: center;
@@ -243,6 +243,7 @@ const change = (e) => {
     // 居中
     display: flex;
     justify-content: center;
+    padding: 60rpx;
   }
 }
 .body {
