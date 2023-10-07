@@ -72,4 +72,11 @@ export default class UserAPI {
       .put(`user/follow/${userId}`)
       .then((res) => res.data)
   }
+
+  static getUserDetails(userId: string): Promise<BaseResponse<UserInfo>> {
+    return http
+      .server()
+      .get(`user/${userId}`)
+      .then((res) => res.data)
+  }
 }

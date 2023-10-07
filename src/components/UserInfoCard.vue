@@ -1,20 +1,19 @@
 <template>
-  <hd-loading></hd-loading>
-  <hd-toast></hd-toast>
-  <hd-modal></hd-modal>
   <div
     class="userInfo"
     :style="{
       'background-image': 'url(' + user?.background + ')',
       'background-repeat': 'no-repeat',
-      width: '100%',
-      height: '100%',
       'background-size': 'cover',
-      'background-position': 'center'
+      'background-position': 'center',
+      padding: '16rpx',
+      'box-sizing': 'border-box',
+      ...customStyle,
+      ...{ 'border-radius': enableFillet ? '20rpx' : '0' }
     }"
   >
     <view class="userInfo-user">
-      <div class="blur" @click="handleOpenDetails">
+      <div class="blur" @click="doOpenDetails">
         <image v-if="user?.avatar != ''" :src="user?.avatar" class="userInfo-user-avatar" />
         <image v-else src="@/static/guest.png" class="userInfo-user-avatar" />
         <view class="userInfo-user-nickname">
@@ -45,6 +44,21 @@ const props = defineProps({
     type: Function,
     required: false,
     default: (userId: string) => {}
+  },
+  customStyle: {
+    type: Object,
+    required: false,
+    default: () => {}
+  },
+  enableFillet: {
+    type: Boolean,
+    required: false,
+    default: true
+  },
+  handleOpenDetails: {
+    type: Function,
+    required: false,
+    default: (userId: string) => {}
   }
 })
 
@@ -52,9 +66,8 @@ const handleFollow = () => {
   props.handleFollow(props.user.id)
 }
 
-const handleOpenDetails = () => {
-  useShowNowStore().setUserId(props.user.id || '')
-  router.push({ name: 'userDetails' })
+const doOpenDetails = () => {
+  props.handleOpenDetails(props.user.id)
 }
 </script>
 <style lang="scss" scoped>
@@ -103,13 +116,6 @@ const handleOpenDetails = () => {
   backdrop-filter: blur(10rpx);
 }
 .userInfo {
-  padding: 16rpx;
-
-  width: 100%;
-  background: #f6f9fe;
-  border-radius: 20rpx;
-  box-sizing: border-box;
-
   &-user {
     display: flex;
     margin-bottom: 20rpx;

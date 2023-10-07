@@ -29,7 +29,7 @@
         </div>
       </div>
       <div class="main">
-        <UserInfo :user="post.author" :handleFollow="handleFollow" />
+        <UserInfo :user="post.author" :handleFollow="handleFollow" :handle-open-details="handleOpenDetails" />
         <view class="divLine" />
         <view class="context">
           {{ post.intro }}
@@ -62,8 +62,9 @@ import { useLoading, useToast, useModal } from '@/uni_modules/fant-mini-plus'
 import { transIdToUrl } from '@/utils/ImageUtils'
 import { useShowNowStore } from '@/store/postShowNow'
 import PostApi from '@/api/PostApi'
-import UserInfo from '@/components/UserInfo.vue'
+import UserInfo from '@/components/UserInfoCard.vue'
 import UserAPI from '@/api/UserAPI'
+import router from '@/router'
 
 const loading = useLoading()
 const toast = useToast()
@@ -179,6 +180,13 @@ const handleFollow = () => {
         icon: 'error'
       })
     })
+}
+
+const handleOpenDetails = (userId: string) => {
+  console.log('打开用户详情', userId)
+
+  useShowNowStore().setUserId(userId)
+  router.push({ name: 'userDetails' })
 }
 </script>
 
