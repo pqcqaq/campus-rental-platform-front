@@ -38,7 +38,7 @@ onMounted(() => {
 const fetchData = async () => {
   loadMsg.value = '加载中...'
   loading.showLoading({})
-  PostApi.getMyCollectPosts(pageNum.value, pageSize.value)
+  PostApi.getCollectPosts(pageNum.value, pageSize.value, useAuthStore().getUserId())
     .then((resp) => {
       const list = resp.data?.data || []
       if (list.length > 0) {

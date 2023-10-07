@@ -1,161 +1,90 @@
 <template>
   <view class="content">
+    <hd-loading></hd-loading>
+    <hd-toast></hd-toast>
+    <hd-modal></hd-modal>
     <view class="nav">
-      <!-- 选项卡水平方向滑动，scroll-with-animation是滑动到下一个选项时，有一个延时效果 -->
-      <scroll-view class="tab-scroll" scroll-x="true" scroll-with-animation :scroll-left="scrollLeft">
+      <view class="tab-scroll" scroll-x="true" scroll-with-animation :scroll-left="scrollLeft">
         <view class="tab-scroll_box">
           <!-- 选项卡类别列表 -->
           <view class="tab-scroll_item" v-for="(item, index) in category" :key="index" :class="{ active: isActive == index }" @click="chenked(index)">
             {{ item.name }}
           </view>
         </view>
-      </scroll-view>
+      </view>
     </view>
-    <!-- 选项卡内容轮播滑动显示，current为当前第几个swiper子项 -->
     <swiper @change="change" :current="isActive" class="swiper-content" :style="fullHeight">
-      <swiper-item class="swiperitem-content">
-        <scroll-view scroll-y style="height: 100%">
-          <view class="nav_item">选项卡1页面</view>
-        </scroll-view>
-      </swiper-item>
-      <swiper-item class="swiperitem-content">
-        <scroll-view scroll-y style="height: 100%">
-          <view class="nav_item">选项卡2页面</view>
-        </scroll-view>
-      </swiper-item>
-      <swiper-item class="swiperitem-content">
-        <scroll-view scroll-y style="height: 100%">
-          <view class="nav_item">选项卡3页面</view>
-        </scroll-view>
-      </swiper-item>
-      <swiper-item class="swiperitem-content">
-        <scroll-view scroll-y style="height: 100%">
-          <view class="nav_item">选项卡4页面</view>
-        </scroll-view>
-      </swiper-item>
-      <swiper-item class="swiperitem-content">
-        <scroll-view scroll-y style="height: 100%">
-          <view class="nav_item">选项卡5页面</view>
-        </scroll-view>
-      </swiper-item>
-      <swiper-item class="swiperitem-content">
-        <scroll-view scroll-y style="height: 100%">
-          <view class="nav_item">选项卡6页面</view>
-        </scroll-view>
+      <swiper-item class="swiperitem-content" v-for="item in category" :key="item.id">
+        <view scroll-y style="height: 100%">
+          <view class="nav_item">
+            <Info />
+          </view>
+        </view>
       </swiper-item>
     </swiper>
   </view>
 </template>
-<script lang="ts">
-export default {
-  watch: {
-    // swiper与上面选项卡联动
-    currentindex(newval) {
-      this.isActive = newval
-      this.scrollLeft = 0
-      // 滑动swiper后，每个选项距离其父元素最左侧的距离
-      for (let i = 0; i < newval - 1; i++) {
-        this.scrollLeft += this.category[i].width
-      }
+<script lang="ts" setup>
+import { onMounted, ref } from 'vue'
+import Info from '@/pages/posts/detail/cpns/Info.vue'
+import Comments from '@/pages/posts/detail/cpns/Comments.vue'
+import PostApi from '@/api/PostApi'
+import { useLoading, useToast, useModal } from '@/uni_modules/fant-mini-plus'
+import Post from '@/model/Post'
+
+const loading = useLoading()
+const toast = useToast()
+const modal = useModal()
+
+onMounted(async () => {
+  //获取手机屏幕的高度，让其等于swiper的高度，从而使屏幕充满
+  uni.getSystemInfo({
+    success: function (res) {
+      fullHeight.value = 'height:' + res.windowHeight + 'px'
     }
-  },
-  data() {
-    return {
-      isActive: 0,
-      index: 0,
-      currentindex: 0,
-      category: [
-        {
-          id: 1,
-          name: '选项卡一',
-          width: 0,
-          left: 0
-        },
-        {
-          id: 2,
-          name: '选项卡二',
-          width: 0,
-          left: 0
-        },
-        {
-          id: 3,
-          name: '选项卡三',
-          width: 0,
-          left: 0
-        },
-        {
-          id: 4,
-          name: '选项卡四',
-          width: 0,
-          left: 0
-        },
-        {
-          id: 5,
-          name: '选项卡五',
-          width: 0,
-          left: 0
-        },
-        {
-          id: 6,
-          name: '选项卡六',
-          width: 0,
-          left: 0
-        }
-      ],
-      contentScrollW: 0, // 导航区宽度
-      scrollLeft: 0, // 横向滚动条位置
-      fullHeight: ''
-    }
-  },
-  mounted() {
-    var that = this
-    //获取手机屏幕的高度，让其等于swiper的高度，从而使屏幕充满
-    uni.getSystemInfo({
-      success: function (res) {
-        that.fullHeight = 'height:' + res.windowHeight + 'px'
-      }
-    })
-    // 获取标题区域宽度，和每个子元素节点的宽度
-    this.getScrollW()
-  },
-  methods: {
-    // 获取标题区域宽度，和每个子元素节点的宽度以及元素距离左边栏的距离
-    getScrollW() {
-      const query = uni.createSelectorQuery().in(this)
-      query
-        .select('.tab-scroll')
-        .boundingClientRect((data: any) => {
-          // 拿到 scroll-view 组件宽度
-          this.contentScrollW = data.width
-        })
-        .exec()
-      query
-        .selectAll('.tab-scroll_item')
-        .boundingClientRect((data: any) => {
-          let dataLen = data.length
-          for (let i = 0; i < dataLen; i++) {
-            //  scroll-view 子元素组件距离左边栏的距离
-            this.category[i].left = data[i].left
-            //  scroll-view 子元素组件宽度
-            this.category[i].width = data[i].width
-          }
-        })
-        .exec()
-    },
-    // 当前点击子元素靠左留一个选项展示，子元素宽度不相同也可实现
-    chenked(index) {
-      this.isActive = index
-      this.scrollLeft = 0
-      for (let i = 0; i < index - 1; i++) {
-        this.scrollLeft += this.category[i].width
-      }
-    },
-    // swiper滑动时，获取其索引，也就是第几个
-    change(e) {
-      const { current } = e.detail
-      this.currentindex = current
-    }
+  })
+})
+
+const isActive = ref<number>(0)
+const currentindex = ref<number>(0)
+
+watch(currentindex, (newval, _oldValue) => {
+  isActive.value = newval
+  scrollLeft.value = 0
+  for (let i = 0; i < newval - 1; i++) {
+    scrollLeft.value += category.value[i].width
   }
+})
+
+const category = ref([
+  {
+    id: 1,
+    name: '详情',
+    width: 0,
+    left: 0
+  },
+  {
+    id: 2,
+    name: '评论',
+    width: 0,
+    left: 0
+  }
+])
+const scrollLeft = ref<number>(0) // 横向滚动条位置
+const fullHeight = ref<string>('')
+
+// 当前点击子元素靠左留一个选项展示，子元素宽度不相同也可实现
+const chenked = (index) => {
+  isActive.value = index
+  scrollLeft.value = 0
+  for (let i = 0; i < index - 1; i++) {
+    scrollLeft.value += category[i].width
+  }
+}
+// swiper滑动时，获取其索引，也就是第几个
+const change = (e) => {
+  const { current } = e.detail
+  currentindex.value = current
 }
 </script>
 <style lang="scss">
@@ -171,7 +100,7 @@ page {
   flex: 1;
   .nav {
     border-top: 1rpx solid #f2f2f2;
-    background-color: #fceeee;
+    background-color: #deebff;
     position: fixed;
     z-index: 99;
     width: 100%;
@@ -202,32 +131,39 @@ page {
     }
   }
   .swiper-content {
-    padding-top: 120rpx;
+    padding-top: 100rpx;
     flex: 1;
     .swiperitem-content {
       background-color: #ffffff;
       .nav_item {
-        background-color: #ffffff;
-        padding: 20rpx 40rpx 0rpx 40rpx;
+        background-color: #e3ecff;
+        height: 100%;
+        padding: 20rpx;
+        //可以上下滚动
+        overflow-y: auto;
       }
     }
   }
 }
 .active {
   position: relative;
-  color: #ff0000;
+  color: #3b69ff;
   font-weight: 600;
 }
 .active::after {
   content: '';
   position: absolute;
-  width: 130rpx;
-  height: 4rpx;
-  background-color: #ff0000;
+  width: 100%;
+  height: 10rpx;
+  background-color: #3b69ff;
   left: 0px;
   right: 0px;
-  bottom: 0px;
+  bottom: 5px;
   margin: auto;
+  // 阴影
+  box-shadow: 3rpx 3rpx 20rpx 0rpx rgba(0, 0, 0, 0.186);
+  // 圆角
+  border-radius: 20rpx;
 }
 .uni-scroll-view::-webkit-scrollbar {
   display: none;

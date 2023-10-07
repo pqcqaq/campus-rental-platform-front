@@ -23,6 +23,7 @@ import PostApi from '@/api/PostApi'
 import Post from '@/model/Post'
 import { useLoading, useToast, useModal } from '@/uni_modules/fant-mini-plus'
 import PostCard from '@/components/PostCard.vue'
+import { useAuthStore } from '../../../store/index'
 const loading = useLoading()
 const toast = useToast()
 const modal = useModal()
@@ -40,7 +41,7 @@ onMounted(() => {
 const fetchData = async () => {
   loadMsg.value = '加载中...'
   loading.showLoading({})
-  PostApi.getMyPublishPosts(pageNum.value, pageSize.value)
+  PostApi.getPublishPosts(pageNum.value, pageSize.value, useAuthStore().getUserId())
     .then((resp) => {
       const list = resp.data?.data || []
       if (list.length > 0) {

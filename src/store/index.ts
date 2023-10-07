@@ -45,6 +45,9 @@ export const useAuthStore = defineStore('authState', {
       this.userInfo!.background = backgroundUrl
       // 保存背景
       UserAPI.saveAlterBackground(backgroundUrl)
+    },
+    getUserId(): string {
+      return this.userInfo?.id || ''
     }
   }
 })

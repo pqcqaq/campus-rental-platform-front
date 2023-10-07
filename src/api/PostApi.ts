@@ -32,17 +32,17 @@ export default class PostApi {
       .then((res) => res.data)
   }
 
-  static getMyPublishPosts(page: number, size: number): Promise<BaseResponse<PageResult<Post>>> {
+  static getPublishPosts(page: number, size: number, userId: string): Promise<BaseResponse<PageResult<Post>>> {
     return http
       .server()
-      .get(`posts/publish/${page}/${size}`)
+      .get(`posts/publish/${page}/${size}/${userId}`)
       .then((res) => res.data)
   }
 
-  static getMyCollectPosts(page: number, size: number): Promise<BaseResponse<PageResult<Post>>> {
+  static getCollectPosts(page: number, size: number, userId: string): Promise<BaseResponse<PageResult<Post>>> {
     return http
       .server()
-      .get(`posts/collect/${page}/${size}`)
+      .get(`posts/collect/${page}/${size}/${userId}`)
       .then((res) => res.data)
   }
 
