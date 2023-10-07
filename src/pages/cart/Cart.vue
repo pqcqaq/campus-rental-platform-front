@@ -68,7 +68,6 @@ import { useLoading, useToast, useModal } from '@/uni_modules/fant-mini-plus'
 import PostCard from '@/components/PostCard.vue'
 import PostApi from '@/api/PostApi'
 import rpxToPx from '@/utils/PixelUtils'
-import FansList from '@/components/FansList.vue'
 const loading = useLoading()
 const toast = useToast()
 const modal = useModal()

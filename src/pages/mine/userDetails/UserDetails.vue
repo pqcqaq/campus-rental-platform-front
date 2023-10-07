@@ -23,7 +23,7 @@
       </view>
       <swiper @change="change" :current="isActive" class="swiper-content" :style="fullHeight">
         <swiper-item class="swiperitem-content">
-          <scroll-view :scroll-y="true" class="nav_item" @scrolltolower="handleTouchButtom">
+          <scroll-view :scroll-y="true" class="nav_item" @scrolltolower="handleTouchButtom1">
             <div class="postList">
               <div v-for="item in postList" :key="item.id" class="postItem">
                 <PostCard :showAction="true" :postId="item.id || ''" :post="item" :enable-side-action="false" />
@@ -33,11 +33,18 @@
           </scroll-view>
         </swiper-item>
         <swiper-item class="swiperitem-content">
-          <view scroll-y style="height: 100%">
-            <view class="nav_item">
-              <FansList />
-            </view>
-          </view>
+          <scroll-view :scroll-y="true" class="nav_item" @scrolltolower="handleTouchButtom2">
+            <div class="userInfoHeader">粉丝列表</div>
+            <div class="userInfoBody">
+              <div v-if="fansList.length > 0">
+                <div class="userInfo" v-for="item in fansList" :key="item.id!">
+                  <UserInfoCard :user="item" :handleOpenDetails="handleOpenDetails" />
+                </div>
+              </div>
+              <div v-else>暂无更多数据</div>
+            </div>
+            <div class="userInfoFooter"></div>
+          </scroll-view>
         </swiper-item>
         <swiper-item class="swiperitem-content">
           <view scroll-y style="height: 100%">
@@ -66,7 +73,7 @@ import { useLoading, useToast, useModal } from '@/uni_modules/fant-mini-plus'
 import PostCard from '@/components/PostCard.vue'
 import PostApi from '@/api/PostApi'
 import rpxToPx from '@/utils/PixelUtils'
-import FansList from '@/components/FansList.vue'
+import router from '@/router'
 const loading = useLoading()
 const toast = useToast()
 const modal = useModal()
@@ -92,11 +99,39 @@ const userDetails = ref<UserInfo>({
   fansNum: null,
   isFollow: null
 })
+const fansList = ref<UserInfo[]>([])
+const pageNum2 = ref<number>(1)
+const pageSize2 = ref<number>(10)
+
+const fetchData2 = () => {
+  UserAPI.getFansList(pageNum2.value, pageSize2.value, useShowNowStore().userId)
+    .then((res) => {
+      fansList.value.push(...res.data!.data)
+      pageNum2.value++
+    })
+    .catch((err) => {
+      toast.showToast({
+        title: '加载失败！',
+        icon: 'error'
+      })
+    })
+}
+
+const handleOpenDetails = (userId: string) => {
+  useShowNowStore().setUserId(userId)
+  router.push({ name: 'userDetails' })
+}
+
+//触底自动刷新
+const handleTouchButtom2 = () => {
+  fetchData2()
+}
 
 onMounted(() => {
   UserApi.getUserDetails(useShowNowStore().userId).then((res) => {
     userDetails.value = res.data!
   })
+  fetchData2()
 })
 
 const handleFollow = () => {
@@ -158,7 +193,7 @@ const fetchData = async () => {
 }
 
 // 触底自动刷新
-const handleTouchButtom = () => {
+const handleTouchButtom1 = () => {
   fetchData()
 }
 
@@ -227,6 +262,31 @@ const change = (e) => {
 </script>
 
 <style lang="scss" scoped>
+.userInfoHeader {
+  padding: 20rpx;
+  // 文字效果
+  border-radius: 50rpx;
+  //字体大小
+  font-size: 40rpx;
+  // 颜色
+  color: #64656695;
+  // 居中
+  display: flex;
+  justify-content: center;
+}
+.userInfoBody {
+  padding: 20rpx;
+}
+.userInfoFooter {
+  padding: 80rpx;
+}
+.userInfo {
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 16px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+}
+
 .header {
   height: 300rpx;
 }
@@ -292,11 +352,7 @@ const change = (e) => {
       .nav_item {
         background-color: #e3ecff;
         height: 100%;
-        //可以上下滚动
         overflow-y: auto;
-        // 左右居中
-        display: flex;
-        justify-content: center;
       }
     }
   }
