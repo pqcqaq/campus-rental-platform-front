@@ -1,6 +1,7 @@
 import http from '@/http/HttpClient'
 import BaseResponse from '@/model/BaseResponse'
 import myRecord from '@/model/myRecord'
+import PageResult from '@/model/PageResult'
 import UserInfo from '@/model/UserInfo'
 
 export default class UserAPI {
@@ -77,6 +78,13 @@ export default class UserAPI {
     return http
       .server()
       .get(`user/${userId}`)
+      .then((res) => res.data)
+  }
+
+  static getFansList(pageNum: number, pageSize: number, userId: string): Promise<BaseResponse<PageResult<UserInfo>>> {
+    return http
+      .server()
+      .get(`user/fansList/${pageNum}/${pageSize}/${userId}`)
       .then((res) => res.data)
   }
 }

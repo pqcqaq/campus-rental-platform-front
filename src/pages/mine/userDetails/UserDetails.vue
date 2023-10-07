@@ -7,7 +7,7 @@
     <div class="body">
       <view class="nav">
         <view class="tab-scroll" scroll-x="true" scroll-with-animation :scroll-left="scrollLeft">
-          <view class="tab-scroll_box">
+          <view class="tab-scroll_box" id="scroll">
             <!-- 选项卡类别列表 -->
             <view
               class="tab-scroll_item"
@@ -36,7 +36,9 @@
         </swiper-item>
         <swiper-item class="swiperitem-content">
           <view scroll-y style="height: 100%">
-            <view class="nav_item">2222</view>
+            <view class="nav_item">
+              <FansList />
+            </view>
           </view>
         </swiper-item>
         <swiper-item class="swiperitem-content">
@@ -65,7 +67,8 @@ import Post from '@/model/Post'
 import { useLoading, useToast, useModal } from '@/uni_modules/fant-mini-plus'
 import PostCard from '@/components/PostCard.vue'
 import PostApi from '@/api/PostApi'
-import rpxToPx from '../../../utils/PixelUtils'
+import rpxToPx from '@/utils/PixelUtils'
+import FansList from '@/components/FansList.vue'
 const loading = useLoading()
 const toast = useToast()
 const modal = useModal()
@@ -242,6 +245,7 @@ const change = (e) => {
     // 居中
     display: flex;
     justify-content: center;
+    margin-bottom: 100rpx;
   }
 }
 .body {

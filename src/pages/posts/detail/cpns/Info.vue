@@ -29,7 +29,7 @@
         </div>
       </div>
       <div class="main">
-        <UserInfo :user="post.author" :handleFollow="handleFollow" :handle-open-details="handleOpenDetails" />
+        <UserInfo :user="post.author" :handleFollow="handleFollow" :handleOpenDetails="handleOpenDetails" />
         <view class="divLine" />
         <view class="context">
           {{ post.intro }}

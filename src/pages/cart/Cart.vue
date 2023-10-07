@@ -1,53 +1,174 @@
 <template>
-  <view class="content">
-    <hd-loading></hd-loading>
-    <hd-toast></hd-toast>
-    <hd-modal></hd-modal>
-    <view class="nav">
-      <view class="tab-scroll" scroll-x="true" scroll-with-animation :scroll-left="scrollLeft">
-        <view class="tab-scroll_box">
-          <!-- 选项卡类别列表 -->
-          <view class="tab-scroll_item" v-for="(item, index) in category" :key="index" :class="{ active: isActive == index }" @click="chenked(index)">
-            {{ item.name }}
+  <hd-toast></hd-toast>
+  <div class="main">
+    <div :show="showHeader" name="fade-down" class="header">
+      <UserInfoCard :user="userDetails" :enable-fillet="false" :custom-style="{ height: '300rpx' }" :handleFollow="handleFollow" />
+    </div>
+    <div class="body">
+      <view class="nav">
+        <view class="tab-scroll" scroll-x="true" scroll-with-animation :scroll-left="scrollLeft">
+          <view class="tab-scroll_box">
+            <!-- 选项卡类别列表 -->
+            <view
+              class="tab-scroll_item"
+              v-for="(item, index) in category"
+              :key="index"
+              :class="{ active: isActive == index }"
+              @click="chenked(index)"
+            >
+              {{ item.name }}
+            </view>
           </view>
         </view>
       </view>
-    </view>
-    <swiper @change="change" :current="isActive" class="swiper-content" :style="fullHeight">
-      <swiper-item class="swiperitem-content">
-        <view scroll-y style="height: 100%">
-          <view class="nav_item">
-            <Info />
+      <swiper @change="change" :current="isActive" class="swiper-content" :style="fullHeight">
+        <swiper-item class="swiperitem-content">
+          <view scroll-y style="height: 100%">
+            <view class="nav_item">
+              <div class="postList">
+                <div v-for="item in postList" :key="item.id" class="postItem">
+                  <PostCard :showAction="true" :postId="item.id || ''" :post="item" :enable-side-action="false"></PostCard>
+                </div>
+                <text class="info">{{ loadMsg }}</text>
+              </div>
+            </view>
           </view>
-        </view>
-      </swiper-item>
-      <swiper-item class="swiperitem-content">
-        <view scroll-y style="height: 100%">
-          <view class="nav_item">
-            <Comments />
+        </swiper-item>
+        <swiper-item class="swiperitem-content">
+          <view scroll-y style="height: 100%">
+            <view class="nav_item">
+              <FansList />
+            </view>
           </view>
-        </view>
-      </swiper-item>
-    </swiper>
-  </view>
+        </swiper-item>
+        <swiper-item class="swiperitem-content">
+          <view scroll-y style="height: 100%">
+            <view class="nav_item">33333</view>
+          </view>
+        </swiper-item>
+        <swiper-item class="swiperitem-content">
+          <view scroll-y style="height: 100%">
+            <view class="nav_item">4444</view>
+          </view>
+        </swiper-item>
+      </swiper>
+    </div>
+    <div class="footer"></div>
+  </div>
 </template>
-<script lang="ts" setup>
-import { onMounted, ref } from 'vue'
-import Info from '@/pages/posts/detail/cpns/Info.vue'
-import Comments from '@/pages/posts/detail/cpns/Comments.vue'
-import PostApi from '@/api/PostApi'
-import { useLoading, useToast, useModal } from '@/uni_modules/fant-mini-plus'
-import Post from '@/model/Post'
 
+<script lang="ts" setup>
+import UserInfoCard from '@/components/UserInfoCard.vue'
+import { useShowNowStore } from '@/store/postShowNow'
+import UserApi from '@/api/UserAPI'
+import UserInfo from '@/model/UserInfo'
+import UserAPI from '@/api/UserAPI'
+import Post from '@/model/Post'
+import { useLoading, useToast, useModal } from '@/uni_modules/fant-mini-plus'
+import PostCard from '@/components/PostCard.vue'
+import PostApi from '@/api/PostApi'
+import rpxToPx from '@/utils/PixelUtils'
+import FansList from '@/components/FansList.vue'
 const loading = useLoading()
 const toast = useToast()
 const modal = useModal()
+const postList = ref<Post[]>([])
+const loadMsg = ref<string>('暂无更多数据')
+const pageNum = ref<number>(1)
+const pageSize = ref<number>(10)
+const total = ref<number>(0)
+const active = ref(0)
+const showHeader = ref(true)
+const userDetails = ref<UserInfo>({
+  id: null,
+  linkMan: null,
+  username: null,
+  mobile: null,
+  nickName: null,
+  avatar: null,
+  background: null,
+  school: null,
+  token: null,
+  role: null,
+  followNum: null,
+  fansNum: null,
+  isFollow: null
+})
+
+onMounted(() => {
+  UserApi.getUserDetails(useShowNowStore().userId).then((res) => {
+    userDetails.value = res.data!
+  })
+})
+
+const handleFollow = () => {
+  UserAPI.follow(userDetails.value.id!)
+    .then((res) => {
+      if (res.code === 200) {
+        if (res.data) {
+          toast.showToast({
+            title: '关注成功',
+            icon: 'success'
+          })
+          userDetails.value.fansNum = userDetails.value.fansNum! + 1
+          userDetails.value.isFollow = true
+        } else {
+          // toast.showToast({
+          //   title: '取消关注成功',
+          //   icon: 'success'
+          // })
+          userDetails.value.fansNum = userDetails.value.fansNum! - 1
+          userDetails.value.isFollow = false
+        }
+      }
+    })
+    .catch((error) => {
+      toast.showToast({
+        title: error.message,
+        icon: 'error'
+      })
+    })
+}
+onMounted(() => {
+  fetchData()
+})
+
+const fetchData = async () => {
+  loadMsg.value = '加载中...'
+  loading.showLoading({})
+  PostApi.getPublishPosts(pageNum.value, pageSize.value, useShowNowStore().userId)
+    .then((resp) => {
+      const list = resp.data?.data || []
+      if (list.length > 0) {
+        postList.value = postList.value.concat(list)
+        total.value = resp.data?.total || 0
+        pageNum.value++
+      } else {
+        loadMsg.value = '暂无更多数据'
+      }
+    })
+    .catch((error) => {
+      toast.showToast({
+        title: error.message,
+        icon: 'error'
+      })
+    })
+    .finally(() => {
+      loadMsg.value = '暂无更多数据'
+      loading.hideLoading()
+    })
+}
+
+//触底自动刷新
+onReachBottom(() => {
+  fetchData()
+})
 
 onMounted(async () => {
   //获取手机屏幕的高度，让其等于swiper的高度，从而使屏幕充满
   uni.getSystemInfo({
     success: function (res) {
-      fullHeight.value = 'height:' + res.windowHeight + 'px'
+      fullHeight.value = 'height:' + (res.windowHeight - rpxToPx(200)) + 'px'
     }
   })
 })
@@ -66,13 +187,25 @@ watch(currentindex, (newval, _oldValue) => {
 const category = ref([
   {
     id: 1,
-    name: '详情',
+    name: '最近',
     width: 0,
     left: 0
   },
   {
     id: 2,
-    name: '评论',
+    name: '粉丝',
+    width: 0,
+    left: 0
+  },
+  {
+    id: 3,
+    name: '关注',
+    width: 0,
+    left: 0
+  },
+  {
+    id: 4,
+    name: '更多',
     width: 0,
     left: 0
   }
@@ -94,13 +227,28 @@ const change = (e) => {
   currentindex.value = current
 }
 </script>
-<style lang="scss">
-page {
-  height: 100%;
-  display: flex;
-  background-color: #ffffff;
+
+<style lang="scss" scoped>
+.header {
+  height: 300rpx;
 }
-.content {
+.postList {
+  .postItem {
+    margin-bottom: 24rpx;
+    //放置在中间
+    display: flex;
+    justify-content: center;
+  }
+  .info {
+    font-size: 35rpx;
+    color: #64656695;
+    // 居中
+    display: flex;
+    justify-content: center;
+    margin-bottom: 100rpx;
+  }
+}
+.body {
   display: flex;
   flex-direction: column;
   width: 100%;
@@ -139,7 +287,8 @@ page {
   }
   .swiper-content {
     padding-top: 100rpx;
-    flex: 1;
+    height: 100%;
+    // flex: 1;
     .swiperitem-content {
       background-color: #ffffff;
       .nav_item {
