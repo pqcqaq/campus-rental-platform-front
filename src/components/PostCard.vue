@@ -7,8 +7,13 @@
       <div class="title">
         {{ post.title }}
       </div>
-      <!-- 数量信息 -->
+      <!-- 信息 -->
       <div class="nums">
+        <!-- 展示数量 -->
+        <div class="show">
+          <image src="@/static/view-fill.png" lazy-load :lazy-load-margin="1"></image>
+          <text class="numText">{{ post.viewNum }}</text>
+        </div>
         <!-- 收藏数目 -->
         <div class="collect">
           <image src="@/static/star-fill.png" lazy-load :lazy-load-margin="1"></image>
@@ -230,8 +235,11 @@ const isAdmin = useAuthStore().isAdmin()
         height: 25rpx;
         margin-right: 10rpx;
       }
-      .collect {
+      .show {
         margin-left: 10rpx;
+        margin-right: 10rpx;
+      }
+      .collect {
         margin-right: 10rpx;
       }
       .like {
@@ -242,6 +250,7 @@ const isAdmin = useAuthStore().isAdmin()
         margin-right: 10rpx;
         font-size: 25rpx;
         color: #000000ae;
+        text-align: center;
       }
     }
   }
