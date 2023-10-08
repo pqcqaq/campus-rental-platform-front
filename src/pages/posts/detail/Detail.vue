@@ -92,6 +92,7 @@ const handleTouchButtom = () => {
 
 onPullDownRefresh(() => {
   pageNum.value = 1
+  commentsList.value = []
   fetchData()
   uni.stopPullDownRefresh()
 })
