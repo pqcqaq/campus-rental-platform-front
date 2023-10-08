@@ -8,8 +8,8 @@
       <!-- 左边显示用户头像（圆形） -->
       <div class="left">
         <div class="avatar">
-          <image v-if="comment.author?.avatar != ''" :src="comment.author?.avatar" class="userInfo-user-avatar" />
-          <image v-else src="@/static/guest.png" class="userInfo-user-avatar" />
+          <image lazy-load :lazy-load-margin="1" v-if="comment.author?.avatar != ''" :src="comment.author?.avatar" class="userInfo-user-avatar" />
+          <image lazy-load :lazy-load-margin="1" v-else src="@/static/guest.png" class="userInfo-user-avatar" />
         </div>
         <div>
           <div class="nickname">{{ comment.author.nickName }}</div>
