@@ -15,11 +15,13 @@
     </view>
     <swiper @change="change" :current="isActive" class="swiper-content" :style="fullHeight">
       <swiper-item class="swiperitem-content">
-        <view scroll-y style="height: 100%">
+        <!-- <view scroll-y style="height: 100%"> -->
+        <scroll-view :scroll-y="true" style="height: 100%">
           <view class="nav_item">
             <Info />
           </view>
-        </view>
+          <!-- </view> -->
+        </scroll-view>
       </swiper-item>
       <swiper-item class="swiperitem-content">
         <scroll-view :scroll-y="true" style="height: 100%" @scrolltolower="handleTouchButtom">
