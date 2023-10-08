@@ -52,9 +52,11 @@ function doLogin() {
       router.replaceAll({ name: 'home' })
     })
     .catch((error) => {
+      console.log(error)
+
       loading.hideLoading()
       toast.showToast({
-        title: error.msg,
+        title: error.message,
         icon: 'error'
       })
     })
@@ -69,7 +71,12 @@ const jump = () => {
     avatar: '',
     school: '某知名大学',
     token: 'null',
-    role: 'visitor'
+    role: 'visitor',
+    id: 'null',
+    background: '',
+    followNum: 0,
+    fansNum: 0,
+    isFollow: false
   }
   isVisitor.value = true
   router.replaceAll({ name: 'home' })
