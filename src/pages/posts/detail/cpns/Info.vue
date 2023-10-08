@@ -7,6 +7,7 @@
       <div class="header">
         <div class="title">{{ post.title }}</div>
         <div class="time">发布于{{ post.createTime }}</div>
+        <div class="view">观看量: {{ post.viewNum }}</div>
         <view class="divLine" />
         <div class="swiper">
           <swiper
@@ -294,7 +295,7 @@ const handleOpenDetails = (userId: string) => {
   background: #b3b4b9;
   width: 100%;
   height: 5rpx;
-  margin-top: 30rpx;
+  margin-top: 20rpx;
   margin-bottom: 20rpx;
 }
 .swiper {
@@ -305,6 +306,11 @@ const handleOpenDetails = (userId: string) => {
 }
 .time {
   font-size: 25rpx;
+  color: #292c3951;
+}
+.view {
+  margin-top: 10rpx;
+  font-size: 30rpx;
   color: #292c3951;
 }
 .context {
