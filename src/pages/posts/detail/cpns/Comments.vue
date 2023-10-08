@@ -1,17 +1,17 @@
 <template>
-  <div>
+  <div class="main">
     <hd-loading></hd-loading>
     <hd-toast></hd-toast>
     <hd-modal></hd-modal>
     <div class="header"></div>
     <div class="body">
       <!-- 左边显示用户头像（圆形） -->
-      <div class="left">
+      <div class="left" @click="openUserDetails">
         <div class="avatar">
           <image lazy-load :lazy-load-margin="1" v-if="comment.author?.avatar != ''" :src="comment.author?.avatar" class="userInfo-user-avatar" />
           <image lazy-load :lazy-load-margin="1" v-else src="@/static/guest.png" class="userInfo-user-avatar" />
         </div>
-        <div>
+        <div class="userInfo">
           <div class="nickname">{{ comment.author.nickName }}</div>
           <div class="school">{{ comment.author.school }}</div>
         </div>
@@ -21,6 +21,11 @@
         <div class="content">{{ comment.detail }}</div>
         <div class="time">{{ comment.createTime }}</div>
       </div>
+      <div class="subComments">
+        <div v-for="item in comment.comments" :key="item.id">
+          <Comments :comment="item" />
+        </div>
+      </div>
     </div>
     <div class="footer"></div>
   </div>
@@ -29,6 +34,9 @@
 <script lang="ts" setup>
 import { useLoading, useToast, useModal } from '@/uni_modules/fant-mini-plus'
 import Comment from '@/model/Comment'
+import Comments from '@/pages/posts/detail/cpns/Comments.vue'
+import router from '@/router'
+import { useShowNowStore } from '../../../../store/postShowNow/index'
 
 const loading = useLoading()
 const toast = useToast()
@@ -41,54 +49,88 @@ const props = defineProps({
   }
 })
 
-onMounted(() => {
-  console.log(props.comment)
-})
+onMounted(() => {})
+
+const openUserDetails = () => {
+  useShowNowStore().setUserId(props.comment.author.id!)
+  router.push({ name: 'userDetails' })
+}
 </script>
 
 <style lang="scss" scoped>
-.body {
-  border: 2rpx solid #000;
-}
-.left {
-  display: flex;
-  width: 100%;
-  height: 100%;
-  flex-direction: row;
-  justify-content: flex-start;
-}
+.main {
+  margin-bottom: 10rpx;
+  .body {
+    border: 2rpx solid #000;
+  }
+  .left {
+    display: flex;
+    margin-top: 10rpx;
+    width: 100%;
+    height: 100%;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    .userInfo {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-around;
+      align-items: flex-start;
+      width: 100%;
+      height: 100%;
+      margin-left: 20rpx;
+      padding: 10rpx;
+      // 背景 圆角 阴影
+      border-radius: 16rpx;
+      box-shadow: 0 0 10rpx rgba(0, 0, 0, 0.1);
+      // 宽度不要占满全部
+      .school {
+        font-size: 24rpx;
+        color: #000;
+      }
+    }
+  }
+  .right {
+    .content {
+      font-size: 28rpx;
+      color: #000;
+      padding: 20rpx;
+    }
 
-.nickname {
-  font-size: 30rpx;
-  color: #000;
-}
-.school {
-  font-size: 24rpx;
-  color: #000;
-}
+    .time {
+      font-size: 24rpx;
+      color: #00000075;
+      margin-left: 30rpx;
+    }
+  }
 
-.content {
-  font-size: 28rpx;
-  color: #000;
-}
+  .nickname {
+    font-size: 30rpx;
+    color: #000;
+  }
 
-.time {
-  font-size: 24rpx;
-  color: #00000075;
-}
-
-.right {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-around;
-  align-items: flex-start;
-  width: 100%;
-  height: 100%;
-}
-.userInfo-user-avatar {
-  flex: 0 0 auto;
-  border-radius: 50%;
-  width: 90rpx;
-  height: 90rpx;
+  .right {
+    margin-bottom: 10rpx;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: flex-start;
+    width: 100%;
+    height: 100%;
+  }
+  .avatar {
+    margin-left: 20rpx;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: flex-start;
+    width: 110rpx;
+    height: 110rpx;
+    .userInfo-user-avatar {
+      width: 100rpx;
+      height: 100rpx;
+      border-radius: 50%;
+    }
+  }
 }
 </style>
