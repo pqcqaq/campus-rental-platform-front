@@ -22,11 +22,14 @@
         </view>
       </swiper-item>
       <swiper-item class="swiperitem-content">
-        <view scroll-y style="height: 100%">
-          <view class="nav_item">
-            <Comments />
+        <scroll-view :scroll-y="true" style="height: 100%" @scrolltolower="handleTouchButtom">
+          <view class="comment">
+            <div v-for="item in commentsList" :key="item.id">
+              <Comments :comment="item" />
+            </div>
+            <div class="msg">{{ msg }}</div>
           </view>
-        </view>
+        </scroll-view>
       </swiper-item>
     </swiper>
   </view>
@@ -38,10 +41,17 @@ import Comments from '@/pages/posts/detail/cpns/Comments.vue'
 import PostApi from '@/api/PostApi'
 import { useLoading, useToast, useModal } from '@/uni_modules/fant-mini-plus'
 import Post from '@/model/Post'
+import Comment from '@/model/Comment'
+import CommentApi from '../../../api/CommentApi'
+import { useShowNowStore } from '../../../store/postShowNow/index'
 
 const loading = useLoading()
 const toast = useToast()
 const modal = useModal()
+const commentsList = ref<Comment[]>([])
+const pageNum = ref<number>(1)
+const pageSize = ref<number>(10)
+const msg = ref<string>('暂无更多数据')
 
 onMounted(async () => {
   //获取手机屏幕的高度，让其等于swiper的高度，从而使屏幕充满
@@ -50,6 +60,40 @@ onMounted(async () => {
       fullHeight.value = 'height:' + res.windowHeight + 'px'
     }
   })
+  fetchData()
+})
+
+const fetchData = () => {
+  msg.value = '加载中...'
+  loading.showLoading({})
+  CommentApi.pageComments(pageNum.value, pageSize.value, useShowNowStore().postId)
+    .then((res) => {
+      if (res.data!.data.length > 0) {
+        pageNum.value++
+        commentsList.value.push(...res.data!.data)
+      }
+    })
+    .catch((err) => {
+      toast.showToast({
+        title: err.message,
+        icon: 'error'
+      })
+    })
+    .finally(() => {
+      loading.hideLoading()
+      msg.value = '暂无更多数据'
+    })
+}
+
+// 触底
+const handleTouchButtom = () => {
+  fetchData()
+}
+
+onPullDownRefresh(() => {
+  pageNum.value = 1
+  fetchData()
+  uni.stopPullDownRefresh()
 })
 
 const isActive = ref<number>(0)
@@ -95,6 +139,12 @@ const change = (e) => {
 }
 </script>
 <style lang="scss">
+.msg {
+  text-align: center;
+  color: #999;
+  font-size: 20px;
+  padding: 20px 0;
+}
 page {
   height: 100%;
   display: flex;
@@ -139,7 +189,8 @@ page {
   }
   .swiper-content {
     padding-top: 100rpx;
-    flex: 1;
+    height: 100%;
+    // flex: 1;
     .swiperitem-content {
       background-color: #ffffff;
       .nav_item {
@@ -147,7 +198,7 @@ page {
         height: 100%;
         padding: 20rpx;
         //可以上下滚动
-        overflow-y: auto;
+        // overflow-y: auto;
       }
     }
   }
@@ -174,5 +225,11 @@ page {
 }
 .uni-scroll-view::-webkit-scrollbar {
   display: none;
+}
+.comment {
+  background-color: #e3ecff;
+  height: 100%;
+  padding: 20rpx;
+  padding-top: 50rpx;
 }
 </style>

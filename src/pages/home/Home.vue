@@ -109,7 +109,6 @@ function fetchData() {
       imgItem.img = await transIdToUrl(imgItem?.img || '')
     }
     swiperList.value = imgList
-    console.log(resp.data)
   })
   // 获取帖子列表
   fetchList()
