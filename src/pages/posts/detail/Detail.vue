@@ -24,7 +24,14 @@
         </scroll-view>
       </swiper-item>
       <swiper-item class="swiperitem-content">
-        <scroll-view :scroll-y="true" style="height: 100%" @scrolltolower="handleTouchButtom">
+        <scroll-view
+          :scroll-y="true"
+          style="height: 100%"
+          @scrolltolower="handleTouchButtom"
+          @refresherrefresh="handleTouchTop"
+          refresher-enabled
+          :refresher-triggered="freshStatus"
+        >
           <view class="comment">
             <div v-for="item in commentsList" :key="item.id">
               <Comments :comment="item" />
@@ -54,6 +61,7 @@ const commentsList = ref<Comment[]>([])
 const pageNum = ref<number>(1)
 const pageSize = ref<number>(10)
 const msg = ref<string>('暂无更多数据')
+const freshStatus = ref<boolean>(false)
 
 onMounted(async () => {
   //获取手机屏幕的高度，让其等于swiper的高度，从而使屏幕充满
@@ -68,6 +76,7 @@ onMounted(async () => {
 const fetchData = () => {
   msg.value = '加载中...'
   loading.showLoading({})
+  freshStatus.value = false
   CommentApi.pageComments(pageNum.value, pageSize.value, useShowNowStore().postId)
     .then((res) => {
       if (res.data!.data.length > 0) {
@@ -84,6 +93,8 @@ const fetchData = () => {
     .finally(() => {
       loading.hideLoading()
       msg.value = '暂无更多数据'
+      uni.stopPullDownRefresh()
+      freshStatus.value = true
     })
 }
 
@@ -92,11 +103,16 @@ const handleTouchButtom = () => {
   fetchData()
 }
 
+const handleTouchTop = () => {
+  pageNum.value = 1
+  commentsList.value = []
+  fetchData()
+}
+
 onPullDownRefresh(() => {
   pageNum.value = 1
   commentsList.value = []
   fetchData()
-  uni.stopPullDownRefresh()
 })
 
 const isActive = ref<number>(0)

@@ -21,9 +21,13 @@
         <div class="content">{{ comment.detail }}</div>
         <div class="time">{{ comment.createTime }}</div>
       </div>
+      <div class="btn" v-if="!isSubComment">
+        <!-- 回复 -->
+        <div class="reply" @click="handleReply">回复</div>
+      </div>
       <div class="subComments">
         <div v-for="item in comment.comments" :key="item.id">
-          <Comments :comment="item" />
+          <Comments :comment="item" :isSubComment="true" />
         </div>
       </div>
     </div>
@@ -46,6 +50,11 @@ const props = defineProps({
   comment: {
     type: Object as PropType<Comment>,
     required: true
+  },
+  isSubComment: {
+    type: Boolean,
+    required: false,
+    default: false
   }
 })
 
@@ -55,6 +64,8 @@ const openUserDetails = () => {
   useShowNowStore().setUserId(props.comment.author.id!)
   router.push({ name: 'userDetails' })
 }
+
+const handleReply = () => {}
 </script>
 
 <style lang="scss" scoped>
@@ -76,7 +87,6 @@ const openUserDetails = () => {
       flex-direction: column;
       justify-content: space-around;
       align-items: flex-start;
-      width: 100%;
       height: 100%;
       margin-left: 20rpx;
       padding: 10rpx;
@@ -88,9 +98,21 @@ const openUserDetails = () => {
         font-size: 24rpx;
         color: #000;
       }
+
+      .nickname {
+        font-size: 30rpx;
+        color: #000;
+      }
     }
   }
   .right {
+    margin-bottom: 10rpx;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: flex-start;
+    width: 100%;
+    height: 100%;
     .content {
       font-size: 28rpx;
       color: #000;
@@ -104,20 +126,6 @@ const openUserDetails = () => {
     }
   }
 
-  .nickname {
-    font-size: 30rpx;
-    color: #000;
-  }
-
-  .right {
-    margin-bottom: 10rpx;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-around;
-    align-items: flex-start;
-    width: 100%;
-    height: 100%;
-  }
   .avatar {
     margin-left: 20rpx;
     display: flex;
@@ -131,6 +139,24 @@ const openUserDetails = () => {
       height: 100rpx;
       border-radius: 50%;
     }
+  }
+}
+.btn {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  .reply {
+    margin-right: 20rpx;
+    font-size: 24rpx;
+    color: #000;
+    padding: 10rpx;
+    // 背景 圆角 阴影
+    border-radius: 16rpx;
+    box-shadow: 0 0 10rpx rgba(0, 0, 0, 0.1);
+    margin-bottom: 20rpx;
   }
 }
 </style>
