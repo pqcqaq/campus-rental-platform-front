@@ -19,7 +19,7 @@
       }"
     >
       <!-- <image :src="userInfo?.background" mode="aspectFill" class="background" /> -->
-      <view class="header-user">
+      <view class="header-user" @click="handleOpenDetials">
         <image v-if="userInfo?.avatar != ''" :src="userInfo?.avatar" class="header-user-avatar" />
         <image v-else src="@/static/guest.png" class="header-user-avatar" />
         <view class="header-user-nickname">
@@ -49,6 +49,7 @@
 import { useModal, useToast } from '@/uni_modules/fant-mini-plus'
 import UserApi from '@/api/UserAPI'
 import { useInfoRecords } from '@/store/UserInfoRecords'
+import { useShowNowStore } from '../../store/postShowNow/index'
 const modal = useModal()
 const toast = useToast()
 
@@ -167,6 +168,11 @@ const doChangeBackground = () => {
       })
     }
   })
+}
+
+const handleOpenDetials = () => {
+  useShowNowStore().setUserId(userInfo.value!.id!)
+  router.push({ name: 'userDetails' })
 }
 </script>
 

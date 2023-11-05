@@ -23,15 +23,23 @@
       </div>
       <div class="btn" v-if="!isSubComment">
         <!-- 回复 -->
-        <div class="reply" @click="handleReply">回复</div>
+        <div class="reply" @click="doReply">{{ replyMsg }}</div>
       </div>
+      <div class="replyInput" v-if="!isSubComment && showReplyInput">
+        <!-- 回复的输入框 -->
+        <div>
+          <input v-model="replyInput" placeholder="输入内容" />
+        </div>
+        <button @click="handleReply">发送</button>
+      </div>
+    </div>
+    <div class="footer">
       <div class="subComments">
-        <div v-for="item in comment.comments" :key="item.id">
+        <div v-for="item in subComments" :key="item.id">
           <Comments :comment="item" :isSubComment="true" />
         </div>
       </div>
     </div>
-    <div class="footer"></div>
   </div>
 </template>
 
@@ -41,10 +49,18 @@ import Comment from '@/model/Comment'
 import Comments from '@/pages/posts/detail/cpns/Comments.vue'
 import router from '@/router'
 import { useShowNowStore } from '../../../../store/postShowNow/index'
+import CommentApi from '../../../../api/CommentApi'
 
 const loading = useLoading()
 const toast = useToast()
 const modal = useModal()
+const subComments = ref<Comment[]>([])
+
+const replyInput = ref<string>('')
+const showReplyInput = ref<boolean>(false)
+const replyMsg = computed(() => {
+  return showReplyInput.value ? '取消' : '回复'
+})
 
 const props = defineProps({
   comment: {
@@ -58,30 +74,91 @@ const props = defineProps({
   }
 })
 
-onMounted(() => {})
+onMounted(() => {
+  subComments.value = props.comment.comments
+})
 
 const openUserDetails = () => {
   useShowNowStore().setUserId(props.comment.author.id!)
   router.push({ name: 'userDetails' })
 }
 
-const handleReply = () => {}
+const doReply = () => {
+  showReplyInput.value = !showReplyInput.value
+}
+
+const handleReply = () => {
+  CommentApi.publishComment({
+    postId: useShowNowStore().postId,
+    commentDetail: replyInput.value,
+    parentId: props.comment.id
+  })
+    .then((res) => {
+      toast.showToast({
+        title: '回复成功',
+        icon: 'success'
+      })
+      replyInput.value = ''
+      showReplyInput.value = false
+      subComments.value.push(res.data!)
+    })
+    .catch((err) => {
+      toast.showToast({
+        title: err.data.data,
+        icon: 'error'
+      })
+    })
+}
 </script>
 
 <style lang="scss" scoped>
+.replyInput {
+  // 背景 圆角 阴影
+  border-radius: 30rpx;
+  box-shadow: 0 0 10rpx rgba(0, 0, 0, 0.1);
+  background: #ecf2ff;
+  margin: 10rpx;
+  padding: 10rpx 20rpx 10rpx 30rpx;
+  input {
+    width: 100%;
+    height: 100%;
+    border: none;
+    outline: none;
+    font-size: 28rpx;
+    color: #000;
+  }
+  display: flex;
+  // 发送按钮显示在右边
+  align-items: center;
+  button {
+    margin-right: 10rpx;
+    font-size: 24rpx;
+    color: #000;
+    padding: 10rpx;
+    // 背景 圆角 阴影
+    border-radius: 50rpx;
+    box-shadow: 0 0 10rpx rgba(0, 0, 0, 0.1);
+  }
+}
 .main {
   margin-bottom: 10rpx;
+  // 背景 圆角 阴影
+  border-radius: 30rpx;
+  box-shadow: 0 0 10rpx rgba(0, 0, 0, 0.1);
+  background: #f3f3f3;
   .body {
-    border: 2rpx solid #000;
+    display: inline; //默认值
   }
   .left {
     display: flex;
     margin-top: 10rpx;
-    width: 100%;
     height: 100%;
     flex-direction: row;
     justify-content: flex-start;
     align-items: center;
+    // 背景 圆角 阴影
+    border-radius: 16rpx;
+    box-shadow: 0 0 10rpx rgba(0, 0, 0, 0.1);
     .userInfo {
       display: flex;
       flex-direction: column;
@@ -90,10 +167,7 @@ const handleReply = () => {}
       height: 100%;
       margin-left: 20rpx;
       padding: 10rpx;
-      // 背景 圆角 阴影
-      border-radius: 16rpx;
-      box-shadow: 0 0 10rpx rgba(0, 0, 0, 0.1);
-      // 宽度不要占满全部
+
       .school {
         font-size: 24rpx;
         color: #000;
