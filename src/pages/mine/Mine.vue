@@ -27,7 +27,7 @@
           <view class="info">{{ userInfo?.school }}</view>
           <view class="phone">{{ userInfo?.mobile }}</view>
         </view>
-        <view class="header-user-more" @click="handleChangeBackground">
+        <view v-on:click.stop="handleChangeBackground" class="header-user-more">
           <hd-icon name="ic_sort_fill" size="48rpx" color="#8d8d8d"></hd-icon>
         </view>
       </view>
