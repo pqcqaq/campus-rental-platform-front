@@ -1,9 +1,11 @@
 <template>
   <hd-loading></hd-loading>
   <hd-toast></hd-toast>
+  <hd-modal></hd-modal>
   <view class="home">
     <view class="header">
       <swiper
+        v-if="swiperList.length > 0"
         class="swiper-box"
         :indicator-dots="indicatorDots"
         :autoplay="autoplay"
@@ -13,58 +15,73 @@
         previous-margin="20px"
         next-margin="20px"
       >
-        <swiper-item class="swiper-box" :autoplay="true" :interval="1000" v-for="item in swiperList" :key="item">
+        <swiper-item class="swiper-box" :autoplay="true" :interval="1000" v-for="item in swiperList" :key="item.postId">
           <view class="swiper-item" @click="openDetial(item)">
             <image class="image" mode="aspectFill" :src="item.img"></image>
             <text class="text">{{ item.text }}</text>
+            <div class="logos">
+              <!-- 收藏数目 -->
+              <div class="collect" v-if="item.type?.includes('collect')">
+                <image src="@/static/star-fill.png"></image>
+              </div>
+              <!-- 点赞数目 -->
+              <div class="like" v-if="item.type?.includes('like')">
+                <image src="@/static/like.png"></image>
+              </div>
+            </div>
           </view>
         </swiper-item>
       </swiper>
     </view>
 
     <view class="main">
-      <hd-button @click="doNav">
-        <hd-icon name="ic_scan_line" size="48rpx" color="#292C39"></hd-icon>
-      </hd-button>
-      <PostCard></PostCard>
+      <div class="postList">
+        <div v-for="item in postList" :key="item.id" class="postItem">
+          <PostCard :postId="item.id || ''" :post="item" :showDel="item.editable" :handleDel="handleDelPost"></PostCard>
+        </div>
+        <text class="info">{{ loadMsg }}</text>
+      </div>
     </view>
-    <!-- 悬浮在左下角的发布按钮（圆形加号） -->
-    <button class="addBtn" color="#E1EDF9" @click="doAdd">
-      <hd-icon class="icon" name="ic_add_line" size="110rpx" color="#71ADE9"></hd-icon>
-    </button>
   </view>
+  <DragBall>
+    <template #body>
+      <button class="addBtn" color="#E1EDF9" @click="doAdd">
+        <hd-icon class="icon" name="ic_add_line" size="110rpx" color="#71ADE9"></hd-icon>
+      </button>
+    </template>
+  </DragBall>
 </template>
 
 <script lang="ts" setup>
 import CommonApi from '@/api/CommonApi'
 import DemoApi from '@/api/DemoApi'
-import Chanel from '@/model/Chanel'
 import { SwiperItem } from '@/model/Swiper'
-import { useLoading, useToast } from '@/uni_modules/fant-mini-plus'
-import axios from 'axios'
+import { useLoading, useToast, useModal } from '@/uni_modules/fant-mini-plus'
 import { ref, onMounted } from 'vue'
-import PostCard from './cpns/PostCard.vue'
+import PostCard from '@/components/PostCard.vue'
+import Post from '@/model/Post'
+import PostApi from '@/api/PostApi'
+import { transIdToUrl } from '@/utils/ImageUtils'
+import UserInfo from '@/model/UserInfo'
+import DragBall from '@/components/DragBall.vue'
+import { useShowNowStore } from '@/store/postShowNow'
+
 const loading = useLoading()
 const toast = useToast()
+const modal = useModal()
 const router = useRouter()
 const swiperList = ref<SwiperItem[]>([])
 const indicatorDots = ref<boolean>(true)
 const autoplay = ref<boolean>(true)
 const interval = ref<number>(5000)
 const duration = ref<number>(1000)
-
-const chanel = ref<Chanel[]>([])
+const pageNum = ref<number>(1)
+const pageSize = ref<number>(10)
+const loadMsg = ref<string>('暂无更多数据')
 
 onMounted(() => {
-  doInit()
+  fetchData()
 })
-
-/**
- * 跳转至路由演示页面
- */
-function doNav() {
-  router.push({ name: 'routerDemo' })
-}
 
 function doAdd() {
   router.push({ name: 'add' })
@@ -72,34 +89,108 @@ function doAdd() {
 /**
  * 初始化
  */
-function doInit() {
+function fetchData() {
   loading.showLoading({})
   DemoApi.init()
     .then((resp) => {
       loading.hideLoading()
-      chanel.value = resp.data || []
     })
     .catch((error) => {
       loading.hideLoading()
-      // 判断如果是取消的请求则不提示
-      if (axios.isCancel(error)) {
-        return
-      }
       toast.showToast({
         title: error.message,
         icon: 'none'
       })
     })
   // 获取轮播图
-  CommonApi.getSwiper().then((resp) => {
-    swiperList.value = resp.data || []
-    console.log(resp.data)
+  CommonApi.getSwiper().then(async (resp) => {
+    const imgList: SwiperItem[] = resp.data || []
+    for (const imgItem of imgList) {
+      imgItem.img = await transIdToUrl(imgItem?.img || '')
+    }
+    swiperList.value = imgList
+  })
+  // 获取帖子列表
+  fetchList()
+}
+
+onPullDownRefresh(() => {
+  pageNum.value = 1
+  postList.value = []
+  fetchData()
+})
+
+const openDetial = (item) => {
+  //存储打开的帖子到本地
+  useShowNowStore().setPostId(item.postId)
+  router.push({ name: 'detail' })
+}
+
+const postList = ref<Post[]>([])
+
+const fetchList = () => {
+  loadMsg.value = '加载中...'
+  loading.showLoading({})
+  PostApi.getPostsList(pageNum.value, pageSize.value)
+    .then((resp) => {
+      const list = resp.data?.data || []
+      if (list.length > 0) {
+        postList.value = postList.value.concat(list)
+        pageNum.value++
+      } else {
+        loadMsg.value = '暂无更多数据'
+      }
+    })
+    .catch((error) => {
+      toast.showToast({
+        title: error.message,
+        icon: 'error'
+      })
+    })
+    .finally(() => {
+      loadMsg.value = '暂无更多数据'
+      loading.hideLoading()
+      uni.stopPullDownRefresh()
+    })
+}
+
+onReachBottom(() => {
+  fetchList()
+})
+
+const handleDelPost = (postId: string, author: UserInfo) => {
+  // 确认删除
+  modal.showModal({
+    title: '提示',
+    content: '确认删除该帖子吗？',
+    success: (res) => {
+      if (res.confirm) {
+        doDelPost(postId, author)
+      }
+    }
   })
 }
 
-const openDetial = (item) => {
-  console.log(item.postId)
-  router.push({ name: 'detail', params: { id: item.postId } })
+const doDelPost = (postId: string, author: UserInfo) => {
+  loading.showLoading({})
+  PostApi.delPost(postId)
+    .then((_resp) => {
+      toast.showToast({
+        title: '删除成功',
+        icon: 'success'
+      })
+      // 从列表中删除
+      postList.value = postList.value.filter((item) => item.id !== postId)
+    })
+    .catch((error) => {
+      toast.showToast({
+        title: error.message,
+        icon: 'error'
+      })
+    })
+    .finally(() => {
+      loading.hideLoading()
+    })
 }
 </script>
 
@@ -110,6 +201,8 @@ const openDetial = (item) => {
   box-sizing: border-box;
   background: #f4f9ff;
   padding: 0 24rpx 24rpx;
+  // 不显示左右滚动条
+  overflow-x: hidden;
   .header {
     margin-bottom: 24rpx;
   }
@@ -123,14 +216,28 @@ const openDetial = (item) => {
       font-size: 20rpx;
       color: #646566;
     }
+    .postList {
+      .postItem {
+        margin-bottom: 24rpx;
+        //放置在中间
+        display: flex;
+        justify-content: center;
+      }
+      .info {
+        font-size: 35rpx;
+        color: #64656695;
+        // 居中
+        display: flex;
+        justify-content: center;
+      }
+    }
   }
 }
+
 .addBtn {
   width: 100rpx;
   height: 100rpx;
-  position: fixed;
-  bottom: 120rpx;
-  left: 24rpx;
+  z-index: 999;
   border-radius: 50%;
   // 阴影
   box-shadow: 3rpx 3rpx 20rpx 0rpx rgba(64, 109, 255, 0.665);
@@ -145,6 +252,8 @@ const openDetial = (item) => {
 }
 .swiper-box {
   height: 380upx;
+  padding-top: 5rpx;
+
   .swiper-item {
     display: flex;
     flex-direction: column;
@@ -167,9 +276,39 @@ const openDetial = (item) => {
     .text {
       // 没有高度体积，放置在右下角
       position: absolute;
+      bottom: 70rpx;
+      right: 30rpx;
+      padding: 15rpx;
+      // 阴影
+      background-color: #64656666;
+      border-radius: 20rpx;
+      box-shadow: 3rpx 3rpx 20rpx 0rpx rgba(0, 0, 0, 0.186);
+      // 阴影模糊效果
+      backdrop-filter: blur(10rpx);
+    }
+    .logos {
+      position: absolute;
+      left: 30rpx;
       bottom: 60rpx;
-      right: 50rpx;
-      padding: 10rpx;
+      display: flex;
+      padding: 5rpx;
+      // 文字背景
+      border-radius: 20rpx 20rpx 20rpx 20rpx;
+      // 标题颜色
+      color: #000000ae;
+      image {
+        width: 25rpx;
+        height: 25rpx;
+        margin-right: 10rpx;
+      }
+      .collect {
+        margin-left: 10rpx;
+        margin-right: 10rpx;
+      }
+      .like {
+        margin-left: 10rpx;
+        margin-right: 10rpx;
+      }
     }
   }
 }

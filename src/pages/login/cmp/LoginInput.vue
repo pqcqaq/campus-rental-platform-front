@@ -1,12 +1,3 @@
-<!--
- * @Author: weisheng
- * @Date: 2023-04-18 13:23:10
- * @LastEditTime: 2023-05-09 20:56:17
- * @LastEditors: weisheng
- * @Description: 
- * @FilePath: \uniapp-vue3-fant-ts\src\pages\login\cmp\LoginInput.vue
- * 记得注释
--->
 <template>
   <view class="login-input">
     <input

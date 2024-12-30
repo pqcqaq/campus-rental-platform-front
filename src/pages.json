@@ -8,7 +8,9 @@
           "allowsBounceVertical": "NO"
         },
         "navigationBarTitleText": "首页",
-        "navigationBarBackgroundColor": "#E7F0FF"
+        "navigationBarBackgroundColor": "#E7F0FF",
+        "enablePullDownRefresh": true,
+        "onReachBottomDistance": 100
       }
     },
     {
@@ -24,7 +26,8 @@
       "name": "detail",
       "style": {
         "navigationBarTitleText": "详情",
-        "navigationBarBackgroundColor": "#E7F0FF"
+        "navigationBarBackgroundColor": "#E7F0FF",
+        "enablePullDownRefresh": true
       }
     },
     {
@@ -83,6 +86,15 @@
       "style": {
         "navigationBarTitleText": "我的发布",
         "navigationBarBackgroundColor": "#E7F0FF"
+      }
+    },
+    {
+      "path": "pages/mine/userDetails/UserDetails",
+      "name": "userDetails",
+      "style": {
+        "navigationBarTitleText": "用户详情",
+        "navigationBarBackgroundColor": "#E7F0FF",
+        "onReachBottomDistance": 100
       }
     },
     {

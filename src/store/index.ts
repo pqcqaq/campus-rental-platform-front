@@ -1,14 +1,6 @@
-/*
- * @Author: weisheng
- * @Date: 2023-04-14 12:57:12
- * @LastEditTime: 2023-04-19 11:03:00
- * @LastEditors: weisheng
- * @Description: pinia商店
- * @FilePath: \uniapp-vue3-fant-ts\src\store\index.ts
- * 记得注释
- */
 import UserAPI from '@/api/UserAPI'
 import UserInfo from '@/model/UserInfo'
+import router from '@/router'
 import { defineStore } from 'pinia'
 const baseURL = import.meta.env.VITE_BASEURL
 
@@ -27,18 +19,35 @@ export const useAuthStore = defineStore('authState', {
   getters: {},
   actions: {
     logout() {
-      this.userInfo = null
+      try {
+        UserAPI.logout().finally(() => {
+          this.userInfo = null
+        })
+      } catch (error) {
+        console.log(error)
+      }
+      router.replaceAll({ name: 'login' })
     },
     getToken(): string {
       return this.userInfo?.token || ''
     },
     setAvatar(avatarId: string): void {
-      const avatarUrl = baseURL + '/common/avatar/' + avatarId
-      console.log('avatarUrl', avatarUrl)
-
+      const avatarUrl = baseURL + '/common/img/' + avatarId
       this.userInfo!.avatar = avatarUrl
       // 保存头像
       UserAPI.saveAlterAvatar(avatarUrl)
+    },
+    isAdmin(): boolean {
+      return this.userInfo?.role === 'ROLE_ADMIN'
+    },
+    setBackground(backgroundId: string): void {
+      const backgroundUrl = baseURL + '/common/img/' + backgroundId
+      this.userInfo!.background = backgroundUrl
+      // 保存背景
+      UserAPI.saveAlterBackground(backgroundUrl)
+    },
+    getUserId(): string {
+      return this.userInfo?.id || ''
     }
   }
 })

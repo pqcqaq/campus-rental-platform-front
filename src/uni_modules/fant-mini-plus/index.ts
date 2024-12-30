@@ -1,12 +1,3 @@
-/*
- * @Author: weisheng
- * @Date: 2021-12-21 14:22:03
- * @LastEditTime: 2023-06-07 11:51:55
- * @LastEditors: weisheng
- * @Description:
- * @FilePath: \fant-mini-plus\src\uni_modules\fant-mini-plus\index.ts
- * 记得注释
- */
 import type { App } from 'vue'
 
 // Toast

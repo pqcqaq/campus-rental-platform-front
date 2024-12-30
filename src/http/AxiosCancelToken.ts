@@ -1,12 +1,3 @@
-/*
- * @Author: weisheng
- * @Date: 2023-04-20 14:23:21
- * @LastEditTime: 2023-04-20 16:49:18
- * @LastEditors: weisheng
- * @Description:
- * @FilePath: \uniapp-vue3-fant-ts\src\http\AxiosCancelToken.ts
- * 记得注释
- */
 import axios, { AxiosRequestConfig, CancelTokenSource } from 'axios'
 
 const requestMap: Map<string, CancelTokenSource> = new Map<string, CancelTokenSource>() //请求&AbortController的map

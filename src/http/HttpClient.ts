@@ -52,8 +52,6 @@ export default class ApiClient {
 
     instance.interceptors.response.use(
       (response) => {
-        console.log('response', response)
-
         // 此处为前后端约定的接口成功的字段，旨在处理状态码为200的错误响应，开发者可自行调整
         if (response.data.code === 200) {
           return response
@@ -64,13 +62,11 @@ export default class ApiClient {
                 // 跳转到登录
                 console.log('跳转到登录')
                 useAuthStore().logout()
-                router.replaceAll({ name: 'login' })
                 break
               case 401:
                 // 跳转到登录
                 console.log('跳转到登录')
                 useAuthStore().logout()
-                router.replaceAll({ name: 'login' })
                 break
             }
           }
@@ -100,8 +96,8 @@ export default class ApiClient {
           newError.msg = newError.errMsg || '请检查网络设置'
           return Promise.reject(newError)
         }
-        const pages = getCurrentPages() as any[]
-        const oauthStore = useAuthStore()
+        // const pages = getCurrentPages() as any[]
+        // const oauthStore = useAuthStore()
         switch (error.status) {
           // 小程序切换页面会导致正在处理中的请求返回状态码为0 这里还没有什么比较好的处理方案
           // case 0:
@@ -111,19 +107,14 @@ export default class ApiClient {
             error.msg = '网络超时!'
             break
           case 401:
-            oauthStore.logout()
             setTimeout(() => {
-              uni.showToast({ title: '登录已过期,请重新登录!', icon: 'none' })
+              uni.showToast({ title: '用户未登录!', icon: 'none' })
             }, 300)
-            // 如果当前页面不是登录页面则跳转至登录页面
-            if (
-              !pages[pages.length - 1].$page ||
-              (pages[pages.length - 1].$page && pages[pages.length - 1].$page.fullPath !== '/pages/login/Login')
-            ) {
-              uni.reLaunch({ url: '/pagesOther/login/Login' })
-            }
+            useAuthStore().logout()
             break
-
+          case 402:
+            error.msg = `${error.status} 用户已禁用!`
+            break
           case 403:
             error.msg = `${error.status} 禁止访问!`
             break

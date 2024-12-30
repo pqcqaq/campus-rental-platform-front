@@ -1,12 +1,3 @@
-<!--
- * @Author: weisheng
- * @Date: 2020-10-31 11:27:05
- * @LastEditTime: 2023-05-23 15:47:42
- * @LastEditors: weisheng
- * @Description: 搜索框
- * @FilePath: \fant-mini-plus\src\uni_modules\fant-mini-plus\components\hd-search-bar\hd-search-bar.vue
- * @symbol_custom_string_obkoro1: 记得注释
--->
 <template>
   <view class="search-bar">
     <view class="search-input-box" :class="{ 'suffix-input-box': $slots.suffix, 'prefix-input-box': $slots.prefix }" @click="doClick">

@@ -1,13 +1,6 @@
-/*
- * @Author: weisheng
- * @Date: 2023-04-17 11:58:46
- * @LastEditTime: 2023-04-18 18:11:53
- * @LastEditors: weisheng
- * @Description: 登录信息
- * @FilePath: \uniapp-vue3-fant-ts\src\model\UserInfo.ts
- * 记得注释
- */
 export default class UserInfo {
+  // id
+  id: Nullable<string> = null
   // 联系方式
   linkMan: Nullable<string> = null
   // 帐号
@@ -18,8 +11,18 @@ export default class UserInfo {
   nickName: Nullable<string> = null
   // 头像
   avatar: Nullable<string> = null
+  // 个人首页背景
+  background: Nullable<string> = null
   // 求学之所
   school: Nullable<string> = null
   // token
   token: Nullable<string> = null
+  // role
+  role: Nullable<string> = null
+  // 关注数量
+  followNum: Nullable<number> = null
+  // 粉丝数量
+  fansNum: Nullable<number> = null
+  // 是否已经关注
+  isFollow: Nullable<boolean> = null
 }

@@ -1,12 +1,3 @@
-/*
- * @Author: weisheng
- * @Date: 2022-02-23 11:11:53
- * @LastEditTime: 2023-09-14 21:32:47
- * @LastEditors: weisheng
- * @Description:
- * @FilePath: \fant-mini-plus\src\uni_modules\fant-mini-plus\components\hd-notify\index.ts
- * 记得注释
- */
 import { type InjectionKey, type Ref, provide, ref } from 'vue'
 import { CommonUtil } from '../../index'
 import type { Notify, NotifyOptions } from './types'

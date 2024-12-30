@@ -1,12 +1,3 @@
-<!--
- * @Author: weisheng
- * @Date: 2020-10-31 11:27:05
- * @LastEditTime: 2023-09-26 22:24:43
- * @LastEditors: weisheng
- * @Description: 表格列
- * @FilePath: \fant-mini-plus\src\uni_modules\fant-mini-plus\components\hd-table-column\hd-table-column.vue
- * @symbol_custom_string_obkoro1: 记得注释
--->
 <template>
   <view :class="[fixed ? 'hd-table-column--fixed' : '', 'hd-table-column']" :style="rootStyle">
     <view

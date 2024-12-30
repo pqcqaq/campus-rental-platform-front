@@ -1,3 +1,5 @@
 {
-    "i18n-ally.localesPaths": []
+    "i18n-ally.localesPaths": [],
+    "typescript.tsdk": "node_modules/typescript/lib",
+    "vue3snippets.enable-compile-vue-file-on-did-save-code": false
 }

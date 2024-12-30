@@ -1,12 +1,3 @@
-/*
- * @Author: weisheng
- * @Date: 2023-03-14 16:06:21
- * @LastEditTime: 2023-05-10 10:00:01
- * @LastEditors: weisheng
- * @Description:
- * @FilePath: \uniapp-vue3-fant-ts\.eslintrc.js
- * 记得注释
- */
 module.exports = {
   env: {
     browser: true,

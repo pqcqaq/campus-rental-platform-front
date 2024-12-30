@@ -4,7 +4,7 @@
   <div class="main">
     <div class="userInfo">
       <div class="avatar" v-if="userInfo?.avatar != ''" @click="handleChangeAvatar">
-        <hd-image lazy-load width="230rpx" height="230rpx" mode="scaleToFill" :round="true" :src="userInfo?.avatar" />
+        <image class="img" lazy-load mode="scaleToFill" :round="true" :src="userInfo?.avatar" />
       </div>
       <image v-else @click="handleChangeAvatar" src="@/static/guest.png" class="defaultAvatar" />
       <div class="info">
@@ -55,7 +55,6 @@ import { useModal, usePopup, useToast } from '@/uni_modules/fant-mini-plus'
 import { ref } from 'vue'
 import Inputfield from '@/components/Inputfield.vue'
 import UserAPI from '@/api/UserAPI'
-import router from '@/router'
 const baseURL = import.meta.env.VITE_BASEURL
 const popup = usePopup()
 const modal = useModal()
@@ -122,8 +121,8 @@ const handleChangeAvatar = () => {
               url: baseURL + '/common/avatar',
               filePath: tempFilePaths[0],
               name: 'avatar',
-              formData: {
-                token: userInfo.value?.token || null
+              header: {
+                token: userInfo.value?.token || 'null'
               },
               success: (res) => {
                 const result = JSON.parse(res.data)
@@ -163,7 +162,6 @@ function doLogout() {
       if (action.confirm) {
         // 点击的确认按钮
         useAuthStore().logout()
-        router.replaceAll({ name: 'login' })
       }
     }
   })
@@ -182,6 +180,27 @@ function doLogout() {
     flex-direction: column;
     align-items: center;
     padding-top: 60px;
+    .avatar {
+      /* 其他样式 */
+      border-radius: 50%;
+      height: 230rpx;
+      width: 230rpx;
+      transition: transform 0.3s ease-in-out;
+      // 阴影
+      box-shadow: 0rpx 0rpx 100rpx 10rpx rgba(0, 0, 0, 0.25);
+      // 元素放置在正中间
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      // 边框
+      border: 5px solid #b9deffa4;
+
+      .img {
+        height: 230rpx;
+        width: 230rpx;
+        border-radius: 50%;
+      }
+    }
     .info {
       //淡蓝色圆角背景，带阴影
       position: relative;
@@ -324,15 +343,6 @@ function doLogout() {
   justify-content: center;
   align-items: center;
   left: 25rpx;
-}
-
-.avatar {
-  /* 其他样式 */
-  border-radius: 50%;
-  border: 5px solid #759eff;
-  transition: transform 0.3s ease-in-out;
-  // 阴影
-  box-shadow: 0rpx 0rpx 100rpx 10rpx rgba(0, 0, 0, 0.3);
 }
 
 .avatar:hover {

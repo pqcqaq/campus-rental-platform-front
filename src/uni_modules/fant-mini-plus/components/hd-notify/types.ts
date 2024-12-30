@@ -1,12 +1,3 @@
-/*
- * @Author: weisheng
- * @Date: 2023-03-14 19:06:18
- * @LastEditTime: 2023-05-19 15:03:18
- * @LastEditors: weisheng
- * @Description:
- * @FilePath: \fant-mini-plus\src\uni_modules\fant-mini-plus\components\hd-notify\types.ts
- * 记得注释
- */
 export type NotifyType = 'primary' | 'success' | 'error' | 'warning'
 
 export type NotifyOptions = {

@@ -1,12 +1,3 @@
-/*
- * @Author: weisheng
- * @Date: 2022-12-15 19:43:51
- * @LastEditTime: 2022-12-16 17:42:12
- * @LastEditors: weisheng
- * @Description:
- * @FilePath: \fant-mini\src\uni_modules\fant-mini\libs\utils\DatePicker.ts
- * 记得注释
- */
 
 import { CommonUtil } from './CommonUtil'
 import { DatePickerType } from '../../components/hd-date-picker/types'

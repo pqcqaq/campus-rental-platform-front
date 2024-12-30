@@ -1,12 +1,3 @@
-<!--
- * @Author: weisheng
- * @Date: 2021-12-22 15:19:08
- * @LastEditTime: 2023-08-07 13:35:06
- * @LastEditors: weisheng
- * @Description: 
- * @FilePath: \uniapp-vue3-fant-ts\src\pages\routerDemo\RouterDemo.vue
- * 记得注释
--->
 <template>
   <view class="router-demo">
     <test></test>

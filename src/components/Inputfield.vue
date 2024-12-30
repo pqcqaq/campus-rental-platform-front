@@ -275,6 +275,12 @@ input[disabled] {
   text-overflow: ellipsis;
   overflow: hidden;
 }
+.field {
+  // 圆角
+  border-radius: 50rpx 50rpx 50rpx 50rpx;
+  // 阴影
+  box-shadow: 0rpx 1rpx 20rpx 0rpx rgba(0, 0, 0, 0.2);
+}
 
 .field:not(:last-child)::after {
   position: absolute;

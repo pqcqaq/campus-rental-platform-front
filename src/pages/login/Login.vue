@@ -1,12 +1,3 @@
-<!--
- * @Author: weisheng
- * @Date: 2021-12-22 15:19:08
- * @LastEditTime: 2023-05-22 16:12:41
- * @LastEditors: weisheng
- * @Description: 
- * @FilePath: \uniapp-vue3-fant-ts\src\pages\login\Login.vue
- * 记得注释
--->
 <template>
   <hd-loading></hd-loading>
   <hd-toast></hd-toast>
@@ -20,10 +11,10 @@
           <login-input key="password" v-model="password" password clearable placeholder="密码" :maxlength="20"></login-input>
         </view>
         <hd-button size="large" type="primary" :disabled="disabled" @click="doLogin">登录</hd-button>
-        <hd-button class="jump" plain type="primary" size="small" @click="jump">跳过登录</hd-button>
       </view>
     </view>
     <view class="login-footer">
+      <hd-button class="jump" plain type="primary" size="small" @click="jump">我是游客</hd-button>
       <text>developed by qcqcqc</text>
     </view>
   </view>
@@ -61,9 +52,11 @@ function doLogin() {
       router.replaceAll({ name: 'home' })
     })
     .catch((error) => {
+      console.log(error)
+
       loading.hideLoading()
       toast.showToast({
-        title: error.msg,
+        title: error.message,
         icon: 'error'
       })
     })
@@ -77,7 +70,13 @@ const jump = () => {
     nickName: '游客',
     avatar: '',
     school: '某知名大学',
-    token: 'null'
+    token: 'null',
+    role: 'visitor',
+    id: 'null',
+    background: '',
+    followNum: 0,
+    fansNum: 0,
+    isFollow: false
   }
   isVisitor.value = true
   router.replaceAll({ name: 'home' })
@@ -137,6 +136,7 @@ const jump = () => {
 }
 .jump {
   margin-top: 50rpx;
+  margin-bottom: 50rpx;
   height: 40rpx;
 }
 </style>

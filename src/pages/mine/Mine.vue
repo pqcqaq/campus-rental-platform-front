@@ -1,12 +1,3 @@
-<!--
- * @Author: weisheng
- * @Date: 2021-12-22 15:19:08
- * @LastEditTime: 2023-05-09 20:54:39
- * @LastEditors: weisheng
- * @Description: 
- * @FilePath: \uniapp-vue3-fant-ts\src\pages\mine\Mine.vue
- * 记得注释
--->
 <template>
   <hd-modal></hd-modal>
   <hd-toast></hd-toast>
@@ -16,23 +7,34 @@
       <hd-icon name="ic_scan_line" size="48rpx" color="#292C39" @click="doScan"></hd-icon>
       <hd-icon name="ic_setup_fill" size="48rpx" color="#292C39" @click="setup"></hd-icon>
     </view>
-    <view class="header">
-      <view class="header-user">
-        <image v-if="userInfo?.avatar != ''" :src="userInfo?.avatar" class="header-user-avatar"></image>
+    <view
+      class="header"
+      :style="{
+        'background-image': 'url(' + userInfo?.background + ')',
+        'background-repeat': 'no-repeat',
+        width: '100%',
+        height: '100%',
+        'background-size': 'cover',
+        'background-position': 'center'
+      }"
+    >
+      <!-- <image :src="userInfo?.background" mode="aspectFill" class="background" /> -->
+      <view class="header-user" @click="handleOpenDetials">
+        <image v-if="userInfo?.avatar != ''" :src="userInfo?.avatar" class="header-user-avatar" />
         <image v-else src="@/static/guest.png" class="header-user-avatar" />
         <view class="header-user-nickname">
           <view class="nickname">{{ userInfo?.nickName }}</view>
           <view class="info">{{ userInfo?.school }}</view>
           <view class="phone">{{ userInfo?.mobile }}</view>
         </view>
-        <view class="header-user-more">
-          <hd-icon name="ic_sort_fill" size="48rpx" color="#BEC0C7"></hd-icon>
+        <view @click.stop="handleChangeBackground" class="header-user-more">
+          <hd-icon name="ic_sort_fill" size="48rpx" color="#8d8d8d"></hd-icon>
         </view>
       </view>
       <view class="header-target">
-        <view class="header-target-item" v-for="(item, key) of target" :key="key" @click="handlePageShow(item)">
+        <view class="header-target-item" v-for="item of infoRecords" :key="item.name" @click="handlePageShow(item)">
           <text class="label">{{ item.value }}</text>
-          <text class="value">{{ key }}</text>
+          <text class="value">{{ item.name }}</text>
         </view>
       </view>
     </view>
@@ -44,31 +46,17 @@
 </template>
 
 <script lang="ts" setup>
-import myRecord from '@/model/myRecord'
 import { useModal, useToast } from '@/uni_modules/fant-mini-plus'
+import UserApi from '@/api/UserAPI'
+import { useInfoRecords } from '@/store/UserInfoRecords'
+import { useShowNowStore } from '../../store/postShowNow/index'
 const modal = useModal()
 const toast = useToast()
 
 const { userInfo } = storeToRefs(useAuthStore()) // 解构pinia的store
+const { infoRecords } = storeToRefs(useInfoRecords()) // 解构
+
 const router = useRouter()
-const target = ref<Record<string, myRecord>>({
-  我的租赁: {
-    value: 0,
-    routerName: 'lease'
-  },
-  我的出租: {
-    value: 0,
-    routerName: 'hire'
-  },
-  我的收藏: {
-    value: 0,
-    routerName: 'collect'
-  },
-  我的发布: {
-    value: 0,
-    routerName: 'publish'
-  }
-})
 
 const handlePageShow = (item) => {
   router.push({ name: item.routerName })
@@ -96,8 +84,96 @@ onMounted(() => {
   if (useAuthStore().isVisitor) {
     userInfo.value = null
     router.replaceAll({ name: 'login' })
+  } else {
+    UserApi.refreshToken()
+      .then((resp: any) => {
+        userInfo.value = resp.data
+      })
+      .catch((error) => {
+        toast.showToast({
+          title: error.msg,
+          icon: 'error'
+        })
+      })
   }
 })
+
+onShow(() => {
+  // 获取我的信息
+  UserApi.getMyInfo().then((resp) => {
+    infoRecords.value = resp.data || []
+  })
+})
+
+const baseURL = import.meta.env.VITE_BASEURL
+const handleChangeBackground = () => {
+  // 更换背景提示
+  modal.showModal({
+    title: '提示',
+    content: '是否更换背景',
+    showCancel: true,
+    cancelText: '取消',
+    confirmText: '确定',
+    success: (res) => {
+      if (res.confirm) {
+        // 确定，打开图片
+        doChangeBackground()
+      }
+    }
+  })
+}
+const doChangeBackground = () => {
+  uni.chooseImage({
+    count: 1,
+    sizeType: ['compressed'], //可以指定是原图还是压缩图，默认二者都有
+    sourceType: ['album', 'camera'], //从相册或者相机选择
+    success: async (res) => {
+      uni.uploadFile({
+        url: baseURL + '/attachment/img',
+        filePath: res.tempFilePaths[0],
+        name: 'img',
+        header: {
+          token: userInfo.value?.token || 'null'
+        },
+        success: (res) => {
+          const result = JSON.parse(res.data)
+          if (result.code == 200) {
+            toast.showToast({
+              title: '上传成功',
+              icon: 'success'
+            })
+            UserApi.saveAlterBackground(result.data)
+              .then((_resp) => {
+                useAuthStore().setBackground(result.data || '')
+              })
+              .catch((error) => {
+                toast.showToast({
+                  title: error.msg,
+                  icon: 'error'
+                })
+              })
+          } else {
+            toast.showToast({
+              title: result.msg,
+              icon: 'error'
+            })
+          }
+        },
+        fail: (err) => {
+          toast.showToast({
+            title: '上传失败',
+            icon: 'error'
+          })
+        }
+      })
+    }
+  })
+}
+
+const handleOpenDetials = () => {
+  useShowNowStore().setUserId(userInfo.value!.id!)
+  router.push({ name: 'userDetails' })
+}
 </script>
 
 <style lang="scss" scoped>
@@ -115,8 +191,27 @@ onMounted(() => {
     padding: 0 12rpx;
   }
   .header {
+    position: relative;
+    // 模糊效果
+    backdrop-filter: blur(10rpx);
+
+    // .background {
+    //   // 作为整个view的背景
+    //   position: absolute;
+    //   top: 0;
+    //   left: 0;
+    //   width: 100%;
+    //   height: 100%;
+    //   z-index: 1;
+    //   opacity: 0.4;
+    //   // 模糊
+    //   filter: blur(10);
+    //   // 穿透
+    //   pointer-events: none;
+    //   border-radius: 16rpx;
+    // }
     width: 100%;
-    background: #f6f9fe;
+    // background: #f6f9fe;
     border-radius: 16rpx;
     padding: 32rpx;
     box-sizing: border-box;
@@ -126,12 +221,21 @@ onMounted(() => {
     &-user {
       display: flex;
       margin-bottom: 56rpx;
+      // 背景模糊
+      backdrop-filter: blur(10rpx);
+      border-radius: 30rpx;
+      padding: 10rpx;
+      // 白色边框
+      border: 1rpx solid #8d8d8d;
+      // 阴影
+      box-shadow: 0 2rpx 10rpx 0 rgba(0, 0, 0, 0.3);
+
       &-avatar {
         flex: 0 0 auto;
         border-radius: 50%;
         width: 128rpx;
         height: 128rpx;
-        overflow: hidden;
+        // overflow: hidden;
       }
       &-nickname {
         flex: 1 1 auto;
@@ -146,11 +250,11 @@ onMounted(() => {
           margin-bottom: 2rpx;
         }
         .info {
-          color: #c6c9cf;
+          color: #595959;
           font-size: 28rpx;
         }
         .phone {
-          color: #c6c9cf;
+          color: #575757;
           font-size: 20rpx;
         }
       }
@@ -174,7 +278,8 @@ onMounted(() => {
           margin-bottom: 24rpx;
         }
         .value {
-          color: #3c3f49;
+          color: #3a3a3a;
+          mix-blend-mode: difference;
           font-size: 28rpx;
         }
       }
@@ -194,7 +299,17 @@ onMounted(() => {
 .header-target-item {
   /* 其他样式 */
   position: relative;
-  overflow: hidden;
+  // overflow: hidden;
+  // 背景模糊
+  backdrop-filter: blur(10rpx);
+  // 白色边框
+  border: 1rpx solid #8d8d8d;
+  // 阴影
+  box-shadow: 0 2rpx 10rpx 0 rgba(0, 0, 0, 0.3);
+  border-radius: 30rpx;
+  margin-left: 10rpx;
+  margin-right: 10rpx;
+  padding: 10rpx;
 }
 
 .header-target-item::before {

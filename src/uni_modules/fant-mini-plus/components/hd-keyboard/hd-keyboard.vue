@@ -1,12 +1,3 @@
-<!--
- * @Author: weisheng
- * @Date: 2022-09-27 15:33:29
- * @LastEditTime: 2023-05-23 15:49:23
- * @LastEditors: weisheng
- * @Description: 
- * @FilePath: \fant-mini-plus\src\uni_modules\fant-mini-plus\components\hd-keyboard\hd-keyboard.vue
- * 记得注释
--->
 <template>
   <hd-popup type="bottom" id="keyboardPop" @change="doPopChange">
     <view class="keyboard" @click="doKeyboardClick">

@@ -1,12 +1,3 @@
-/*
- * @Author: weisheng
- * @Date: 2023-04-18 21:48:30
- * @LastEditTime: 2023-04-26 13:53:01
- * @LastEditors: weisheng
- * @Description:
- * @FilePath: \uniapp-vue3-fant-ts\src\store\persist.ts
- * 记得注释
- */
 import { CommonUtil } from '@/uni_modules/fant-mini-plus'
 import { PiniaPluginContext } from 'pinia'
 
