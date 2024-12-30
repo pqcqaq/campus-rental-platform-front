@@ -6,9 +6,11 @@
 import { onMounted, ref } from 'vue'
 
 const route = useRoute() as any
-const id = route.params.id
+const id = ref(route.params.id)
 
-onMounted(() => {})
+onMounted(() => {
+  console.log('id', id)
+})
 </script>
 
 <style lang="stylus" scoped></style>

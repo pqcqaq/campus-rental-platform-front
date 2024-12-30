@@ -90,6 +90,11 @@ export default class ApiClient {
         }
       },
       (error) => {
+        // 如果请求超时，返回超时信息
+        if (error.code === 'ECONNABORTED' || error.message === 'Network Error' || error.message.includes('timeout')) {
+          error.msg = '请求超时!'
+          return Promise.reject(error)
+        }
         if (error.status !== 0 && !error.status) {
           const newError = error as any
           newError.msg = newError.errMsg || '请检查网络设置'

@@ -13,10 +13,10 @@
         previous-margin="20px"
         next-margin="20px"
       >
-        <!-- v-for循环遍历数组 -->
         <swiper-item class="swiper-box" :autoplay="true" :interval="1000" v-for="item in swiperList" :key="item">
           <view class="swiper-item" @click="openDetial(item)">
             <image class="image" mode="aspectFill" :src="item.img"></image>
+            <text class="text">{{ item.text }}</text>
           </view>
         </swiper-item>
       </swiper>
@@ -26,6 +26,7 @@
       <hd-button @click="doNav">
         <hd-icon name="ic_scan_line" size="48rpx" color="#292C39"></hd-icon>
       </hd-button>
+      <PostCard></PostCard>
     </view>
     <!-- 悬浮在左下角的发布按钮（圆形加号） -->
     <button class="addBtn" color="#E1EDF9" @click="doAdd">
@@ -42,6 +43,7 @@ import { SwiperItem } from '@/model/Swiper'
 import { useLoading, useToast } from '@/uni_modules/fant-mini-plus'
 import axios from 'axios'
 import { ref, onMounted } from 'vue'
+import PostCard from './cpns/PostCard.vue'
 const loading = useLoading()
 const toast = useToast()
 const router = useRouter()
@@ -143,26 +145,32 @@ const openDetial = (item) => {
 }
 .swiper-box {
   height: 380upx;
-}
-
-.swiper-item {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  background-color: #999;
-  color: #fff;
-  margin: 10rpx 10rpx 10rpx 10px;
-  border-radius: 50upx;
-  /* app上运行不显示图片，就需要加下面这行，设置高度 */
-  height: 320upx;
-}
-.image {
-  width: 100%;
-  height: 320upx;
-  // 图片的圆角
-  border-radius: 50upx;
-  // 阴影
-  box-shadow: 3rpx 3rpx 20rpx 0rpx rgba(0, 0, 0, 0.186);
+  .swiper-item {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: #999;
+    color: #fff;
+    margin: 10rpx 10rpx 10rpx 10px;
+    border-radius: 50upx;
+    /* app上运行不显示图片，就需要加下面这行，设置高度 */
+    height: 320upx;
+    .image {
+      width: 100%;
+      height: 320upx;
+      // 图片的圆角
+      border-radius: 50upx;
+      // 阴影
+      box-shadow: 3rpx 3rpx 20rpx 0rpx rgba(0, 0, 0, 0.186);
+    }
+    .text {
+      // 没有高度体积，放置在右下角
+      position: absolute;
+      bottom: 60rpx;
+      right: 50rpx;
+      padding: 10rpx;
+    }
+  }
 }
 </style>
